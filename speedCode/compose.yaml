@@ -1,0 +1,7 @@
+﻿services:
+  speedcode:
+    image: speedcode
+    build:
+      context: .
+      dockerfile: speedCode/Dockerfile
+
