@@ -1,0 +1,23 @@
+# This is a generated file. Not intended for manual editing.
+version: "3.8"
+services:
+  api:
+    build:
+      context: "/Applications/XAMPP/xamppfiles/htdocs/Codes/Portfolio-examen-backend/speedCode"
+      dockerfile: "Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net9.0/speedCode.dll"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "speedcode:dev"
+    ports: []
+    volumes:
+    - "/Applications/XAMPP/xamppfiles/htdocs/Codes/Portfolio-examen-backend/speedCode:/app:rw"
+    - "/Applications/XAMPP/xamppfiles/htdocs/Codes/Portfolio-examen-backend/speedCode:/src:rw"
+    - "/Users/zuohuangcai/.microsoft/usersecrets:/root/.microsoft/usersecrets"
+    - "/Users/zuohuangcai/.nuget/packages:/root/.nuget/packages"
+    working_dir: "/app"
