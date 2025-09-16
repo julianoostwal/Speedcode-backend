@@ -11,17 +11,14 @@ namespace speedCode.Model
         [Key]
         public Guid Id { get; set; }
 
-        [Key]
         [Required]
         [ForeignKey("Room")]
         public Rooms RoomId { get; set; }
 
-        [Key]
         [Required]
         [ForeignKey("Profile")]
         public Profiles ProfileId { get; set; }
 
-        [Key]
         [Required]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

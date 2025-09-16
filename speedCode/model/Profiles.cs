@@ -13,16 +13,8 @@ namespace speedCode.Model
         public Guid Id { get; set; }
 
         [Required]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-        [Required]
         [Column(TypeName = "text")]
         public string NickName { get; set; }
-
-        [Required]
-        [Column(TypeName = "text")]
-        public string AvatarUrl { get; set; }
 
         [Required]
         [Column(TypeName = "text")]
@@ -32,5 +24,11 @@ namespace speedCode.Model
         [Column(TypeName = "text")]
         public string Password { get; set; }
 
+        [Column(TypeName = "text")]
+        public string AvatarUrl { get; set; }
+
+        [Required]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }
