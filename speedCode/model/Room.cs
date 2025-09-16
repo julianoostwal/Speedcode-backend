@@ -17,7 +17,7 @@ namespace speedCode.Model
 
         [Required]
         [Column(TypeName = "enum")]
-        public int Level { get; set; }
+        public string Level { get; set; }
 
         [Required]
         [Column(TypeName = "boolean")]
