@@ -12,12 +12,10 @@ namespace speedCode.Model
         public Guid Id { get; set; }
 
         [Required]
-        [ForeignKey("Room")]
-        public Rooms RoomId { get; set; }
+        public Rooms Room { get; set; }
 
         [Required]
-        [ForeignKey("Profile")]
-        public Profiles ProfileId { get; set; }
+        public Profiles Profile{ get; set; }
 
         [Required]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

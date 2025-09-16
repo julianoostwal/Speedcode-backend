@@ -11,7 +11,6 @@ namespace speedCode.Model
         public Guid Id { get; set; }
 
         [Required]
-        [ForeignKey("TestId")]
         public TestCode TestId { get; set; }
 
         [Required]
