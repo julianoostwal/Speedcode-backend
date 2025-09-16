@@ -15,7 +15,6 @@ namespace speedCode.Model
         public TestCode TestId { get; set; }
 
         [Required]
-        [ForeignKey("ExerciseId")]
-        public Exercise ExerciseId { get; set; }
+        public Exercise Exercise { get; set; }
     }
 }
