@@ -17,6 +17,18 @@ namespace speedCode.Model
         [Required]
         [Column(TypeName = "text")]
         public string NickName { get; set; }
+
+        [Required]
+        [Column(TypeName = "text")]
+        public string AvatarUrl { get; set; }
+
+        [Required]
+        [Column(TypeName = "text")]
+        public string Email { get; set; }
+
+        [Required]
+        [Column(TypeName = "text")]
+        public string Password { get; set; }
         
     }
 }

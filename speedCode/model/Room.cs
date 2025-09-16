@@ -5,13 +5,25 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace speedCode.Model
 {
     [Table("rooms")]
-    public class Room
+    public class Rooms
     {
         [Key]
         public Guid Id { get; set; }
 
         [Required]
         [Column(TypeName = "text")]
-        public string RoomName { get; set; }      
+        public string RoomName { get; set; }
+
+        [Required]
+        [Column(TypeName = "enum")]
+        public int Level { get; set; }
+
+        [Required]
+        [Column(TypeName = "boolean")]
+        public bool IsPrivate { get; set; }
+
+        [Required]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }
