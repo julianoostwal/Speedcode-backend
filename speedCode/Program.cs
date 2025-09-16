@@ -14,9 +14,9 @@ builder.Services.AddOpenApi();
 
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.ListenLocalhost(8080, listenOptions =>
-        listenOptions.UseHttps());
+    options.ListenAnyIP(8080);
 });
+
 
 var app = builder.Build();
 
