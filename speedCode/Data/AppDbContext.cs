@@ -22,6 +22,10 @@ namespace speedCode.Data
             modelBuilder.Entity<Profiles>()
                 .Property(p => p.CreatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            modelBuilder.Entity<TestCode>()
+                .Property(u => u.CreatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
         }
     }
 }

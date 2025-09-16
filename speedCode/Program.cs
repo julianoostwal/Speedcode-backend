@@ -12,13 +12,15 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-builder.WebHost.ConfigureKestrel(options =>
-{
-    options.ListenLocalhost(8080, listenOptions =>
-        listenOptions.UseHttps());
-});
+builder.WebHost.ConfigureKestrel(options => { options.ListenAnyIP(8080); });
 
 var app = builder.Build();
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+}
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -12,8 +12,8 @@ using speedCode.Data;
 namespace speedCode.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250916095400_update")]
-    partial class update
+    [Migration("20250916113538_updateColumn")]
+    partial class updateColumn
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,7 +38,7 @@ namespace speedCode.Migrations
 
             modelBuilder.Entity("speedCode.Model.Profiles", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
@@ -48,10 +48,10 @@ namespace speedCode.Migrations
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("NickName")
-                        .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("nick_name");
 
-                    b.HasKey("Id");
+                    b.HasKey("id");
 
                     b.ToTable("profiles");
                 });
@@ -103,9 +103,35 @@ namespace speedCode.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<Guid>("authorid")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("testCode")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("testCode");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("authorid");
+
                     b.ToTable("testCode");
+                });
+
+            modelBuilder.Entity("speedCode.Model.TestCode", b =>
+                {
+                    b.HasOne("speedCode.Model.Profiles", "author")
+                        .WithMany()
+                        .HasForeignKey("authorid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("author");
                 });
 #pragma warning restore 612, 618
         }

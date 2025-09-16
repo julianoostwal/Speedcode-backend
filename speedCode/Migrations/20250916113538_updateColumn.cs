@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace speedCode.Migrations
 {
     /// <inheritdoc />
-    public partial class update : Migration
+    public partial class updateColumn : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -26,13 +26,13 @@ namespace speedCode.Migrations
                 name: "profiles",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
-                    NickName = table.Column<string>(type: "text", nullable: false)
+                    nick_name = table.Column<string>(type: "varchar(50)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_profiles", x => x.Id);
+                    table.PrimaryKey("PK_profiles", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -74,12 +74,26 @@ namespace speedCode.Migrations
                 name: "testCode",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    testCode = table.Column<string>(type: "text", nullable: false),
+                    authorid = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_testCode", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_testCode_profiles_authorid",
+                        column: x => x.authorid,
+                        principalTable: "profiles",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_testCode_authorid",
+                table: "testCode",
+                column: "authorid");
         }
 
         /// <inheritdoc />
@@ -87,9 +101,6 @@ namespace speedCode.Migrations
         {
             migrationBuilder.DropTable(
                 name: "exercise_tests");
-
-            migrationBuilder.DropTable(
-                name: "profiles");
 
             migrationBuilder.DropTable(
                 name: "room_exercises");
@@ -102,6 +113,9 @@ namespace speedCode.Migrations
 
             migrationBuilder.DropTable(
                 name: "testCode");
+
+            migrationBuilder.DropTable(
+                name: "profiles");
         }
     }
 }

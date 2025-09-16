@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
@@ -9,12 +8,7 @@ namespace speedCode.Model
     [Index(nameof(Email), IsUnique = true), Index(nameof(NickName), IsUnique = true)]
     public class Profiles
     {
-        [Key]
-        public Guid Id { get; set; }
-
-        [Required]
-        [Column(TypeName = "text")]
-        public string NickName { get; set; }
+        [Key] public Guid id { get; set; }
 
         [Required]
         [Column(TypeName = "text")]
@@ -26,9 +20,10 @@ namespace speedCode.Model
 
         [Column(TypeName = "text")]
         public string AvatarUrl { get; set; }
-
-        [Required]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        
+        [Required] public DateTime CreatedAt { get; set; }
+        
+        [Column("nick_name", TypeName = "varchar(50)")]
+        public string? NickName { get; set; }
     }
 }

@@ -7,19 +7,12 @@ namespace speedCode.Model
     [Table("exercises")]
     public class Exercise
     {
-        [Key]
-        public Guid Id { get; set; }
+        [Key] public Guid Id { get; set; }
 
-        [Required]
-        [Column(TypeName = "text")]
-        public string Description { get; set; }
+        public string title { get; set; }
 
-        [Required]
-        [Column(TypeName = "text")]
-        public string Title { get; set; }
+        string description { get; set; }
 
-        [Required]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        [Required] public DateTime CreatedAt { get; set; }
     }
 }
