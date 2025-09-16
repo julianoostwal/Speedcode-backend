@@ -9,5 +9,13 @@ namespace speedCode.Model
     {
         [Key]
         public Guid Id { get; set; }
+
+        [Required]
+        [ForeignKey("Room")]
+        public Rooms RoomId { get; set; }
+
+        [Required]
+        [ForeignKey("Exercise")]
+        public Exercise ExerciseId { get; set; }
     }
 }

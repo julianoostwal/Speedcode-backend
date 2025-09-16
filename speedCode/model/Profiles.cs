@@ -1,10 +1,12 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace speedCode.Model
 {
     [Table("profiles")]
+    [Index(nameof(Email), IsUnique = true), Index(nameof(NickName), IsUnique = true)]
     public class Profiles
     {
         [Key]
@@ -29,6 +31,6 @@ namespace speedCode.Model
         [Required]
         [Column(TypeName = "text")]
         public string Password { get; set; }
-        
+
     }
 }

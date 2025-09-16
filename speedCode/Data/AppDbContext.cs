@@ -7,7 +7,7 @@ namespace speedCode.Data
     {
         public DbSet<Profiles> Profiles { get; set; }
         public DbSet<TestCode> TestCode { get; set; }
-        public DbSet<Room> Room { get; set; }
+        public DbSet<Rooms> Room { get; set; }
         public DbSet<RoomUser> RoomUser { get; set; }
         public DbSet<RoomExercise> RoomExercise { get; set; }
         public DbSet<ExerciseTest> ExerciseTest { get; set; }

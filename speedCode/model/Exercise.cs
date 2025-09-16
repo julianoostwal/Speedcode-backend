@@ -9,6 +9,17 @@ namespace speedCode.Model
     {
         [Key]
         public Guid Id { get; set; }
-        
+
+        [Required]
+        [Column(TypeName = "text")]
+        public string Description { get; set; }
+
+        [Required]
+        [Column(TypeName = "text")]
+        public string Title { get; set; }
+
+        [Required]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }
