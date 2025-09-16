@@ -11,7 +11,7 @@ namespace speedCode.Model
         public Guid Id { get; set; }
 
         [Required]
-        public TestCode TestId { get; set; }
+        public TestCode Test { get; set; }
 
         [Required]
         public Exercise Exercise { get; set; }

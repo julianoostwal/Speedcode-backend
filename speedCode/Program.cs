@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using speedCode.Data;
 
@@ -14,26 +15,10 @@ builder.Services.AddOpenApi();
 
 builder.WebHost.ConfigureKestrel(options => { options.ListenAnyIP(8080); });
 
-
-
+// auto migration
 var app = builder.Build();
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate();
-}
 
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-
-    var scope = app.Services.CreateScope();
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate();
-}
-
+MigrationHelper.ApplyMigrations(app);
 
 app.UseHttpsRedirection();
 
