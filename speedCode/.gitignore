@@ -12,12 +12,18 @@ bin/
 obj/
 out/
 
+
 # NuGet 包
 *.nupkg
 packages/
 project.lock.json
 project.fragment.lock.json
 artifacts/
+
+*.csproj
+*.cache
+*.dll
+*.pdb
 
 # Rider 缓存
 .idea/

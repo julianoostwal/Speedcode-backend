@@ -11,8 +11,12 @@ namespace speedCode.Model
 
         public string title { get; set; }
 
-        string description { get; set; }
+        public string description { get; set; }
 
         [Required] public DateTime CreatedAt { get; set; }
+
+        [Required] public bool isRoomExcise { get; set; }
+
+        [Required] public int points { get; set; }
     }
 }

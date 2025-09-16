@@ -262,3 +262,4 @@
 /Applications/XAMPP/xamppfiles/htdocs/Codes/Portfolio-examen-backend/speedCode/obj/Debug/net9.0/speedCode.pdb
 /Applications/XAMPP/xamppfiles/htdocs/Codes/Portfolio-examen-backend/speedCode/obj/Debug/net9.0/speedCode.genruntimeconfig.cache
 /Applications/XAMPP/xamppfiles/htdocs/Codes/Portfolio-examen-backend/speedCode/obj/Debug/net9.0/ref/speedCode.dll
+/Applications/XAMPP/xamppfiles/htdocs/Codes/Portfolio-examen-backend/speedCode/bin/Debug/net9.0/model/appsettings.json
