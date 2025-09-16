@@ -22,6 +22,17 @@ namespace speedCode.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("speedCode.Model.ExerciseTest", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("exercise_tests");
+                });
+
             modelBuilder.Entity("speedCode.Model.Profiles", b =>
                 {
                     b.Property<Guid>("Id")
@@ -40,6 +51,47 @@ namespace speedCode.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("profiles");
+                });
+
+            modelBuilder.Entity("speedCode.Model.Room", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("RoomName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("rooms");
+                });
+
+            modelBuilder.Entity("speedCode.Model.RoomExercise", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("room_exercises");
+                });
+
+            modelBuilder.Entity("speedCode.Model.RoomUser", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("room_users");
                 });
 
             modelBuilder.Entity("speedCode.Model.TestCode", b =>
