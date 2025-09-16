@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace speedCode.Model
 {
@@ -9,6 +10,12 @@ namespace speedCode.Model
     {
         [Key]
         public Guid Id { get; set; }
+
+        [Required]
+        public Rooms Room { get; set; }
+
+        [Required]
+        public Profiles Profile{ get; set; }
 
         [Required]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
