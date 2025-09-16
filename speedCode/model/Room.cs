@@ -15,9 +15,9 @@ namespace speedCode.Model
         [Column(TypeName = "text")]
         public string RoomName { get; set; }
 
-        [Required]
-        [Column(TypeName = "enum")]
-        public string Level { get; set; }
+
+        public enum Level { Easy, Medium, Hard }
+        public Level RoomLevel { get; set; }
 
         [Required]
         [Column(TypeName = "boolean")]
