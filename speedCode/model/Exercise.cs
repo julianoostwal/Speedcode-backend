@@ -15,7 +15,7 @@ namespace speedCode.Model
 
         [Required] public DateTime CreatedAt { get; set; }
 
-        [Required] public bool isRoomExcise { get; set; }
+        [Required] public bool isRoomExercise { get; set; }
 
         [Required] public int points { get; set; }
     }
