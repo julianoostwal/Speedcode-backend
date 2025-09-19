@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace speedCode.Controllers
@@ -7,6 +8,7 @@ namespace speedCode.Controllers
     public class HelloWorldController : ControllerBase
     {
         [HttpGet]
+        [Authorize]
         public IActionResult Get()
         {
             return Ok("Hello World!");

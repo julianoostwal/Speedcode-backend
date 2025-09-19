@@ -263,3 +263,11 @@
 /Applications/XAMPP/xamppfiles/htdocs/Codes/Portfolio-examen-backend/speedCode/obj/Debug/net9.0/speedCode.genruntimeconfig.cache
 /Applications/XAMPP/xamppfiles/htdocs/Codes/Portfolio-examen-backend/speedCode/obj/Debug/net9.0/ref/speedCode.dll
 /Applications/XAMPP/xamppfiles/htdocs/Codes/Portfolio-examen-backend/speedCode/bin/Debug/net9.0/model/appsettings.json
+/Applications/XAMPP/xamppfiles/htdocs/Codes/Portfolio-examen-backend/speedCode/bin/Debug/net9.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+/Applications/XAMPP/xamppfiles/htdocs/Codes/Portfolio-examen-backend/speedCode/bin/Debug/net9.0/Microsoft.IdentityModel.Abstractions.dll
+/Applications/XAMPP/xamppfiles/htdocs/Codes/Portfolio-examen-backend/speedCode/bin/Debug/net9.0/Microsoft.IdentityModel.JsonWebTokens.dll
+/Applications/XAMPP/xamppfiles/htdocs/Codes/Portfolio-examen-backend/speedCode/bin/Debug/net9.0/Microsoft.IdentityModel.Logging.dll
+/Applications/XAMPP/xamppfiles/htdocs/Codes/Portfolio-examen-backend/speedCode/bin/Debug/net9.0/Microsoft.IdentityModel.Protocols.dll
+/Applications/XAMPP/xamppfiles/htdocs/Codes/Portfolio-examen-backend/speedCode/bin/Debug/net9.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+/Applications/XAMPP/xamppfiles/htdocs/Codes/Portfolio-examen-backend/speedCode/bin/Debug/net9.0/Microsoft.IdentityModel.Tokens.dll
+/Applications/XAMPP/xamppfiles/htdocs/Codes/Portfolio-examen-backend/speedCode/bin/Debug/net9.0/System.IdentityModel.Tokens.Jwt.dll

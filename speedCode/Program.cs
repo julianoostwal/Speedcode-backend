@@ -1,11 +1,10 @@
-using System.Diagnostics;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using speedCode.Data;
+using speedCode.security;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-
+AuthManager.ConfigureJwt(builder);
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -15,15 +14,13 @@ builder.Services.AddOpenApi();
 
 builder.WebHost.ConfigureKestrel(options => { options.ListenAnyIP(8080); });
 
-// auto migration
 var app = builder.Build();
 
 MigrationHelper.ApplyMigrations(app);
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
