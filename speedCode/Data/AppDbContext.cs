@@ -11,7 +11,8 @@ namespace speedCode.Data
         public DbSet<RoomUser> RoomUser { get; set; }
         public DbSet<RoomExercise> RoomExercise { get; set; }
         public DbSet<ExerciseTest> ExerciseTest { get; set; }
-        public DbSet<ProfileExercise> Exercise { get; set; }
+        public DbSet<ProfileExercise> ProfileExercise { get; set; }
+        public DbSet<Exercise> Exercise { get; set; }
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
         {
