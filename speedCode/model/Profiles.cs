@@ -8,7 +8,9 @@ namespace speedCode.Model
     [Index(nameof(Email), IsUnique = true), Index(nameof(NickName), IsUnique = true)]
     public class Profiles
     {
-        [Key] public Guid id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int id { get; set; }
 
         [Required]
         [Column(TypeName = "text")]
@@ -20,8 +22,9 @@ namespace speedCode.Model
 
         [Column(TypeName = "text")]
         public string AvatarUrl { get; set; }
-        
-        [Required] public DateTime CreatedAt { get; set; }
+
+        [Required]
+        public DateTime CreatedAt { get; set; }
         
         [Column("nick_name", TypeName = "varchar(50)")]
         public string? NickName { get; set; }

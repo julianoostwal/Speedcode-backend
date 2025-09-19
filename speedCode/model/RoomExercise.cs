@@ -8,12 +8,17 @@ namespace speedCode.Model
     public class RoomExercise
     {
         [Key]
-        public Guid Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
 
         [Required]
-        public Rooms Room { get; set; }
+        public virtual int RoomId { get; set; }
+        [ForeignKey("RoomId")]
+        public virtual Rooms Room { get; set; }
 
         [Required]
-        public Exercise Exercise { get; set; }
+        public virtual int ExerciseId { get; set; }
+        [ForeignKey("ExerciseId")]
+        public virtual Exercise Exercise { get; set; }
     }
 }

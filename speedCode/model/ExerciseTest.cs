@@ -8,12 +8,17 @@ namespace speedCode.Model
     public class ExerciseTest
     {
         [Key]
-        public Guid Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
 
         [Required]
-        public TestCode Test { get; set; }
+        public virtual int TestId { get; set; }
+        [ForeignKey("TestId")]
+        public virtual TestCode Test { get; set; }
 
         [Required]
-        public Exercise Exercise { get; set; }
+        public virtual int ExerciseId { get; set; }
+        [ForeignKey("ExerciseId")]
+        public virtual Exercise Exercise { get; set; }
     }
 }

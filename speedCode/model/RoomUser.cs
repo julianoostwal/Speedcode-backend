@@ -9,17 +9,21 @@ namespace speedCode.Model
     public class RoomUser
     {
         [Key]
-        public Guid Id { get; set; }
-
-        [Required]
-        public Rooms Room { get; set; }
-
-        [Required]
-        public Profiles Profile{ get; set; }
-
-        [Required]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public int Id { get; set; }
+
+        [Required]
+        public virtual int RoomId { get; set; }
+        [ForeignKey("RoomId")]
+        public virtual Rooms Room { get; set; }
+
+        [Required]
+        public virtual int ProfileId { get; set; }
+        [ForeignKey("ProfileId")]
+        public virtual Profiles Profile { get; set; }
+
+        [Required]
+        public DateTime CreatedAt { get; set; }
         
     }
 }

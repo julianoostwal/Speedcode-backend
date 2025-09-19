@@ -6,13 +6,17 @@ namespace speedCode.Model;
 [Table("testCode")]
 public class TestCode
 {
-    [Key] public Guid Id { get; set; }
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
 
     [Required]
     [Column("testCode", TypeName = "text")]
     public string testCode { get; set; }
 
-    public Profiles author { get; set; }
+    public virtual int authorId { get; set; }
+    [ForeignKey("authorId")]
+    public virtual Profiles author { get; set; }
 
     [Required]
     public DateTime CreatedAt { get; set; }

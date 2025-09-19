@@ -9,7 +9,8 @@ namespace speedCode.Model
     public class Rooms
     {
         [Key]
-        public Guid Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
 
         [Required]
         [Column(TypeName = "text")]
@@ -24,7 +25,6 @@ namespace speedCode.Model
         public bool IsPrivate { get; set; }
 
         [Required]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; }
     }
 }

@@ -55,19 +55,19 @@ namespace speedCode.Seeder
             {
                 var testCodes = new List<TestCode>
                 {
-                    new TestCode { testCode = "Test1", author = , CreatedAt = DateTime.UtcNow },
-                    new TestCode { testCode = "Test2", author = , CreatedAt = DateTime.UtcNow }
+                    new TestCode { testCode = "Test1", authorId = , CreatedAt = DateTime.UtcNow },
+                    new TestCode { testCode = "Test2", authorId = , CreatedAt = DateTime.UtcNow }
                 };
                 context.TestCode.AddRange(testCodes);
                 context.SaveChanges();
             }
 
-            if (!context.ExerciseTest.Any())
+            /*if (!context.ExerciseTest.Any())
             {
                 var exerciseTests = new List<ExerciseTest>
                 {
-                    new ExerciseTest { Test = , Exercise =  },
-                    new ExerciseTest { Test = , Exercise =  }
+                    new ExerciseTest { TestId = , ExerciseId =  },
+                    new ExerciseTest { TestId = , ExerciseId =  }
                 };
                 context.ExerciseTest.AddRange(exerciseTests);
                 context.SaveChanges();
@@ -77,8 +77,8 @@ namespace speedCode.Seeder
             {
                 var profileExercises = new List<ProfileExercise>
                 {
-                    new ProfileExercise { Exercise = , Profile =  },
-                    new ProfileExercise { Exercise = , Profile =  }
+                    new ProfileExercise { ExerciseId = , ProfileId =  },
+                    new ProfileExercise { ExerciseId = , ProfileId =  }
                 };
                 context.ProfileExercise.AddRange(profileExercises);
                 context.SaveChanges();
@@ -88,8 +88,8 @@ namespace speedCode.Seeder
             {
                 var roomUsers = new List<RoomUser>
                 {
-                    new RoomUser { Room = , Profile = , CreatedAt = DateTime.UtcNow },
-                    new RoomUser { Room = , Profile = , CreatedAt = DateTime.UtcNow }
+                    new RoomUser { RoomId = , ProfileId = , CreatedAt = DateTime.UtcNow },
+                    new RoomUser { RoomId = , ProfileId = , CreatedAt = DateTime.UtcNow }
                 };
                 context.RoomUser.AddRange(roomUsers);
                 context.SaveChanges();
@@ -99,8 +99,8 @@ namespace speedCode.Seeder
             {
                 var roomExercises = new List<RoomExercise>
                 {
-                    new RoomExercise { Room = , Exercise =  },
-                    new RoomExercise { Room = , Exercise =  }
+                    new RoomExercise { RoomId = , ExerciseId =  },
+                    new RoomExercise { RoomId = , ExerciseId =  }
                 };
                 context.RoomExercise.AddRange(roomExercises);
                 context.SaveChanges();
