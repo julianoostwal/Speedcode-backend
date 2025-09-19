@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using speedCode.Model;
 using speedCode.Data;
 
+// Seeder is nog niet klaar moet nog verder uitgewerkt worden
 
 namespace speedCode.Seeder
 {
