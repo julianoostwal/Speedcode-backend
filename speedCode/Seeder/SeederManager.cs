@@ -8,7 +8,7 @@ using speedCode.Data;
 
 namespace speedCode.Seeder
 {
-    public class MainSeeder
+    public class SeederManager
     {
         public static void SeedDatabase(AppDbContext context)
         {
