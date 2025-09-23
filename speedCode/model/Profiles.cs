@@ -9,11 +9,8 @@ namespace speedCode.Model
     {
         [Key] public Guid id { get; set; }
 
-        [Column(TypeName = "text")]
-        public string AvatarUrl { get; set; }
-        
         [Required] public DateTime CreatedAt { get; set; }
-        
+
         [Column("nick_name", TypeName = "varchar(50)")]
         public string? NickName { get; set; }
     }
