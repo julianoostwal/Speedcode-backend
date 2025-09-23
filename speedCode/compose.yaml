@@ -2,6 +2,9 @@
 
 services:
   speedcode:
+    build:
+      context: .
+      dockerfile: Dockerfile
     image: speedcode:latest
     container_name: speedcode
     ports:
