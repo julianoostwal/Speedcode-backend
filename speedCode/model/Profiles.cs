@@ -13,7 +13,7 @@ namespace speedCode.Model
         public int id { get; set; }
 
         [Column(TypeName = "text")]
-        public string AvatarUrl { get; set; }
+        public string? AvatarUrl { get; set; }
 
         [Required]
         public DateTime CreatedAt { get; set; }

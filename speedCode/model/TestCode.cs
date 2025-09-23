@@ -14,8 +14,8 @@ public class TestCode
     [Column("testCode", TypeName = "text")]
     public string testCode { get; set; }
 
-    public virtual int authorId { get; set; }
-    [ForeignKey("authorId")]
+    public virtual int authorid { get; set; }
+    [ForeignKey("authorid")]
     public virtual Profiles author { get; set; }
 
     [Required]

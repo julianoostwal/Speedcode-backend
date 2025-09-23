@@ -8,7 +8,7 @@ public class ProfileExercise
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
+    public int id { get; set; }
 
     [Required]
     public virtual int ExerciseId { get; set; }
@@ -16,7 +16,7 @@ public class ProfileExercise
     public virtual Exercise Exercise { get; set; }
 
     [Required]
-    public virtual int ProfileId { get; set; }
-    [ForeignKey("ProfileId")]
+    public virtual int Profileid { get; set; }
+    [ForeignKey("Profileid")]
     public virtual Profiles Profile { get; set; }
 }

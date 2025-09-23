@@ -401,3 +401,11 @@ C:\Users\jmdko\bit-academy\portfolio\Portfolio-examen-backend\speedCode\obj\Debu
 /Applications/XAMPP/xamppfiles/htdocs/Codes/Portfolio-examen-backend/speedCode/bin/Debug/net9.0/Microsoft.IdentityModel.Tokens.dll
 /Applications/XAMPP/xamppfiles/htdocs/Codes/Portfolio-examen-backend/speedCode/bin/Debug/net9.0/System.IdentityModel.Tokens.Jwt.dll
 >>>>>>> main
+C:\Users\jmdko\bit-academy\portfolio\Portfolio-examen-backend\speedCode\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\jmdko\bit-academy\portfolio\Portfolio-examen-backend\speedCode\bin\Debug\net9.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\jmdko\bit-academy\portfolio\Portfolio-examen-backend\speedCode\bin\Debug\net9.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\jmdko\bit-academy\portfolio\Portfolio-examen-backend\speedCode\bin\Debug\net9.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\jmdko\bit-academy\portfolio\Portfolio-examen-backend\speedCode\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\jmdko\bit-academy\portfolio\Portfolio-examen-backend\speedCode\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\jmdko\bit-academy\portfolio\Portfolio-examen-backend\speedCode\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\jmdko\bit-academy\portfolio\Portfolio-examen-backend\speedCode\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll

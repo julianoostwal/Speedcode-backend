@@ -18,8 +18,8 @@ namespace speedCode.Model
         public virtual Rooms Room { get; set; }
 
         [Required]
-        public virtual int ProfileId { get; set; }
-        [ForeignKey("ProfileId")]
+        public virtual int Profileid { get; set; }
+        [ForeignKey("Profileid")]
         public virtual Profiles Profile { get; set; }
 
         [Required]
