@@ -18,12 +18,12 @@ namespace speedCode.Seeder
             {
                 var profiles = new List<Profiles>
                 {
-                    new Profiles { Email = "jack@example.com", Password = "Jack123!", AvatarUrl = "", CreatedAt = DateTime.UtcNow, NickName = "Jack" },
-                    new Profiles { Email = "nikita@example.com", Password = "Nikita123!", AvatarUrl = "", CreatedAt = DateTime.UtcNow, NickName = "Nikita" },
-                    new Profiles { Email = "john@example.com", Password = "John123!", AvatarUrl = "", CreatedAt = DateTime.UtcNow, NickName = "John" },
-                    new Profiles { Email = "luuk@example.com", Password = "Luuk123!", AvatarUrl = "", CreatedAt = DateTime.UtcNow, NickName = "Luuk" },
-                    new Profiles { Email = "ismael@example.com", Password = "Ismael123!", AvatarUrl = "", CreatedAt = DateTime.UtcNow, NickName = "Ismael" },
-                    new Profiles { Email = "denise@example.com", Password = "Denise123!", AvatarUrl = "", CreatedAt = DateTime.UtcNow, NickName = "Denise" }
+                    new Profiles { AvatarUrl = "", CreatedAt = DateTime.UtcNow, NickName = "Jack" },
+                    new Profiles { AvatarUrl = "", CreatedAt = DateTime.UtcNow, NickName = "Nikita" },
+                    new Profiles { AvatarUrl = "", CreatedAt = DateTime.UtcNow, NickName = "John" },
+                    new Profiles { AvatarUrl = "", CreatedAt = DateTime.UtcNow, NickName = "Luuk" },
+                    new Profiles { AvatarUrl = "", CreatedAt = DateTime.UtcNow, NickName = "Ismael" },
+                    new Profiles { AvatarUrl = "", CreatedAt = DateTime.UtcNow, NickName = "Denise" }
                 };
                 context.Profiles.AddRange(profiles);
                 context.SaveChanges();
@@ -52,23 +52,23 @@ namespace speedCode.Seeder
                 context.SaveChanges();
             }
 
-            /*if (!context.TestCode.Any())
+            if (!context.TestCode.Any())
             {
                 var testCodes = new List<TestCode>
                 {
-                    new TestCode { testCode = "Test1", authorId = , CreatedAt = DateTime.UtcNow },
-                    new TestCode { testCode = "Test2", authorId = , CreatedAt = DateTime.UtcNow }
+                    new TestCode { testCode = "TestCode1", authorId = context.Profiles.First().id, CreatedAt = DateTime.UtcNow },
+                    new TestCode { testCode = "TestCode2", authorId = context.Profiles.Skip(1).First().id, CreatedAt = DateTime.UtcNow }
                 };
                 context.TestCode.AddRange(testCodes);
                 context.SaveChanges();
             }
 
-            /*if (!context.ExerciseTest.Any())
+            if (!context.ExerciseTest.Any())
             {
                 var exerciseTests = new List<ExerciseTest>
                 {
-                    new ExerciseTest { TestId = , ExerciseId =  },
-                    new ExerciseTest { TestId = , ExerciseId =  }
+                    new ExerciseTest { TestId = context.TestCode.First().Id, ExerciseId = 1 },
+                    new ExerciseTest { TestId = context.TestCode.Skip(1).First().Id, ExerciseId = 1 }
                 };
                 context.ExerciseTest.AddRange(exerciseTests);
                 context.SaveChanges();
@@ -78,8 +78,8 @@ namespace speedCode.Seeder
             {
                 var profileExercises = new List<ProfileExercise>
                 {
-                    new ProfileExercise { ExerciseId = , ProfileId =  },
-                    new ProfileExercise { ExerciseId = , ProfileId =  }
+                    new ProfileExercise { ExerciseId = 1, ProfileId = 1 },
+                    new ProfileExercise { ExerciseId = 1, ProfileId = 2 }
                 };
                 context.ProfileExercise.AddRange(profileExercises);
                 context.SaveChanges();
@@ -89,8 +89,8 @@ namespace speedCode.Seeder
             {
                 var roomUsers = new List<RoomUser>
                 {
-                    new RoomUser { RoomId = , ProfileId = , CreatedAt = DateTime.UtcNow },
-                    new RoomUser { RoomId = , ProfileId = , CreatedAt = DateTime.UtcNow }
+                    new RoomUser { RoomId = 1, ProfileId = 1, CreatedAt = DateTime.UtcNow },
+                    new RoomUser { RoomId = 1, ProfileId = 2, CreatedAt = DateTime.UtcNow }
                 };
                 context.RoomUser.AddRange(roomUsers);
                 context.SaveChanges();
@@ -100,12 +100,12 @@ namespace speedCode.Seeder
             {
                 var roomExercises = new List<RoomExercise>
                 {
-                    new RoomExercise { RoomId = , ExerciseId =  },
-                    new RoomExercise { RoomId = , ExerciseId =  }
+                    new RoomExercise { RoomId = 1, ExerciseId = 1 },
+                    new RoomExercise { RoomId = 1, ExerciseId = 2 }
                 };
                 context.RoomExercise.AddRange(roomExercises);
                 context.SaveChanges();
-            }*/
+            }
         }
     }
 }
