@@ -9,8 +9,7 @@ namespace speedCode.Model
     public class Rooms
     {
         [Key]
-        [Column(TypeName = "uuid")]
-        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
         [Column(TypeName = "text")]

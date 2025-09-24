@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using speedCode.Model;
 using speedCode.Data;
 
-// Seeder is nog in test fase
-
 namespace speedCode.Seeder
 {
     public class SeederManager
@@ -13,19 +11,6 @@ namespace speedCode.Seeder
         public static void SeedDatabase(AppDbContext context)
         {
             context.Database.Migrate();
-
-            if (!context.Profiles.Any())
-            {
-                var profiles = new List<Profiles>
-                {
-                    new Profiles { AvatarUrl = "", CreatedAt = DateTime.UtcNow, NickName = "Joshua" }/*,
-                    new Profiles { AvatarUrl = "", CreatedAt = DateTime.UtcNow, NickName = "Luca" },
-                    new Profiles { AvatarUrl = "", CreatedAt = DateTime.UtcNow, NickName = "Zuohuang" },
-                    new Profiles { AvatarUrl = "", CreatedAt = DateTime.UtcNow, NickName = "Julian" }*/
-                };
-                context.Profiles.AddRange(profiles);
-                context.SaveChanges();
-            }
 
             if (!context.Exercise.Any())
             {
@@ -54,8 +39,7 @@ namespace speedCode.Seeder
             {
                 var testCodes = new List<TestCode>
                 {
-                    new TestCode { testCode = "TestCode1", authorid = context.Profiles.First().id, CreatedAt = DateTime.UtcNow }/*,
-                    new TestCode { testCode = "TestCode2", authorid = context.Profiles.Skip(1).First().id, CreatedAt = DateTime.UtcNow }*/
+                    new TestCode { testCode = "TestCode1", authorid = context.Profiles.First().id, CreatedAt = DateTime.UtcNow }
                 };
                 context.TestCode.AddRange(testCodes);
                 context.SaveChanges();
@@ -65,8 +49,7 @@ namespace speedCode.Seeder
             {
                 var exerciseTests = new List<ExerciseTest>
                 {
-                    new ExerciseTest { TestId = context.TestCode.First().Id, ExerciseId = context.Exercise.First().Id }/*,
-                    new ExerciseTest { TestId = context.TestCode.Skip(1).First().Id, ExerciseId = context.Exercise.First().Id }*/
+                    new ExerciseTest { TestId = context.TestCode.First().Id, ExerciseId = context.Exercise.First().Id }
                 };
                 context.ExerciseTest.AddRange(exerciseTests);
                 context.SaveChanges();
@@ -76,8 +59,7 @@ namespace speedCode.Seeder
             {
                 var profileExercises = new List<ProfileExercise>
                 {
-                    new ProfileExercise { ExerciseId = context.Exercise.First().Id, Profileid = context.Profiles.First().id }/*,
-                    new ProfileExercise { ExerciseId = context.Exercise.First().Id, Profileid = context.Profiles.Skip(1).First().id }*/
+                    new ProfileExercise { ExerciseId = context.Exercise.First().Id, Profileid = context.Profiles.First().id }
                 };
                 context.ProfileExercise.AddRange(profileExercises);
                 context.SaveChanges();
@@ -87,8 +69,7 @@ namespace speedCode.Seeder
             {
                 var roomUsers = new List<RoomUser>
                 {
-                    new RoomUser { RoomId = context.Rooms.First().Id, Profileid = context.Profiles.First().id, CreatedAt = DateTime.UtcNow }/*,
-                    new RoomUser { RoomId = context.Rooms.First().Id, Profileid = context.Profiles.Skip(1).First().id, CreatedAt = DateTime.UtcNow }*/
+                    new RoomUser { RoomId = context.Rooms.First().Id, Profileid = context.Profiles.First().id, CreatedAt = DateTime.UtcNow }
                 };
                 context.RoomUser.AddRange(roomUsers);
                 context.SaveChanges();
@@ -98,8 +79,7 @@ namespace speedCode.Seeder
             {
                 var roomExercises = new List<RoomExercise>
                 {
-                    new RoomExercise { RoomId = context.Rooms.First().Id, ExerciseId = context.Exercise.First().Id }/*,
-                    new RoomExercise { RoomId = context.Rooms.First().Id, ExerciseId = context.Exercise.Skip(1).First().Id.ToString() }*/
+                    new RoomExercise { RoomId = context.Rooms.First().Id, ExerciseId = context.Exercise.First().Id }
                 };
                 context.RoomExercise.AddRange(roomExercises);
                 context.SaveChanges();

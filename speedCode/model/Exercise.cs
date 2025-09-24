@@ -8,8 +8,7 @@ namespace speedCode.Model
     public class Exercise
     {
         [Key]
-        [Column(TypeName = "uuid")]
-        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         public string title { get; set; }
 

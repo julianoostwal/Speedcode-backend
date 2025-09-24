@@ -9,7 +9,7 @@ namespace speedCode.Model
     {
         [Key]
         [Column(TypeName = "uuid")]
-        public string id { get; set; }
+        public Guid id { get; set; }
 
         [Column("avatar_url", TypeName = "text")]
         public string? AvatarUrl { get; set; }

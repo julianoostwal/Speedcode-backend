@@ -9,16 +9,15 @@ namespace speedCode.Model
     public class RoomUser
     {
         [Key]
-        [Column(TypeName = "uuid")]
-        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
-        public virtual string RoomId { get; set; }
+        public virtual Guid RoomId { get; set; }
         [ForeignKey("RoomId")]
         public virtual Rooms Room { get; set; }
 
         [Required]
-        public virtual string Profileid { get; set; }
+        public virtual Guid Profileid { get; set; }
         [ForeignKey("Profileid")]
         public virtual Profiles Profile { get; set; }
 

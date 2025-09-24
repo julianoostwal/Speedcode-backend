@@ -1,22 +1,22 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace speedCode.Model;
-
-[Table("profile_exercises")]
-public class ProfileExercise
+namespace speedCode.Model
 {
-    [Key]
-    [Column(TypeName = "uuid")]
-    public string Id { get; set; } = Guid.NewGuid().ToString();
+    [Table("profile_exercises")]
+    public class ProfileExercise
+    {
+        [Key]
+        public Guid Id { get; set; } = Guid.NewGuid();
 
-    [Required]
-    public virtual string ExerciseId { get; set; }
-    [ForeignKey("ExerciseId")]
-    public virtual Exercise Exercise { get; set; }
+        [Required]
+        public virtual Guid ExerciseId { get; set; }
+        [ForeignKey("ExerciseId")]
+        public virtual Exercise Exercise { get; set; }
 
-    [Required]
-    public virtual string Profileid { get; set; }
-    [ForeignKey("Profileid")]
-    public virtual Profiles Profile { get; set; }
+        [Required]
+        public virtual Guid Profileid { get; set; }
+        [ForeignKey("Profileid")]
+        public virtual Profiles Profile { get; set; }
+    }
 }

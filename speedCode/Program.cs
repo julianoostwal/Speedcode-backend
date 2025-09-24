@@ -18,13 +18,13 @@ builder.WebHost.ConfigureKestrel(options => { options.ListenAnyIP(8080); });
 var app = builder.Build();
 
 MigrationHelper.ApplyMigrations(app);
-/*
+
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     SeederManager.SeedDatabase(db);
 }
-*/
+
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
