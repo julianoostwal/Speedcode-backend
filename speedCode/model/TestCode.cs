@@ -7,14 +7,14 @@ namespace speedCode.Model;
 public class TestCode
 {
     [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
+    [Column(TypeName = "uuid")]
+    public string Id { get; set; } = Guid.NewGuid().ToString();
 
     [Required]
     [Column("testCode", TypeName = "text")]
     public string testCode { get; set; }
 
-    public virtual int authorid { get; set; }
+    public virtual string authorid { get; set; }
     [ForeignKey("authorid")]
     public virtual Profiles author { get; set; }
 

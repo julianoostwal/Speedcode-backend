@@ -8,8 +8,8 @@ namespace speedCode.Model
     public class Profiles
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int id { get; set; }
+        [Column(TypeName = "uuid")]
+        public string id { get; set; }
 
         [Column("avatar_url", TypeName = "text")]
         public string? AvatarUrl { get; set; }

@@ -8,8 +8,8 @@ namespace speedCode.Model
     public class Exercise
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        [Column(TypeName = "uuid")]
+        public string Id { get; set; } = Guid.NewGuid().ToString();
 
         public string title { get; set; }
 
