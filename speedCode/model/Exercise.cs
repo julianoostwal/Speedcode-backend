@@ -22,5 +22,8 @@ namespace speedCode.Model
 
         [Required]
         public int points { get; set; }
+        
+        public virtual ICollection<ExerciseTest> ExerciseTests { get; set; } = new List<ExerciseTest>();
+
     }
 }

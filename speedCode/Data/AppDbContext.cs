@@ -20,12 +20,26 @@ namespace speedCode.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            
+            modelBuilder.Entity<ExerciseTest>()
+                .HasKey(et => new { et.exerciseId, et.testId });
+
+            modelBuilder.Entity<ExerciseTest>()
+                .HasOne(et => et.exercise)
+                .WithMany(e => e.ExerciseTests)
+                .HasForeignKey(et => et.exerciseId);
+
+            modelBuilder.Entity<ExerciseTest>()
+                .HasOne(et => et.test)
+                .WithMany(t => t.ExerciseTests)
+                .HasForeignKey(et => et.testId);
+            
             modelBuilder.Entity<Profiles>()
                 .Property(p => p.createdAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             modelBuilder.Entity<TestCode>()
-                .Property(u => u.createdAt)
+                .Property(u => u.CreatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             modelBuilder.Entity<Rooms>()

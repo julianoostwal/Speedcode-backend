@@ -1,6 +1,4 @@
-using System;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using speedCode.Model;
 using speedCode.Data;
 
@@ -16,8 +14,16 @@ namespace speedCode.Seeder
             {
                 var exercises = new List<Exercise>
                 {
-                    new Exercise { title = "Opdracht1", description = "Test1", isRoomExcise = false, createdAt = DateTime.UtcNow, points = 10 },
-                    new Exercise { title = "Opdracht2", description = "Test2", isRoomExcise = false, createdAt = DateTime.UtcNow, points = 5 }
+                    new Exercise
+                    {
+                        title = "Opdracht1", description = "Test1", isRoomExcise = false, createdAt = DateTime.UtcNow,
+                        points = 10
+                    },
+                    new Exercise
+                    {
+                        title = "Opdracht2", description = "Test2", isRoomExcise = false, createdAt = DateTime.UtcNow,
+                        points = 5
+                    }
                 };
                 context.Exercise.AddRange(exercises);
                 context.SaveChanges();
@@ -27,9 +33,19 @@ namespace speedCode.Seeder
             {
                 var rooms = new List<Rooms>
                 {
-                    new Rooms { roomName = "Room1", roomLevel = Rooms.Level.Easy, isPrivate = false, createdAt = DateTime.UtcNow },
-                    new Rooms { roomName = "Room2", roomLevel = Rooms.Level.Medium, isPrivate = false, createdAt = DateTime.UtcNow },
-                    new Rooms { roomName = "Room3", roomLevel = Rooms.Level.Hard, isPrivate = false, createdAt = DateTime.UtcNow }
+                    new Rooms
+                    {
+                        roomName = "Room1", roomLevel = Rooms.Level.Easy, isPrivate = false, createdAt = DateTime.UtcNow
+                    },
+                    new Rooms
+                    {
+                        roomName = "Room2", roomLevel = Rooms.Level.Medium, isPrivate = false,
+                        createdAt = DateTime.UtcNow
+                    },
+                    new Rooms
+                    {
+                        roomName = "Room3", roomLevel = Rooms.Level.Hard, isPrivate = false, createdAt = DateTime.UtcNow
+                    }
                 };
                 context.Rooms.AddRange(rooms);
                 context.SaveChanges();
@@ -39,7 +55,11 @@ namespace speedCode.Seeder
             {
                 var testCodes = new List<TestCode>
                 {
-                    new TestCode { expectedResult = new[] { "TestCode1" }, authorId = context.Profiles.First().id, createdAt = DateTime.UtcNow }
+                    new TestCode
+                    {
+                        ExpectedResult = new[] { "TestCode1" }, authorId = context.Profiles.First().id,
+                        CreatedAt = DateTime.UtcNow
+                    }
                 };
                 context.TestCode.AddRange(testCodes);
                 context.SaveChanges();
@@ -59,7 +79,8 @@ namespace speedCode.Seeder
             {
                 var profileExercises = new List<ProfileExercise>
                 {
-                    new ProfileExercise { exerciseId = context.Exercise.First().id, profileId = context.Profiles.First().id }
+                    new ProfileExercise
+                        { exerciseId = context.Exercise.First().id, profileId = context.Profiles.First().id }
                 };
                 context.ProfileExercise.AddRange(profileExercises);
                 context.SaveChanges();
@@ -69,7 +90,11 @@ namespace speedCode.Seeder
             {
                 var roomUsers = new List<RoomUser>
                 {
-                    new RoomUser { roomId = context.Rooms.First().id, profileId = context.Profiles.First().id, createdAt = DateTime.UtcNow }
+                    new RoomUser
+                    {
+                        roomId = context.Rooms.First().id, profileId = context.Profiles.First().id,
+                        createdAt = DateTime.UtcNow
+                    }
                 };
                 context.RoomUser.AddRange(roomUsers);
                 context.SaveChanges();
