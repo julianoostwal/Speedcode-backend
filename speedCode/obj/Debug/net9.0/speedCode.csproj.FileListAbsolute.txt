@@ -400,6 +400,7 @@ C:\Users\jmdko\bit-academy\portfolio\Portfolio-examen-backend\speedCode\obj\Debu
 /Applications/XAMPP/xamppfiles/htdocs/Codes/Portfolio-examen-backend/speedCode/bin/Debug/net9.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 /Applications/XAMPP/xamppfiles/htdocs/Codes/Portfolio-examen-backend/speedCode/bin/Debug/net9.0/Microsoft.IdentityModel.Tokens.dll
 /Applications/XAMPP/xamppfiles/htdocs/Codes/Portfolio-examen-backend/speedCode/bin/Debug/net9.0/System.IdentityModel.Tokens.Jwt.dll
+<<<<<<< HEAD
 >>>>>>> main
 C:\Users\jmdko\bit-academy\portfolio\Portfolio-examen-backend\speedCode\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\jmdko\bit-academy\portfolio\Portfolio-examen-backend\speedCode\bin\Debug\net9.0\Microsoft.IdentityModel.Abstractions.dll
@@ -409,3 +410,10 @@ C:\Users\jmdko\bit-academy\portfolio\Portfolio-examen-backend\speedCode\bin\Debu
 C:\Users\jmdko\bit-academy\portfolio\Portfolio-examen-backend\speedCode\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\Users\jmdko\bit-academy\portfolio\Portfolio-examen-backend\speedCode\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
 C:\Users\jmdko\bit-academy\portfolio\Portfolio-examen-backend\speedCode\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll
+=======
+/Applications/XAMPP/xamppfiles/htdocs/Codes/Portfolio-examen-backend/speedCode/bin/Debug/net9.0/Swashbuckle.AspNetCore.Swagger.dll
+/Applications/XAMPP/xamppfiles/htdocs/Codes/Portfolio-examen-backend/speedCode/bin/Debug/net9.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+/Applications/XAMPP/xamppfiles/htdocs/Codes/Portfolio-examen-backend/speedCode/bin/Debug/net9.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+/Applications/XAMPP/xamppfiles/htdocs/Codes/Portfolio-examen-backend/speedCode/bin/Debug/net9.0/speedCode.xml
+/Applications/XAMPP/xamppfiles/htdocs/Codes/Portfolio-examen-backend/speedCode/obj/Debug/net9.0/speedCode.xml
+>>>>>>> main
