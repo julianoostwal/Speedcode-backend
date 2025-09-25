@@ -25,5 +25,7 @@ namespace speedCode.Model
 
         [Required]
         public DateTime createdAt { get; set; }
+
+        public Guid chatId { get; set; } = Guid.Empty;
     }
 }
