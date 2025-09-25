@@ -8,12 +8,12 @@ public class TestCode
 {
     [Key] public Guid Id { get; set; }
 
+
     [Required]
-    [Column("testCode", TypeName = "text")]
-    public string testCode { get; set; }
+    [Column("expected_result", TypeName = "text[]")]
+    public string[] ExpectedResult { get; set; }
 
     public Profiles author { get; set; }
 
-    [Required]
-    public DateTime CreatedAt { get; set; }
+    [Required] public DateTime CreatedAt { get; set; }
 }
