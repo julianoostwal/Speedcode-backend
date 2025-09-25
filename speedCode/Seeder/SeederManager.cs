@@ -16,8 +16,8 @@ namespace speedCode.Seeder
             {
                 var exercises = new List<Exercise>
                 {
-                    new Exercise { title = "Opdracht1", description = "Test1", isRoomExcise = false, CreatedAt = DateTime.UtcNow, points = 10 },
-                    new Exercise { title = "Opdracht2", description = "Test2", isRoomExcise = false, CreatedAt = DateTime.UtcNow, points = 5 }
+                    new Exercise { title = "Opdracht1", description = "Test1", isRoomExcise = false, createdAt = DateTime.UtcNow, points = 10 },
+                    new Exercise { title = "Opdracht2", description = "Test2", isRoomExcise = false, createdAt = DateTime.UtcNow, points = 5 }
                 };
                 context.Exercise.AddRange(exercises);
                 context.SaveChanges();
@@ -27,9 +27,9 @@ namespace speedCode.Seeder
             {
                 var rooms = new List<Rooms>
                 {
-                    new Rooms { RoomName = "Room1", RoomLevel = Rooms.Level.Easy, IsPrivate = false, CreatedAt = DateTime.UtcNow },
-                    new Rooms { RoomName = "Room2", RoomLevel = Rooms.Level.Medium, IsPrivate = false, CreatedAt = DateTime.UtcNow },
-                    new Rooms { RoomName = "Room3", RoomLevel = Rooms.Level.Hard, IsPrivate = false, CreatedAt = DateTime.UtcNow }
+                    new Rooms { roomName = "Room1", roomLevel = Rooms.Level.Easy, isPrivate = false, createdAt = DateTime.UtcNow },
+                    new Rooms { roomName = "Room2", roomLevel = Rooms.Level.Medium, isPrivate = false, createdAt = DateTime.UtcNow },
+                    new Rooms { roomName = "Room3", roomLevel = Rooms.Level.Hard, isPrivate = false, createdAt = DateTime.UtcNow }
                 };
                 context.Rooms.AddRange(rooms);
                 context.SaveChanges();
@@ -39,7 +39,7 @@ namespace speedCode.Seeder
             {
                 var testCodes = new List<TestCode>
                 {
-                    new TestCode { testCode = "TestCode1", authorid = context.Profiles.First().id, CreatedAt = DateTime.UtcNow }
+                    new TestCode { expectedResult = new[] { "TestCode1" }, authorId = context.Profiles.First().id, createdAt = DateTime.UtcNow }
                 };
                 context.TestCode.AddRange(testCodes);
                 context.SaveChanges();
@@ -49,7 +49,7 @@ namespace speedCode.Seeder
             {
                 var exerciseTests = new List<ExerciseTest>
                 {
-                    new ExerciseTest { TestId = context.TestCode.First().Id, ExerciseId = context.Exercise.First().Id }
+                    new ExerciseTest { testId = context.TestCode.First().id, exerciseId = context.Exercise.First().id }
                 };
                 context.ExerciseTest.AddRange(exerciseTests);
                 context.SaveChanges();
@@ -59,7 +59,7 @@ namespace speedCode.Seeder
             {
                 var profileExercises = new List<ProfileExercise>
                 {
-                    new ProfileExercise { ExerciseId = context.Exercise.First().Id, Profileid = context.Profiles.First().id }
+                    new ProfileExercise { exerciseId = context.Exercise.First().id, profileId = context.Profiles.First().id }
                 };
                 context.ProfileExercise.AddRange(profileExercises);
                 context.SaveChanges();
@@ -69,7 +69,7 @@ namespace speedCode.Seeder
             {
                 var roomUsers = new List<RoomUser>
                 {
-                    new RoomUser { RoomId = context.Rooms.First().Id, Profileid = context.Profiles.First().id, CreatedAt = DateTime.UtcNow }
+                    new RoomUser { roomId = context.Rooms.First().id, profileId = context.Profiles.First().id, createdAt = DateTime.UtcNow }
                 };
                 context.RoomUser.AddRange(roomUsers);
                 context.SaveChanges();
@@ -79,7 +79,7 @@ namespace speedCode.Seeder
             {
                 var roomExercises = new List<RoomExercise>
                 {
-                    new RoomExercise { RoomId = context.Rooms.First().Id, ExerciseId = context.Exercise.First().Id }
+                    new RoomExercise { roomId = context.Rooms.First().id, exerciseId = context.Exercise.First().id }
                 };
                 context.RoomExercise.AddRange(roomExercises);
                 context.SaveChanges();

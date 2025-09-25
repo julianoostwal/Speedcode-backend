@@ -9,21 +9,21 @@ namespace speedCode.Model
     public class Rooms
     {
         [Key]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid id { get; set; } = Guid.NewGuid();
 
         [Required]
         [Column(TypeName = "text")]
-        public string RoomName { get; set; }
+        public string roomName { get; set; }
 
 
         public enum Level { Easy, Medium, Hard }
-        public Level RoomLevel { get; set; }
+        public Level roomLevel { get; set; }
 
         [Required]
         [Column(TypeName = "boolean")]
-        public bool IsPrivate { get; set; }
+        public bool isPrivate { get; set; }
 
         [Required]
-        public DateTime CreatedAt { get; set; }
+        public DateTime createdAt { get; set; }
     }
 }

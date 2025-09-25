@@ -7,18 +7,18 @@ namespace speedCode.Model
     public class TestCode
     {
         [Key]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid id { get; set; } = Guid.NewGuid();
 
         [Required]
-        [Column("testCode", TypeName = "text")]
-        public string testCode { get; set; }
+        [Column("expected_result", TypeName = "text[]")]
+        public string[] expectedResult { get; set; }
 
         [Required]
-        public virtual Guid authorid { get; set; }
-        [ForeignKey("authorid")]
+        public virtual Guid authorId { get; set; }
+        [ForeignKey("authorId")]
         public virtual Profiles author { get; set; }
 
         [Required]
-        public DateTime CreatedAt { get; set; }
+        public DateTime createdAt { get; set; }
     }
 }

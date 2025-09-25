@@ -8,16 +8,16 @@ namespace speedCode.Model
     public class ExerciseTest
     {
         [Key]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid id { get; set; } = Guid.NewGuid();
 
         [Required]
-        public virtual Guid TestId { get; set; }
-        [ForeignKey("TestId")]
-        public virtual TestCode Test { get; set; }
+        public virtual Guid testId { get; set; }
+        [ForeignKey("testId")]
+        public virtual TestCode test { get; set; }
 
         [Required]
-        public virtual Guid ExerciseId { get; set; }
-        [ForeignKey("ExerciseId")]
-        public virtual Exercise Exercise { get; set; }
+        public virtual Guid exerciseId { get; set; }
+        [ForeignKey("exerciseId")]
+        public virtual Exercise exercise { get; set; }
     }
 }

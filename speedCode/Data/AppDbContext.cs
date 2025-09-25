@@ -21,15 +21,15 @@ namespace speedCode.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Profiles>()
-                .Property(p => p.CreatedAt)
+                .Property(p => p.createdAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             modelBuilder.Entity<TestCode>()
-                .Property(u => u.CreatedAt)
+                .Property(u => u.createdAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             modelBuilder.Entity<Rooms>()
-                .Property(e => e.RoomLevel)
+                .Property(e => e.roomLevel)
                 .HasConversion<string>();
         }
     }

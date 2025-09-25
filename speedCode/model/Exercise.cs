@@ -8,14 +8,14 @@ namespace speedCode.Model
     public class Exercise
     {
         [Key]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid id { get; set; } = Guid.NewGuid();
 
         public string title { get; set; }
 
         public string description { get; set; }
 
         [Required]
-        public DateTime CreatedAt { get; set; }
+        public DateTime createdAt { get; set; }
 
         [Required]
         public bool isRoomExcise { get; set; }
