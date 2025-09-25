@@ -1,10 +1,6 @@
 {
   "version": 2,
-<<<<<<< HEAD
-  "dgSpecHash": "25QaHA86yEU=",
-=======
-  "dgSpecHash": "B1bAAli9Wxw=",
->>>>>>> f8187fda3ef2aacceb7fd19d066cfc96d8480305
+  "dgSpecHash": "ovBTzWYX9EM=",
   "success": true,
   "projectFilePath": "C:\\Users\\jmdko\\bit-academy\\portfolio\\Portfolio-examen-backend\\speedCode\\speedCode.csproj",
   "expectedPackageFiles": [
