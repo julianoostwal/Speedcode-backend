@@ -8,6 +8,7 @@ services:
     image: speedcode:latest
     container_name: speedcode
     environment:
+      judge0__BaseUrl: "https://judge0.speedcode.tech"
       supabaseAuth__jwtSecret: "4ll8g3Zi7taW7ZbCvegdN7dMF1ArKbjs"
       SupabaseAuth__Authority: "https://supabase.speedcode.tech/auth/v1"
       SupabaseAuth__MetadataAddress: "https://supabase.speedcode.tech/auth/v1/.well-known/openid-configuration"

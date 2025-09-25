@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using speedCode.codeTesting;
 
 namespace speedCode.Controllers
 {
@@ -10,6 +11,14 @@ namespace speedCode.Controllers
     [Route("[controller]")]
     public class HelloWorldController : ControllerBase
     {
+        private readonly Judge0Client _judge0Client;
+
+        public HelloWorldController(Judge0Client judge0Client)
+        {
+            _judge0Client = judge0Client;
+        }
+
+
         /// <summary>
         /// Return hello world
         /// </summary>
@@ -24,5 +33,19 @@ namespace speedCode.Controllers
         {
             return Ok("Hello World!");
         }
+
+        [HttpGet("submit-code")]
+        public async Task<IActionResult> SubmitCode()
+        {
+            var result = await _judge0Client.SubmitCodeAsync("print('Hello World')", 71);
+    
+            return Ok(new
+            {
+                Output = result.Stdout,
+                Error = result.Stderr,
+                Status = result.Status?.Description
+            });
+        }
+
     }
 }

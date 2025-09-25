@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using speedCode.codeTesting;
 using speedCode.Data;
 using speedCode.security;
 
 var builder = WebApplication.CreateBuilder(args);
 AuthManager.ConfigureJwt(builder);
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -21,6 +21,13 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 builder.WebHost.ConfigureKestrel(options => { options.ListenAnyIP(8080); });
+
+
+builder.Services.AddSingleton<Judge0Client>(sp =>
+{
+    var httpClient = new HttpClient { BaseAddress = new Uri(builder.Configuration["Judge0:BaseUrl"]) };
+    return new Judge0Client(httpClient);
+});
 
 var app = builder.Build();
 
