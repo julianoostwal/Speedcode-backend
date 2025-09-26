@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using speedCode.codeTesting;
+using speedCode.services;
 
 namespace speedCode.Controllers;
 
@@ -9,9 +11,18 @@ namespace speedCode.Controllers;
 [Route("[controller]")]
 public class JudgeCodeController : ControllerBase
 {
+    private readonly JudgeCodeService _judgeCodeService;
+
+    public JudgeCodeController(JudgeCodeService judgeCodeService)
+    {
+        _judgeCodeService = judgeCodeService;
+    }
+
     [HttpGet("judgecode")]
     public IActionResult Get(string code, string languageId, string exerciseId)
     {
+        _judgeCodeService.TestCodeAsync(code, Guid.Parse(exerciseId), 70);
+       
         return Ok("Hello World!");
     }
 }

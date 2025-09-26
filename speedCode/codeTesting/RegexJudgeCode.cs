@@ -1,13 +1,32 @@
+using System.Text.RegularExpressions;
+using speedCode.codeTesting.enums;
+using speedCode.Utils;
+
 namespace speedCode.codeTesting;
 
 public class RegexJudgeCode : JudgeCode
 {
-    public string[] ExpectedResults { get; set; }
-    public string CheckType { get; set; }
-    public string Code { get; set; }
+    public override required string[] ExpectedResults { get; set; }
+    public override required string OutPut { get; set; }
 
-    public override JudgeCodeTestResults TestCode(string code, string[] expectedResults)
+    public override JudgeCodeTestResults TestOutput()
     {
-        throw new NotImplementedException();
+        JudgeCodeTestResults results = new JudgeCodeTestResults();
+        foreach (var expectedResult in ExpectedResults)
+        {
+            Match match = Regex.Match(OutPut, expectedResult);
+            results.Log = new JudgeCodeTestLog
+            {
+                Regex = expectedResult,
+                Accepted = match.Success
+            };
+
+            if (!match.Success)
+            {
+                results.Status = JudgeCodeTestStatus.NotPassed;
+            }
+        }
+
+        return results;
     }
 }

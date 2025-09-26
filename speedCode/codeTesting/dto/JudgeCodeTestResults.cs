@@ -1,7 +1,9 @@
+using speedCode.codeTesting.enums;
+
 namespace speedCode.codeTesting;
 
 public class JudgeCodeTestResults
 {
-    string results;
-    string status;
+    public JudgeCodeTestLog? Log { get; set; }
+    public JudgeCodeTestStatus? Status { get; set; }
 }

@@ -4,6 +4,7 @@ using speedCode.codeTesting;
 using speedCode.Data;
 using speedCode.security;
 using speedCode.Seeder;
+using speedCode.services;
 
 var builder = WebApplication.CreateBuilder(args);
 AuthManager.ConfigureJwt(builder);
@@ -29,6 +30,9 @@ builder.Services.AddSingleton<Judge0Client>(sp =>
     var httpClient = new HttpClient { BaseAddress = new Uri(builder.Configuration["Judge0:BaseUrl"]) };
     return new Judge0Client(httpClient);
 });
+
+builder.Services.AddHttpClient<Judge0Client>();
+builder.Services.AddTransient<JudgeCodeService>();
 
 var app = builder.Build();
 
