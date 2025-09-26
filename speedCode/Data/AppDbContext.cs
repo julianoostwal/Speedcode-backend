@@ -13,6 +13,9 @@ namespace speedCode.Data
         public DbSet<ExerciseTest> ExerciseTest { get; set; }
         public DbSet<ProfileExercise> ProfileExercise { get; set; }
         public DbSet<Exercise> Exercise { get; set; }
+        public DbSet<Achievement> Achievement { get; set; }
+        public DbSet<ProfileAchivement> ProfileAchievement { get; set; }
+
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
         {
@@ -39,7 +42,7 @@ namespace speedCode.Data
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             modelBuilder.Entity<TestCode>()
-                .Property(u => u.CreatedAt)
+                .Property(u => u.createdAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             modelBuilder.Entity<Rooms>()

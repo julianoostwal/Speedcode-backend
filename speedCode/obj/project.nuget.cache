@@ -1,6 +1,10 @@
 {
   "version": 2,
+<<<<<<< HEAD
   "dgSpecHash": "B1bAAli9Wxw=",
+=======
+  "dgSpecHash": "ovBTzWYX9EM=",
+>>>>>>> upstream/main
   "success": true,
   "projectFilePath": "/Applications/XAMPP/xamppfiles/htdocs/Codes/Portfolio-examen-backend/speedCode/speedCode.csproj",
   "expectedPackageFiles": [

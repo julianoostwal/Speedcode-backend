@@ -34,6 +34,7 @@ builder.Services.AddSingleton<Judge0Client>(sp =>
 builder.Services.AddHttpClient<Judge0Client>();
 builder.Services.AddTransient<JudgeCodeService>();
 
+
 var app = builder.Build();
 
 MigrationHelper.ApplyMigrations(app);

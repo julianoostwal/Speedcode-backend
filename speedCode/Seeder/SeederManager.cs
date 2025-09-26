@@ -57,8 +57,8 @@ namespace speedCode.Seeder
                 {
                     new TestCode
                     {
-                        ExpectedResult = new[] { "TestCode1" }, authorId = context.Profiles.First().id,
-                        CreatedAt = DateTime.UtcNow
+                        expectedResult = new[] { "TestCode1" }, authorId = context.Profiles.First().id,
+                        createdAt = DateTime.UtcNow
                     }
                 };
                 context.TestCode.AddRange(testCodes);
@@ -107,6 +107,45 @@ namespace speedCode.Seeder
                     new RoomExercise { roomId = context.Rooms.First().id, exerciseId = context.Exercise.First().id }
                 };
                 context.RoomExercise.AddRange(roomExercises);
+                context.SaveChanges();
+            }
+
+            if (!context.Achievement.Any())
+            {
+                var Achievement = new List<Achievement>
+                {
+                    new Achievement
+                    {
+                        achievementIcon = "🏆", achievementName = "Speed Demon",
+                        achievementDescription = "Achieved 90+ WPM"
+                    },
+                    new Achievement
+                    {
+                        achievementIcon = "🎯", achievementName = "Precision Master",
+                        achievementDescription = "99% accuracy in a race"
+                    },
+                    new Achievement
+                    {
+                        achievementIcon = "🔥", achievementName = "Hot Streak",
+                        achievementDescription = "10 day coding streak"
+                    },
+                    new Achievement
+                    {
+                        achievementIcon = "⚡", achievementName = "Lightning Fast",
+                        achievementDescription = "Complete race under 2 minutes"
+                    },
+                    new Achievement
+                    {
+                        achievementIcon = "🌟", achievementName = "Rising Star",
+                        achievementDescription = "Top 100 this month"
+                    },
+                    new Achievement
+                    {
+                        achievementIcon = "💎", achievementName = "Diamond Coder",
+                        achievementDescription = "500 races completed"
+                    }
+                };
+                context.Achievement.AddRange(Achievement);
                 context.SaveChanges();
             }
         }

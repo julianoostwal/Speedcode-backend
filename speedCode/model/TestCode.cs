@@ -10,7 +10,7 @@ namespace speedCode.Model
 
         [Required]
         [Column("expected_result", TypeName = "text[]")]
-        public string[] ExpectedResult { get; set; }
+        public string[] expectedResult { get; set; }
 
         [Required] public virtual Guid authorId { get; set; }
         [ForeignKey("authorId")] public virtual Profiles author { get; set; }
@@ -24,8 +24,8 @@ namespace speedCode.Model
 
         [Column("type")] [Required] public TestType Type { get; set; }
 
-        [Required] public DateTime CreatedAt { get; set; }
 
         public virtual ICollection<ExerciseTest> ExerciseTests { get; set; } = new List<ExerciseTest>();
+        [Required] public DateTime createdAt { get; set; }
     }
 }
