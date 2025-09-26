@@ -12,7 +12,6 @@
 bin/
 obj/
 out/
-/.idea
 
 /bin
 /obj
