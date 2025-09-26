@@ -1,0 +1,68 @@
+# Visual Studio / Rider / IDE 文件
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+.idea/
+*.dotSettings.user
+
+# Build 产物
+bin/
+obj/
+out/
+
+/bin
+/obj
+<<<<<<< HEAD
+
+=======
+>>>>>>> efa0314 (update gitlgnore)
+# NuGet 包
+*.nupkg
+packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+*.csproj
+*.cache
+*.dll
+*.pdb
+
+# Rider 缓存
+.idea/
+*.iml
+.idea_modules/
+
+# ASP.NET / .NET 输出文件
+*.dll
+*.exe
+*.pdb
+*.app
+*.dbmdl
+
+# EF Migrations
+Migrations/*.Designer.cs
+Migrations/*.resx
+
+# Node / frontend
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# 日志文件
+*.log
+
+# 操作系统文件
+.DS_Store
+Thumbs.db
+
+# 用户特定配置文件
+*.env
+.env.local
+.env.*.local
+
+# 其他临时文件
+*.tmp
+*.swp
