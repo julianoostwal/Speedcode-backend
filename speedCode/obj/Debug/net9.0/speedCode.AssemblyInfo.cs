@@ -14,11 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("speedCode")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-<<<<<<< HEAD
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5a5603f82129deea0e7d0308b3630840a06eccf6")]
-=======
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+52fd19e7c690fa9403efcbf947c3f183fe577ef5")]
->>>>>>> upstream/main
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e185af56c05163036a521e61cdef5e658cd6084f")]
 [assembly: System.Reflection.AssemblyProductAttribute("speedCode")]
 [assembly: System.Reflection.AssemblyTitleAttribute("speedCode")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
