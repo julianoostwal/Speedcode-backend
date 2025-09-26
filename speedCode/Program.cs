@@ -30,6 +30,8 @@ builder.Services.AddSingleton<Judge0Client>(sp =>
     return new Judge0Client(httpClient);
 });
 
+builder.Services.AddHttpClient();
+
 var app = builder.Build();
 
 MigrationHelper.ApplyMigrations(app);
