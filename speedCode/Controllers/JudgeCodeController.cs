@@ -19,10 +19,12 @@ public class JudgeCodeController : ControllerBase
     }
 
     [HttpGet("judgecode")]
-    public IActionResult Get(string code, string languageId, string exerciseId)
+    // string code, string languageId, string exerciseId
+    public IActionResult Get()
     {
-        _judgeCodeService.TestCodeAsync(code, Guid.Parse(exerciseId), 70);
-       
+        // _judgeCodeService.TestCodeAsync(code, Guid.Parse(exerciseId), 70);
+        _judgeCodeService.TestCodeAsync();
+
         return Ok("Hello World!");
     }
 }

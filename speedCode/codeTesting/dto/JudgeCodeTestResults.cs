@@ -4,6 +4,6 @@ namespace speedCode.codeTesting;
 
 public class JudgeCodeTestResults
 {
-    public JudgeCodeTestLog? Log { get; set; }
-    public JudgeCodeTestStatus? Status { get; set; }
+    public List<JudgeCodeTestLog> Logs { get; set; } = new List<JudgeCodeTestLog>();
+    public JudgeCodeTestStatus Status { get; set; }
 }

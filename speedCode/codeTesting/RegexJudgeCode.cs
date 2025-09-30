@@ -1,9 +1,11 @@
 using System.Text.RegularExpressions;
+using speedCode.codeTesting.attributes;
 using speedCode.codeTesting.enums;
-using speedCode.Utils;
+using speedCode.dto;
 
 namespace speedCode.codeTesting;
 
+[JudgeTypesAttributes(TestType.Regex)]
 public class RegexJudgeCode : JudgeCode
 {
     public override required string[] ExpectedResults { get; set; }
@@ -15,11 +17,12 @@ public class RegexJudgeCode : JudgeCode
         foreach (var expectedResult in ExpectedResults)
         {
             Match match = Regex.Match(OutPut, expectedResult);
-            results.Log = new JudgeCodeTestLog
+            results.Logs.Add(new JudgeCodeTestLog
             {
                 Regex = expectedResult,
                 Accepted = match.Success
-            };
+            });
+
 
             if (!match.Success)
             {

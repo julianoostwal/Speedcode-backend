@@ -30,20 +30,18 @@ builder.Services.AddSingleton<Judge0Client>(sp =>
     var httpClient = new HttpClient { BaseAddress = new Uri(builder.Configuration["Judge0:BaseUrl"]) };
     return new Judge0Client(httpClient);
 });
-
-builder.Services.AddHttpClient<Judge0Client>();
 builder.Services.AddTransient<JudgeCodeService>();
 
 
 var app = builder.Build();
 
-MigrationHelper.ApplyMigrations(app);
+// MigrationHelper.ApplyMigrations(app);
 
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    SeederManager.SeedDatabase(db);
-}
+// using (var scope = app.Services.CreateScope())
+// {
+//     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+//     SeederManager.SeedDatabase(db);
+// }
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
