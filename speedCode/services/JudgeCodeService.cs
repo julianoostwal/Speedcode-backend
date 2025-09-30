@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using speedCode.codeTesting;
 using speedCode.Data;
+using speedCode.dto;
 using speedCode.Model;
 
 namespace speedCode.services;
@@ -16,14 +17,10 @@ public class JudgeCodeService
         _dbContext = dbContext;
     }
 
-    public async void TestCodeAsync(string code, Guid exerciseId, int languageId)
+    public async void TestCodeAsync()
     {
-        List<TestCode> testCodes = await _dbContext.ExerciseTest
-            .Where(et => et.exerciseId == exerciseId)
-            .Include(et => et.test)
-            .Select(et => et.test)
-            .ToListAsync();
-
-        Console.WriteLine(testCodes);
+        Task<SubmissionResult> result = _judge0Client.SubmitCodeAsync("print('Hello World')", 70);
+        JudgeCodeFactory.CreateJudgeCode(TestType.Regex);
+        Console.WriteLine(await result);
     }
 }
