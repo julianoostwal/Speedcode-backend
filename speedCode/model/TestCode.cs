@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using speedCode.dto;
 
 namespace speedCode.Model
 {
@@ -14,13 +15,7 @@ namespace speedCode.Model
 
         [Required] public virtual Guid authorId { get; set; }
         [ForeignKey("authorId")] public virtual Profiles author { get; set; }
-
-        public enum TestType
-        {
-            Regex,
-            Exactly,
-            Contains,
-        }
+        
 
         [Column("type")] [Required] public TestType Type { get; set; }
 
