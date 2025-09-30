@@ -42,6 +42,7 @@ MigrationHelper.ApplyMigrations(app);
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    SeederManager.CreateSupabaseAuthUsersAsync(builder.Configuration["Supabase:Url"], builder.Configuration["Supabase:ServiceRoleKey"]).GetAwaiter().GetResult();
     SeederManager.SeedDatabase(db);
 }
 

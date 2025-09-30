@@ -3592,24 +3592,31 @@
     ]
   },
   "packageFolders": {
-    "/Users/zuohuangcai/.nuget/packages/": {}
+    "C:\\Users\\jmdko\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Applications/XAMPP/xamppfiles/htdocs/Codes/Portfolio-examen-backend/speedCode/speedCode.csproj",
+      "projectUniqueName": "C:\\Users\\jmdko\\bit-academy\\portfolio\\Portfolio-examen-backend\\speedCode\\speedCode.csproj",
       "projectName": "speedCode",
-      "projectPath": "/Applications/XAMPP/xamppfiles/htdocs/Codes/Portfolio-examen-backend/speedCode/speedCode.csproj",
-      "packagesPath": "/Users/zuohuangcai/.nuget/packages/",
-      "outputPath": "/Applications/XAMPP/xamppfiles/htdocs/Codes/Portfolio-examen-backend/speedCode/obj/",
+      "projectPath": "C:\\Users\\jmdko\\bit-academy\\portfolio\\Portfolio-examen-backend\\speedCode\\speedCode.csproj",
+      "packagesPath": "C:\\Users\\jmdko\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\jmdko\\bit-academy\\portfolio\\Portfolio-examen-backend\\speedCode\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "/Users/zuohuangcai/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\jmdko\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -3628,7 +3635,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.100"
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
       "net9.0": {
@@ -3694,8 +3701,16 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.101/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300/PortableRuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Problem reading the cache file C:\\Users\\jmdko\\bit-academy\\portfolio\\Portfolio-examen-backend\\speedCode\\obj\\project.nuget.cache : '<' is an invalid start of a property name. Expected a '\"'. Path: $ | LineNumber: 2 | BytePositionInLine: 0."
+    }
+  ]
 }
