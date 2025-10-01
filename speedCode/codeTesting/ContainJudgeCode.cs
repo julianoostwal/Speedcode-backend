@@ -12,7 +12,10 @@ public class ContainJudgeCode : JudgeCode
 
     public override JudgeCodeTestResults TestOutput()
     {
-        JudgeCodeTestResults results = new JudgeCodeTestResults();
+        JudgeCodeTestResults results = new JudgeCodeTestResults()
+        {
+            Status = JudgeCodeTestStatus.Passed
+        };
 
         foreach (var expected in ExpectedResults)
         {
@@ -31,10 +34,6 @@ public class ContainJudgeCode : JudgeCode
             }
         }
 
-        if (results.Status == JudgeCodeTestStatus.Passed)
-        {
-            results.Status = JudgeCodeTestStatus.Passed;
-        }
 
         return results;
     }

@@ -19,7 +19,6 @@ public class JudgeCodeController : ControllerBase
     }
 
     [HttpGet("judgecode")]
-    // string code, string languageId, string exerciseId
     public IActionResult Get()
     {
         // _judgeCodeService.TestCodeAsync(code, Guid.Parse(exerciseId), 70);

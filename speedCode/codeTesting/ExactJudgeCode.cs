@@ -12,7 +12,10 @@ public class ExactJudgeCode : JudgeCode
 
     public override JudgeCodeTestResults TestOutput()
     {
-        var results = new JudgeCodeTestResults();
+        var results = new JudgeCodeTestResults()
+        {
+            Status = JudgeCodeTestStatus.Passed
+        };
 
         foreach (var expected in ExpectedResults)
         {
@@ -28,11 +31,6 @@ public class ExactJudgeCode : JudgeCode
             {
                 results.Status = JudgeCodeTestStatus.NotPassed;
             }
-        }
-
-        if (results.Status == JudgeCodeTestStatus.Passed)
-        {
-            results.Status = JudgeCodeTestStatus.Passed;
         }
 
         return results;
