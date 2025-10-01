@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using speedCode.Model;
 using speedCode.Data;
+using speedCode.dto;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -21,15 +22,14 @@ namespace speedCode.Seeder
             var random = new Random();
             for (int i = 0; i < 6; i++)
             {
-                var email = $"{RandomString(random, 8)}@example.com";
+                var email = $"{RandomString(random, 5)}@example.com";
 
-                var usersResponse = await httpClient.GetAsync($"/auth/v1/admin/users?email={email}");
+                var usersResponse = await httpClient.GetAsync($"/api/platform/auth/default/users?email={email}");
                 if (usersResponse.IsSuccessStatusCode)
                 {
                     var usersJson = await usersResponse.Content.ReadAsStringAsync();
                     using var doc = JsonDocument.Parse(usersJson);
-                    var usersArray = doc.RootElement.GetProperty("users");
-                    if (usersArray.GetArrayLength() > 0)
+                    if (doc.RootElement.TryGetProperty("users", out var usersArray) && usersArray.GetArrayLength() > 0)
                         continue;
                 }
 
@@ -42,7 +42,16 @@ namespace speedCode.Seeder
                 var json = JsonSerializer.Serialize(payload);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
                 var response = await httpClient.PostAsync("/api/platform/auth/default/users", content);
-                response.EnsureSuccessStatusCode();
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"Failed to create user {email}: {error}");
+                }
+                else
+                {
+                    Console.WriteLine($"Created user {email}");
+                }
             }
         }
 
@@ -124,7 +133,7 @@ namespace speedCode.Seeder
 
                 for (int i = 0; i < count; i++)
                 {
-                    testCodes.Add(new TestCode { expectedResult = new[] { $"TestCode{i + 1}" }, authorId = context.Profiles.Skip(i).First().id, createdAt = DateTime.UtcNow });
+                    testCodes.Add(new TestCode { expectedResult = new[] { $"TestCode{i + 1}" }, authorId = context.Profiles.Skip(i).First().id, createdAt = DateTime.UtcNow, Type = TestType.Exactly });
                 }
                 context.TestCode.AddRange(testCodes);
                 context.SaveChanges();
