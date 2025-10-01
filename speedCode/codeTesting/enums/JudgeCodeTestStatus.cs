@@ -6,6 +6,6 @@ public enum JudgeCodeTestStatus
 {
     [Description("not passed")] NotPassed,
     [Description("passed")] Passed,
-    [Description("error")] Error
-    
+    [Description("error")] Error,
+    [Description("unknow")] Unknow
 }

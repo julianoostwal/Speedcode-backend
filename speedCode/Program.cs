@@ -35,13 +35,13 @@ builder.Services.AddTransient<JudgeCodeService>();
 
 var app = builder.Build();
 
-// MigrationHelper.ApplyMigrations(app);
+MigrationHelper.ApplyMigrations(app);
 
-// using (var scope = app.Services.CreateScope())
-// {
-//     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-//     SeederManager.SeedDatabase(db);
-// }
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    SeederManager.SeedDatabase(db);
+}
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

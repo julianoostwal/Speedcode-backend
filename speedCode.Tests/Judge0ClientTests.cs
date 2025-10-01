@@ -18,9 +18,8 @@ namespace speedCode.speedCode.Tests
                 .AddUserSecrets<Judge0ClientTests>()
                 .AddEnvironmentVariables()
                 .Build();
-
+            
             string baseUrl = config["Judge0:BaseUrl"] ?? "http://localhost:2358";
-
             var httpClient = new HttpClient
             {
                 BaseAddress = new Uri(baseUrl)
@@ -29,7 +28,7 @@ namespace speedCode.speedCode.Tests
             var client = new Judge0Client(httpClient);
 
             SubmissionResult result = await client.SubmitCodeAsync("print('Hello World')", 70);
-            
+
             Assert.Equal(Judge0Statuses.Accepted, result.Status.Id);
             Assert.Equal(result.Stdout, "Hello World\n");
         }

@@ -19,7 +19,11 @@ public class JudgeCodeService
 
     public async void TestCodeAsync()
     {
+        
+        
+        
         Task<SubmissionResult> result = _judge0Client.SubmitCodeAsync("print('Hello World')", 70);
+        
         JudgeCodeFactory.CreateJudgeCode(TestType.Regex);
         Console.WriteLine(await result);
     }
