@@ -24,7 +24,11 @@ public class RegexJudgeCode : JudgeCode
             });
 
 
-            if (!match.Success)
+            if (match.Success)
+            {
+                results.Status = JudgeCodeTestStatus.Passed;
+            }
+            else
             {
                 results.Status = JudgeCodeTestStatus.NotPassed;
             }
