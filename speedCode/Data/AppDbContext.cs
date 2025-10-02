@@ -15,6 +15,12 @@ namespace speedCode.Data
         public DbSet<Exercise> Exercise { get; set; }
         public DbSet<Achievement> Achievement { get; set; }
         public DbSet<ProfileAchivement> ProfileAchievement { get; set; }
+        public DbSet<NavItem> NavItem { get; set; }
+        public DbSet<DropdownItems> DropdownItems { get; set; }
+        public DbSet<FooterSection> FooterSection { get; set; }
+        public DbSet<FooterSectionLinks> FooterSectionLinks { get; set; }
+        public DbSet<ContactInfo> ContactInfo { get; set; }
+        public DbSet<SocialLink> SocialLink { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
@@ -23,7 +29,14 @@ namespace speedCode.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
+            modelBuilder.Entity<Profiles>()
+                .Property(p => p.createdAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            modelBuilder.Entity<Rooms>()
+                .Property(e => e.roomLevel)
+                .HasConversion<string>();
+
             modelBuilder.Entity<ExerciseTest>()
                 .HasKey(et => new { et.exerciseId, et.testId });
 
@@ -36,18 +49,10 @@ namespace speedCode.Data
                 .HasOne(et => et.test)
                 .WithMany(t => t.ExerciseTests)
                 .HasForeignKey(et => et.testId);
-            
-            modelBuilder.Entity<Profiles>()
-                .Property(p => p.createdAt)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             modelBuilder.Entity<TestCode>()
                 .Property(u => u.createdAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-            modelBuilder.Entity<Rooms>()
-                .Property(e => e.roomLevel)
-                .HasConversion<string>();
         }
     }
 }

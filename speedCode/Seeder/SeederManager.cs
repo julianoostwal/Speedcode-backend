@@ -12,25 +12,36 @@ namespace speedCode.Seeder
 {
     public class SeederManager
     {
+
+        // Creates users in Supabase Auth
+
         public static async Task CreateSupabaseAuthUsersAsync(string supabaseUrl, string serviceRoleKey)
         {
             using var httpClient = new HttpClient();
             httpClient.BaseAddress = new Uri(supabaseUrl);
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", serviceRoleKey);
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            httpClient.DefaultRequestHeaders.Add("apikey", serviceRoleKey);
 
             var random = new Random();
             for (int i = 0; i < 6; i++)
             {
                 var email = $"{RandomString(random, 5)}@example.com";
 
-                var usersResponse = await httpClient.GetAsync($"/api/platform/auth/default/users?email={email}");
+                var usersResponse = await httpClient.GetAsync($"/auth/v1/admin/users?email={email}");
+                var usersJson = await usersResponse.Content.ReadAsStringAsync();
+                Console.WriteLine($"User lookup response for {email}: {usersJson}");
                 if (usersResponse.IsSuccessStatusCode)
                 {
-                    var usersJson = await usersResponse.Content.ReadAsStringAsync();
                     using var doc = JsonDocument.Parse(usersJson);
-                    if (doc.RootElement.TryGetProperty("users", out var usersArray) && usersArray.GetArrayLength() > 0)
-                        continue;
+                    if (doc.RootElement.TryGetProperty("users", out var usersArray) && usersArray.ValueKind == JsonValueKind.Array)
+                    {
+                        bool exists = usersArray.EnumerateArray().Any(u =>
+                            u.TryGetProperty("email", out var e) && e.GetString() == email
+                        );
+                        if (exists)
+                            continue;
+                    }
                 }
 
                 var payload = new
@@ -41,7 +52,7 @@ namespace speedCode.Seeder
                 };
                 var json = JsonSerializer.Serialize(payload);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
-                var response = await httpClient.PostAsync("/api/platform/auth/default/users", content);
+                var response = await httpClient.PostAsync("/auth/v1/admin/users", content);
 
                 if (!response.IsSuccessStatusCode)
                 {
@@ -55,6 +66,8 @@ namespace speedCode.Seeder
             }
         }
 
+        // Gets a random string of lowercase letters
+
         private static string RandomString(Random random, int length)
         {
             const string chars = "abcdefghijklmnopqrstuvwxyz";
@@ -65,6 +78,8 @@ namespace speedCode.Seeder
         public static void SeedDatabase(AppDbContext context)
         {
             context.Database.Migrate();
+
+            // Seed Exercises
 
             if (!context.Exercise.Any())
             {
@@ -105,6 +120,8 @@ namespace speedCode.Seeder
                 context.SaveChanges();
             }
 
+            // Seed Rooms
+
             if (!context.Rooms.Any())
             {
                 var rooms = new List<Rooms>
@@ -126,6 +143,8 @@ namespace speedCode.Seeder
                 context.SaveChanges();
             }
 
+            // Seed TestCode
+
             if (!context.TestCode.Any() && context.Profiles.Any())
             {
                 var testCodes = new List<TestCode>();
@@ -138,6 +157,8 @@ namespace speedCode.Seeder
                 context.TestCode.AddRange(testCodes);
                 context.SaveChanges();
             }
+
+            // Seed ExerciseTest
 
             if (!context.ExerciseTest.Any() && context.TestCode.Any() && context.Exercise.Any())
             {
@@ -153,6 +174,8 @@ namespace speedCode.Seeder
                 context.SaveChanges();
             }
 
+            // Seed ProfileExercise
+
             if (!context.ProfileExercise.Any() && context.Exercise.Any() && context.Profiles.Any())
             {
                 var profileExercises = new List<ProfileExercise>();
@@ -166,6 +189,8 @@ namespace speedCode.Seeder
                 context.ProfileExercise.AddRange(profileExercises);
                 context.SaveChanges();
             }
+
+            // Seed RoomUser
 
             if (!context.RoomUser.Any() && context.Rooms.Any() && context.Profiles.Any())
             {
@@ -192,6 +217,8 @@ namespace speedCode.Seeder
                 context.SaveChanges();
             }
 
+            // Seed RoomExercise
+
             if (!context.RoomExercise.Any() && context.Rooms.Any() && context.Exercise.Any())
             {
                 var roomExercises = new List<RoomExercise>();
@@ -216,6 +243,8 @@ namespace speedCode.Seeder
                 context.RoomExercise.AddRange(roomExercises);
                 context.SaveChanges();
             }
+
+            // Seed Achievements
 
             if (!context.Achievement.Any())
             {
@@ -253,6 +282,109 @@ namespace speedCode.Seeder
                     }
                 };
                 context.Achievement.AddRange(Achievement);
+                context.SaveChanges();
+            }
+
+            // Seed ContactInfo
+
+            if (!context.ContactInfo.Any())
+            {
+                var contactInfos = new List<ContactInfo>
+                {
+                    new ContactInfo
+                    {
+                        city = "Purmerend",
+                        address = "SpinneKop 2",
+                        postalCode = "1444 GN",
+                        emailAddress = "john.doe@example.com"
+                    }
+                };
+                context.ContactInfo.AddRange(contactInfos);
+                context.SaveChanges();
+            }
+
+            // Seed SocialLinks
+
+            if (!context.SocialLink.Any())
+            {
+                var socialLinks = new List<SocialLink>
+                {
+                    new SocialLink
+                    {
+                        platform = "Github",
+                        href = "#",
+                        icon = ""
+                    }
+                };
+                context.SocialLink.AddRange(socialLinks);
+                context.SaveChanges();
+            }
+
+            // Seed DropdownItems
+
+            if (!context.DropdownItems.Any())
+            {
+                var dropdownItems = new List<DropdownItems>
+                {
+                    new DropdownItems
+                    {
+                        label = "Dropdown Item",
+                        href = "#",
+                        description = "Description for dropdown item"
+                    }
+                };
+                context.DropdownItems.AddRange(dropdownItems);
+                context.SaveChanges();
+            }
+
+            // Seed NavItems
+
+            if (!context.NavItem.Any())
+            {
+                var navItems = new List<NavItem>
+                {
+                    new NavItem
+                    {
+                        label = "Nav Item",
+                        href = "#",
+                        isDropdown = false,
+                        dropdownItemsId = context.DropdownItems.First().id
+                    }
+                };
+                context.NavItem.AddRange(navItems);
+                context.SaveChanges();
+            }
+
+            // Seed FooterSectionsLinks
+
+            if (!context.FooterSectionLinks.Any())
+            {
+                var footerSectionLinks = new List<FooterSectionLinks>
+                {
+                    new FooterSectionLinks
+                    {
+                        label = "Footer Link",
+                        href = "#",
+                        isExternal = false
+                    }
+                };
+                context.FooterSectionLinks.AddRange(footerSectionLinks);
+                context.SaveChanges();
+            }
+
+            // Seed FooterSections
+
+            if (!context.FooterSection.Any())
+            {
+                var footerSections = new List<FooterSection>
+                {
+                    new FooterSection
+                    {
+                        title = "Footer section",
+                        linksId = context.FooterSectionLinks.First().id
+                    }
+                };
+                context.FooterSection.AddRange(footerSections);
                 context.SaveChanges();
             }
         }
