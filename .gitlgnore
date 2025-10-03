@@ -14,10 +14,7 @@ out/
 /.idea
 /bin
 /obj
-<<<<<<< HEAD
 
-=======
->>>>>>> efa0314 (update gitlgnore)
 # NuGet 包
 *.nupkg
 packages/

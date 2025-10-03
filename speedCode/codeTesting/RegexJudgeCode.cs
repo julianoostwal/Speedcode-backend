@@ -20,6 +20,7 @@ public class RegexJudgeCode : JudgeCode
             results.Logs.Add(new JudgeCodeTestLog
             {
                 Regex = expectedResult,
+                TestType = TestType.Regex,
                 Accepted = match.Success
             });
 

@@ -18,6 +18,7 @@ namespace speedCode.tests
         }
     }
 
+
     public class JudgeCodeFactoryTests
     {
         [Fact]
