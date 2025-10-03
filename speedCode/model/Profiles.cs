@@ -18,5 +18,9 @@ namespace speedCode.Model
 
         [Column("nick_name", TypeName = "varchar(50)")]
         public string? nickName { get; set; }
+
+        public enum Rol { Admin, User }
+
+        public Rol profileRol { get; set; }
     }
 }

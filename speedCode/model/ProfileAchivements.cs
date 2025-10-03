@@ -21,6 +21,6 @@ namespace speedCode.Model
         public virtual Profiles profile { get; set; }
 
         [Required]
-        public DateTime gotOnDate { get; set; }
+        public DateTime createdAt { get; set; }
     }
 }
