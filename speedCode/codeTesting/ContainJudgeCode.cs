@@ -24,6 +24,7 @@ public class ContainJudgeCode : JudgeCode
 
             results.Logs.Add(new JudgeCodeTestLog
             {
+                TestType = TestType.Contains,
                 Regex = expected,
                 Accepted = contains
             });

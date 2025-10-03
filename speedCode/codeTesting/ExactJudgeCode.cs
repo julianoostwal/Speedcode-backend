@@ -24,6 +24,7 @@ public class ExactJudgeCode : JudgeCode
             results.Logs.Add(new JudgeCodeTestLog
             {
                 Regex = expected,
+                TestType = TestType.Exactly,
                 Accepted = match
             });
 
