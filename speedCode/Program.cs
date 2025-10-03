@@ -5,6 +5,7 @@ using speedCode.Data;
 using speedCode.security;
 using speedCode.Seeder;
 using speedCode.services;
+using speedCode.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 AuthManager.ConfigureJwt(builder);
@@ -18,7 +19,11 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+    });
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
@@ -34,14 +39,14 @@ builder.Services.AddTransient<JudgeCodeService>();
 
 var app = builder.Build();
 
-MigrationHelper.ApplyMigrations(app);
+/*MigrationHelper.ApplyMigrations(app);
 
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     SeederManager.CreateSupabaseAuthUsersAsync(builder.Configuration["Supabase:Url"], builder.Configuration["Supabase:ServiceRoleKey"]).GetAwaiter().GetResult();
     SeederManager.SeedDatabase(db);
-}
+}*/
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

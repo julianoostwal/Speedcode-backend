@@ -1,115 +1,147 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using speedCode.Data;
 using speedCode.Model;
-using System.Security.Claims;
+using speedCode.dto;
+
 namespace speedCode.Controllers;
 
-[Route("api/[controller]")]
 [ApiController]
-public class ApiProfilesController : ControllerBase
+[Route("api/[controller]")]
+public class ProfilesController : ControllerBase
 {
     private readonly AppDbContext _context;
 
-    public ApiProfilesController(AppDbContext context)
+    public ProfilesController(AppDbContext context)
     {
         _context = context;
     }
-    // aan werken
-    /*[HttpGet]
-    public async Task<ActionResult<IEnumerable<Profiles>>> GetApiProfiles()
+
+    // GET all
+    [HttpGet]
+    public IActionResult GetProfiles()
     {
-        return await _context.Profiles
-            .Select(x => Profiles(x))
-            .ToListAsync();
+        var profiles = _context.Profiles.ToList();
+        return Ok(profiles);
     }
-    
+
+    // GET
     [HttpGet("{id}")]
-    public async Task<ActionResult<Profiles>> GetProfile(Guid id)
+    public IActionResult GetProfile(Guid id)
     {
-        var profile = await _context.Profiles.FindAsync(id);
-
+        var profile = _context.Profiles.Find(id);
         if (profile == null)
-        {
             return NotFound();
-        }
-
-        return ProfileToDTO(profile);
-    }*/
-
-    /*[HttpPut("{id}")]
-    public async Task<IActionResult> PutProfile(Guid id, Profiles profiles)
-    {
-        if (id != profiles.id)
-        {
-            return BadRequest();
-        }
-
-        var existingProfile = await _context.Profiles.FindAsync(id);
-        if (existingProfile == null)
-        {
-            return NotFound();
-        }
-
-        existingProfile.Name = profiles.Name;
-        existingProfile.Email = profile.Email;
-
-        try
-        {
-            await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException) when (!ProfileExists(id))
-        {
-            return NotFound();
-        }
-
-        return NoContent();
+        return Ok(profile);
     }
 
-    /*[HttpPost]
-    public async Task<ActionResult<TodoItemDTO>> PostTodoItem(TodoItemDTO todoDTO)
+    // POST
+    [HttpPost]
+    public async Task<IActionResult> CreateProfile([FromBody] CreateProfileRequest request)
     {
-        var todoItem = new TodoItem
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        using var httpClient = new HttpClient();
+        var supabaseUrl = "https://supabase.speedcode.tech";
+        var serviceRoleKey = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc1NzU5MzgwMCwiZXhwIjo0OTEzMjY3NDAwLCJyb2xlIjoic2VydmljZV9yb2xlIn0.U5ovw3nz1VKJJCbKfzARWXuHTUr73U1LNtyBNyhT6pg";
+        httpClient.BaseAddress = new Uri(supabaseUrl);
+        httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", serviceRoleKey);
+        httpClient.DefaultRequestHeaders.Add("apikey", serviceRoleKey);
+
+        var payload = new
         {
-            IsComplete = todoDTO.IsComplete,
-            Name = todoDTO.Name
+            email = request.email,
+            password = request.password,
+            email_confirm = true
+        };
+        var json = System.Text.Json.JsonSerializer.Serialize(payload);
+        var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+        var response = await httpClient.PostAsync("/auth/v1/admin/users", content);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var error = await response.Content.ReadAsStringAsync();
+            return BadRequest($"Failed to create user in Supabase Auth: {error}");
+        }
+
+        var responseBody = await response.Content.ReadAsStringAsync();
+        var doc = System.Text.Json.JsonDocument.Parse(responseBody);
+        var userId = doc.RootElement.GetProperty("user").GetProperty("id").GetString();
+
+        if (!Guid.TryParse(userId, out Guid supabaseUserId))
+            return BadRequest("Invalid user ID returned from Supabase.");
+
+        if (_context.Profiles.Any(p => p.id == supabaseUserId))
+            return Conflict("Profile already exists for this user.");
+
+        var profile = new Profiles
+        {
+            avatarUrl = request.avatarUrl,
+            nickName = request.nickName,
+            role = request.role,
+            createdAt = DateTime.UtcNow
         };
 
-        _context.TodoItems.Add(todoItem);
-        await _context.SaveChangesAsync();
-
-        return CreatedAtAction(
-            nameof(GetTodoItem),
-            new { id = todoItem.Id },
-            ItemToDTO(todoItem));
+        _context.Profiles.Add(profile);
+        _context.SaveChanges();
+        return CreatedAtAction(nameof(GetProfile), new { id = profile.id }, profile);
     }
-    
-    /*[HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteTodoItem(long id)
+
+    // UPDATE
+    [HttpPut("{id}")]
+    public IActionResult UpdateProfile(Guid id, [FromBody] Profiles updatedProfile)
     {
-        var todoItem = await _context.TodoItems.FindAsync(id);
-        if (todoItem == null)
-        {
+        if (id != updatedProfile.id)
+            return BadRequest();
+
+        var profile = _context.Profiles.Find(id);
+        if (profile == null)
             return NotFound();
-        }
 
-        _context.TodoItems.Remove(todoItem);
-        await _context.SaveChangesAsync();
+        profile.avatarUrl = updatedProfile.avatarUrl;
+        profile.nickName = updatedProfile.nickName;
+        profile.role = updatedProfile.role;
 
+        _context.SaveChanges();
         return NoContent();
     }
 
-    private bool TodoItemExists(long id)
+    // DELETE
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteProfile(Guid id)
     {
-        return _context.TodoItems.Any(e => e.Id == id);
-    }
+        var profile = _context.Profiles.Find(id);
 
-    private static TodoItemDTO ItemToDTO(TodoItem todoItem) =>
-       new TodoItemDTO
-       {
-           Id = todoItem.Id,
-           Name = todoItem.Name,
-           IsComplete = todoItem.IsComplete
-       };
-    */
+        var supabaseUrl = "https://supabase.speedcode.tech";
+        var serviceRoleKey = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc1NzU5MzgwMCwiZXhwIjo0OTEzMjY3NDAwLCJyb2xlIjoic2VydmljZV9yb2xlIn0.U5ovw3nz1VKJJCbKfzARWXuHTUr73U1LNtyBNyhT6pg";
+        using (var httpClient = new HttpClient())
+        {
+            httpClient.BaseAddress = new Uri(supabaseUrl);
+            httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", serviceRoleKey);
+            httpClient.DefaultRequestHeaders.Add("apikey", serviceRoleKey);
+
+            var response = await httpClient.DeleteAsync($"/auth/v1/admin/users/{id}");
+        }
+
+        var achievements = _context.ProfileAchievement.Where(pa => pa.profileId == id);
+        if (achievements.Any())
+            _context.ProfileAchievement.RemoveRange(achievements);
+
+        var exercises = _context.ProfileExercise.Where(pe => pe.profileId == id);
+        if (exercises.Any())
+            _context.ProfileExercise.RemoveRange(exercises);
+
+        var roomUsers = _context.RoomUser.Where(ru => ru.profileId == id);
+        if (roomUsers.Any())
+            _context.RoomUser.RemoveRange(roomUsers);
+
+        if (profile != null)
+            _context.Profiles.Remove(profile);
+
+        if (profile == null && !achievements.Any() && !exercises.Any() && !roomUsers.Any())
+            return NotFound();
+
+        _context.SaveChanges();
+        return NoContent();
+    }
 }

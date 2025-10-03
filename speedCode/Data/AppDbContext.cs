@@ -33,6 +33,10 @@ namespace speedCode.Data
                 .Property(p => p.createdAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+            modelBuilder.Entity<Profiles>()
+                .Property(p => p.role)
+                .HasConversion<string>();
+
             modelBuilder.Entity<Rooms>()
                 .Property(e => e.roomLevel)
                 .HasConversion<string>();
@@ -53,6 +57,10 @@ namespace speedCode.Data
             modelBuilder.Entity<TestCode>()
                 .Property(u => u.createdAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            modelBuilder.Entity<TestCode>()
+                .Property(p => p.Type)
+                .HasConversion<string>();
         }
     }
 }
