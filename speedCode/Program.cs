@@ -50,6 +50,7 @@ using (var scope = app.Services.CreateScope())
     SeederManager.SeedDatabase(db);
 }
 
+app.UseWebSockets();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
