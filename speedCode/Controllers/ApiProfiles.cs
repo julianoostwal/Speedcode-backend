@@ -24,18 +24,35 @@ public class ProfilesController : ControllerBase
         return Ok(profiles);
     }
 
-    // GET
-    [HttpGet("{id}")]
+    // GET by id
+    [HttpGet("id/{id}")]
     public IActionResult GetProfile(Guid id)
     {
         var profile = _context.Profiles.Find(id);
         if (profile == null)
             return NotFound();
-        return Ok(profile);
+
+        var roomUser = _context.RoomUser.FirstOrDefault(ru => ru.profileId == profile.id);
+        if (roomUser?.roomId == null)
+            return Ok("Profile: id: " + profile.id + ", role: " + profile.role);
+
+        var room = _context.Rooms.Find(roomUser.roomId);
+        if (room == null)
+            return Ok("Profile: id: " + profile.id + ", role: " + profile.role + ", room niet gevonden");
+
+        var exerciseUser = _context.ProfileExercise.FirstOrDefault(pe => pe.profileId == profile.id);
+        if (exerciseUser?.exerciseId == null)
+            return Ok("Profile: id: " + profile.id + ", role: " + profile.role);
+
+        var exercise = _context.Exercise.Find(exerciseUser.exerciseId);
+        if (exercise == null)
+            return Ok("Profile: id: " + profile.id + ", role: " + profile.role + ", is in room: " + room.roomName + ", exercise niet gevonden");
+
+        return Ok("Profile: id: " + profile.id + ", role: " + profile.role + ", is in room: " + room.roomName + ", Exercise: " + exercise.title);
     }
 
     // POST
-    [HttpPost]
+    /*[HttpPost] moet verder aan gewerkt worden (3-10-2025)
     public async Task<IActionResult> CreateProfile([FromBody] CreateProfileRequest request)
     {
         if (!ModelState.IsValid)
@@ -66,7 +83,13 @@ public class ProfilesController : ControllerBase
 
         var responseBody = await response.Content.ReadAsStringAsync();
         var doc = System.Text.Json.JsonDocument.Parse(responseBody);
-        var userId = doc.RootElement.GetProperty("user").GetProperty("id").GetString();
+        
+        if (!doc.RootElement.TryGetProperty("id", out var idElement))
+        {
+            return BadRequest("Supabase did not return a user id. Response: " + responseBody);
+        }
+        
+        var userId = idElement.GetString();
 
         if (!Guid.TryParse(userId, out Guid supabaseUserId))
             return BadRequest("Invalid user ID returned from Supabase.");
@@ -74,16 +97,10 @@ public class ProfilesController : ControllerBase
         if (_context.Profiles.Any(p => p.id == supabaseUserId))
             return Conflict("Profile already exists for this user.");
 
-        var profile = new Profiles
-        {
-            avatarUrl = request.avatarUrl,
-            nickName = request.nickName,
-            role = request.role,
-            createdAt = DateTime.UtcNow
-        };
+        var profile = _context.Profiles.FirstOrDefault(p => p.id == supabaseUserId);
+        if (profile == null)
+            return StatusCode(500, "Profile was not created in the database.");
 
-        _context.Profiles.Add(profile);
-        _context.SaveChanges();
         return CreatedAtAction(nameof(GetProfile), new { id = profile.id }, profile);
     }
 
@@ -143,5 +160,5 @@ public class ProfilesController : ControllerBase
 
         _context.SaveChanges();
         return NoContent();
-    }
+    }*/
 }
