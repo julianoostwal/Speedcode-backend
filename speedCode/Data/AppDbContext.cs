@@ -32,7 +32,7 @@ namespace speedCode.Data
             modelBuilder.Entity<Profiles>(entity =>
             {
                 entity.Property(p => p.role)
-                    .HasConversion<int>()
+                    .HasConversion<string>()
                     .HasDefaultValue(speedCode.Model.Profiles.Rol.user);
 
                 entity.Property(p => p.createdAt)
