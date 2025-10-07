@@ -26,32 +26,50 @@ public class ProfilesController : ControllerBase
 
     // GET by id
     [HttpGet("id/{id}")]
-    public IActionResult GetProfile(Guid id)
+    public async Task<IActionResult> GetProfile(Guid id)
     {
         var profile = _context.Profiles.Find(id);
         if (profile == null)
             return NotFound();
-
+    
+        var supabaseUrl = "https://supabase.speedcode.tech";
+        var serviceRoleKey = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc1NzU5MzgwMCwiZXhwIjo0OTEzMjY3NDAwLCJyb2xlIjoic2VydmljZV9yb2xlIn0.U5ovw3nz1VKJJCbKfzARWXuHTUr73U1LNtyBNyhT6pg";
+        using var httpClient = new HttpClient();
+        httpClient.BaseAddress = new Uri(supabaseUrl);
+        httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", serviceRoleKey);
+        httpClient.DefaultRequestHeaders.Add("apikey", serviceRoleKey);
+    
+        var response = await httpClient.GetAsync($"/auth/v1/admin/users/{id}");
+        var responseBody = await response.Content.ReadAsStringAsync();
+    
+        string userEmail = null;
+        if (response.IsSuccessStatusCode)
+        {
+            var doc = System.Text.Json.JsonDocument.Parse(responseBody);
+            if (doc.RootElement.TryGetProperty("email", out var emailElement))
+                userEmail = emailElement.GetString();
+        }
+    
         var roomUser = _context.RoomUser.FirstOrDefault(ru => ru.profileId == profile.id);
         if (roomUser?.roomId == null)
-            return Ok("Profile: id: " + profile.id + ", role: " + profile.role);
-
+            return Ok($"Profile: id: {profile.id}, role: {profile.role}, email: {userEmail}");
+    
         var room = _context.Rooms.Find(roomUser.roomId);
         if (room == null)
-            return Ok("Profile: id: " + profile.id + ", role: " + profile.role + ", room niet gevonden");
-
+            return Ok($"Profile: id: {profile.id}, role: {profile.role}, email: {userEmail}, room niet gevonden");
+    
         var exerciseUser = _context.ProfileExercise.FirstOrDefault(pe => pe.profileId == profile.id);
         if (exerciseUser?.exerciseId == null)
-            return Ok("Profile: id: " + profile.id + ", role: " + profile.role);
-
+            return Ok($"Profile: id: {profile.id}, role: {profile.role}, email: {userEmail}");
+    
         var exercise = _context.Exercise.Find(exerciseUser.exerciseId);
         if (exercise == null)
-            return Ok("Profile: id: " + profile.id + ", role: " + profile.role + ", is in room: " + room.roomName + ", exercise niet gevonden");
-
+            return Ok($"Profile: id: {profile.id}, role: {profile.role}, email: {userEmail}, is in room: {room.roomName}, exercise niet gevonden");
+    
         var profileAchievement = _context.ProfileAchievement.Where(pa => pa.profileId == profile.id).ToList();
         if (profileAchievement == null || profileAchievement.Count == 0)
-            return Ok("Profile: id: " + profile.id + ", role: " + profile.role + ", is in room: " + room.roomName + ", Exercise: " + exercise.title + ", heeft nog geen achievements");
-        
+            return Ok($"Profile: id: {profile.id}, role: {profile.role}, email: {userEmail}, is in room: {room.roomName}, Exercise: {exercise.title}, heeft nog geen achievements");
+    
         var achievements = new List<string>();
         foreach (var pa in profileAchievement)
         {
@@ -60,9 +78,9 @@ public class ProfilesController : ControllerBase
                 achievements.Add(achievement.achievementName);
         }
         if (achievements.Count == 0)
-            return Ok("Profile: id: " + profile.id + ", role: " + profile.role + ", is in room: " + room.roomName + ", Exercise: " + exercise.title + ", heeft nog geen achievements");
-
-        return Ok("Profile: id: " + profile.id + ", role: " + profile.role + ", is in room: " + room.roomName + ", Exercise: " + exercise.title + ", Achievements: " + string.Join(", ", achievements));
+            return Ok($"Profile: id: {profile.id}, role: {profile.role}, email: {userEmail}, is in room: {room.roomName}, Exercise: {exercise.title}, heeft nog geen achievements");
+    
+        return Ok($"Profile: id: {profile.id}, role: {profile.role}, email: {userEmail}, is in room: {room.roomName}, Exercise: {exercise.title}, Achievements: {string.Join(", ", achievements)}");
     }
 
     // GET by email
@@ -119,11 +137,11 @@ public class ProfilesController : ControllerBase
         var exercise = _context.Exercise.Find(exerciseUser.exerciseId);
         if (exercise == null)
             return Ok("Profile: id: " + profile.id + ", role: " + profile.role + ", email: " + userEmail + ", is in room: " + room.roomName + ", exercise niet gevonden");
-        
+
         var profileAchievement = _context.ProfileAchievement.Where(pa => pa.profileId == profile.id).ToList();
         if (profileAchievement == null || profileAchievement.Count == 0)
             return Ok("Profile: id: " + profile.id + ", role: " + profile.role + ", email: " + userEmail + ", is in room: " + room.roomName + ", Exercise: " + exercise.title + ", heeft nog geen achievements");
-        
+
         var achievements = new List<string>();
         foreach (var pa in profileAchievement)
         {
@@ -198,12 +216,12 @@ public class ProfilesController : ControllerBase
 
         var responseBody = await response.Content.ReadAsStringAsync();
         var doc = System.Text.Json.JsonDocument.Parse(responseBody);
-        
+
         if (!doc.RootElement.TryGetProperty("id", out var idElement))
         {
             return BadRequest("Supabase did not return a user id. Response: " + responseBody);
         }
-        
+
         var userId = idElement.GetString();
 
         if (!Guid.TryParse(userId, out Guid supabaseUserId))
@@ -220,27 +238,160 @@ public class ProfilesController : ControllerBase
         return CreatedAtAction(nameof(GetProfile), new { id = profile.id }, profile);
     }
 
-    // UPDATE
-    /*[HttpPut("{id}")]
-    public IActionResult UpdateProfile(Guid id, [FromBody] Profiles updatedProfile)
+    // Update user by id
+    [HttpPut("id/{id}")]
+    public async Task<IActionResult> UpdateProfile(Guid id, [FromBody] UpdateProfileRequest updatedProfile)
     {
-        if (id != updatedProfile.id)
-            return BadRequest();
-
         var profile = _context.Profiles.Find(id);
         if (profile == null)
             return NotFound();
 
-        profile.avatarUrl = updatedProfile.avatarUrl;
-        profile.nickName = updatedProfile.nickName;
-        profile.role = updatedProfile.role;
+        string newNickName = $"{updatedProfile.firstName} {updatedProfile.lastName}";
+        if (!string.IsNullOrWhiteSpace(updatedProfile.firstName) && !string.IsNullOrWhiteSpace(updatedProfile.lastName) && profile.nickName != newNickName)
+        {
+            if (_context.Profiles.Any(p => p.id != id && p.nickName == newNickName))
+                return Conflict("A profile with this nickname already exists.");
+            profile.nickName = newNickName;
+        }
+
+        if (!string.IsNullOrWhiteSpace(updatedProfile.avatarUrl))
+        {
+            if (profile.avatarUrl != updatedProfile.avatarUrl)
+                profile.avatarUrl = updatedProfile.avatarUrl;
+        }
+
+        if (updatedProfile.role != profile.role)
+            profile.role = updatedProfile.role;
 
         _context.SaveChanges();
+
+        var supabaseUrl = "https://supabase.speedcode.tech";
+        var serviceRoleKey = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc1NzU5MzgwMCwiZXhwIjo0OTEzMjY3NDAwLCJyb2xlIjoic2VydmljZV9yb2xlIn0.U5ovw3nz1VKJJCbKfzARWXuHTUr73U1LNtyBNyhT6pg";
+        using var httpClient = new HttpClient();
+        httpClient.BaseAddress = new Uri(supabaseUrl);
+        httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", serviceRoleKey);
+        httpClient.DefaultRequestHeaders.Add("apikey", serviceRoleKey);
+
+        var payloadDict = new Dictionary<string, object>();
+
+        if (!string.IsNullOrWhiteSpace(updatedProfile.email) && profile.avatarUrl != updatedProfile.email)
+            payloadDict["email"] = updatedProfile.email;
+
+        if (!string.IsNullOrWhiteSpace(updatedProfile.password))
+            payloadDict["password"] = updatedProfile.password;
+
+        if (!string.IsNullOrWhiteSpace(updatedProfile.avatarUrl) && profile.avatarUrl != updatedProfile.avatarUrl)
+            payloadDict["avatar_url"] = updatedProfile.avatarUrl;
+
+        var userMetadata = new Dictionary<string, object>();
+        if (!string.IsNullOrWhiteSpace(updatedProfile.firstName))
+            userMetadata["first_name"] = updatedProfile.firstName;
+        if (!string.IsNullOrWhiteSpace(updatedProfile.lastName))
+            userMetadata["last_name"] = updatedProfile.lastName;
+
+        if (userMetadata.Count > 0)
+            payloadDict["user_metadata"] = userMetadata;
+
+        var json = System.Text.Json.JsonSerializer.Serialize(payloadDict);
+        var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+        var response = await httpClient.PutAsync($"/auth/v1/admin/users/{id}", content);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var error = await response.Content.ReadAsStringAsync();
+            return BadRequest($"Failed to update user in Supabase Auth: {error}");
+        }
+
         return NoContent();
     }
 
-    // DELETE
-    /*[HttpDelete("{id}")]
+    // Update user by email
+    [HttpPut("email/{email}")]
+    public async Task<IActionResult> UpdateProfileByEmail(string email, [FromBody] UpdateProfileRequest updatedProfile)
+    {
+        var supabaseUrl = "https://supabase.speedcode.tech";
+        var serviceRoleKey = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc1NzU5MzgwMCwiZXhwIjo0OTEzMjY3NDAwLCJyb2xlIjoic2VydmljZV9yb2xlIn0.U5ovw3nz1VKJJCbKfzARWXuHTUr73U1LNtyBNyhT6pg";
+        using var httpClient = new HttpClient();
+        httpClient.BaseAddress = new Uri(supabaseUrl);
+        httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", serviceRoleKey);
+        httpClient.DefaultRequestHeaders.Add("apikey", serviceRoleKey);
+
+        var requestUrl = $"/auth/v1/admin/users?email={email}";
+        var response = await httpClient.GetAsync(requestUrl);
+        var responseBody = await response.Content.ReadAsStringAsync();
+
+        if (!response.IsSuccessStatusCode)
+            return BadRequest($"Failed to fetch user from Supabase Auth: {responseBody}");
+
+        var doc = System.Text.Json.JsonDocument.Parse(responseBody);
+        if (!doc.RootElement.TryGetProperty("users", out var usersArray) || usersArray.GetArrayLength() == 0)
+            return NotFound("No user found with this email in Supabase Auth.");
+
+        var userElement = usersArray.EnumerateArray()
+            .FirstOrDefault(u => u.TryGetProperty("email", out var e) && e.GetString() == email);
+
+        if (userElement.ValueKind == System.Text.Json.JsonValueKind.Undefined)
+            return NotFound("No user found with this email in Supabase Auth.");
+
+        var userId = userElement.GetProperty("id").GetString();
+        if (!Guid.TryParse(userId, out Guid supabaseUserId))
+            return BadRequest("Invalid user ID returned from Supabase.");
+
+        var profile = _context.Profiles.FirstOrDefault(p => p.id == supabaseUserId);
+        if (profile == null)
+            return NotFound("Profile not found in database for this Supabase user.");
+
+        string newNickName = $"{updatedProfile.firstName} {updatedProfile.lastName}";
+        if (!string.IsNullOrWhiteSpace(updatedProfile.firstName) && !string.IsNullOrWhiteSpace(updatedProfile.lastName) && profile.nickName != newNickName)
+        {
+            if (_context.Profiles.Any(p => p.id != supabaseUserId && p.nickName == newNickName))
+                return Conflict("A profile with this nickname already exists.");
+            profile.nickName = newNickName;
+        }
+
+        if (!string.IsNullOrWhiteSpace(updatedProfile.avatarUrl) && profile.avatarUrl != updatedProfile.avatarUrl)
+            profile.avatarUrl = updatedProfile.avatarUrl;
+
+        if (updatedProfile.role != profile.role)
+            profile.role = updatedProfile.role;
+
+        _context.SaveChanges();
+
+        var payloadDict = new Dictionary<string, object>();
+
+        if (!string.IsNullOrWhiteSpace(updatedProfile.email) && email != updatedProfile.email)
+            payloadDict["email"] = updatedProfile.email;
+
+        if (!string.IsNullOrWhiteSpace(updatedProfile.password))
+            payloadDict["password"] = updatedProfile.password;
+
+        if (!string.IsNullOrWhiteSpace(updatedProfile.avatarUrl) && profile.avatarUrl != updatedProfile.avatarUrl)
+            payloadDict["avatar_url"] = updatedProfile.avatarUrl;
+
+        var userMetadata = new Dictionary<string, object>();
+        if (!string.IsNullOrWhiteSpace(updatedProfile.firstName))
+            userMetadata["first_name"] = updatedProfile.firstName;
+        if (!string.IsNullOrWhiteSpace(updatedProfile.lastName))
+            userMetadata["last_name"] = updatedProfile.lastName;
+
+        if (userMetadata.Count > 0)
+            payloadDict["user_metadata"] = userMetadata;
+
+        var json = System.Text.Json.JsonSerializer.Serialize(payloadDict);
+        var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+        var updateResponse = await httpClient.PutAsync($"/auth/v1/admin/users/{userId}", content);
+
+        if (!updateResponse.IsSuccessStatusCode)
+        {
+            var error = await updateResponse.Content.ReadAsStringAsync();
+            return BadRequest($"Failed to update user in Supabase Auth: {error}");
+        }
+
+        return NoContent();
+    }
+
+    // Delete by id
+    [HttpDelete("id/{id}")]
     public async Task<IActionResult> DeleteProfile(Guid id)
     {
         var profile = _context.Profiles.Find(id);
@@ -275,6 +426,66 @@ public class ProfilesController : ControllerBase
             return NotFound();
 
         _context.SaveChanges();
+
         return NoContent();
-    }*/
+    }
+
+    //Delete by email
+    [HttpDelete("email/{email}")]
+    public async Task<IActionResult> DeleteProfileByEmail(string email)
+    {
+        var supabaseUrl = "https://supabase.speedcode.tech";
+        var serviceRoleKey = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc1NzU5MzgwMCwiZXhwIjo0OTEzMjY3NDAwLCJyb2xlIjoic2VydmljZV9yb2xlIn0.U5ovw3nz1VKJJCbKfzARWXuHTUr73U1LNtyBNyhT6pg";
+        using var httpClient = new HttpClient();
+        httpClient.BaseAddress = new Uri(supabaseUrl);
+        httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", serviceRoleKey);
+        httpClient.DefaultRequestHeaders.Add("apikey", serviceRoleKey);
+
+        var requestUrl = $"/auth/v1/admin/users?email={email}";
+        var response = await httpClient.GetAsync(requestUrl);
+        var responseBody = await response.Content.ReadAsStringAsync();
+
+        if (!response.IsSuccessStatusCode)
+            return BadRequest($"Failed to fetch user from Supabase Auth: {responseBody}");
+
+        var doc = System.Text.Json.JsonDocument.Parse(responseBody);
+        if (!doc.RootElement.TryGetProperty("users", out var usersArray) || usersArray.GetArrayLength() == 0)
+            return NotFound("No user found with this email in Supabase Auth.");
+
+        var userElement = usersArray.EnumerateArray()
+            .FirstOrDefault(u => u.TryGetProperty("email", out var e) && e.GetString() == email);
+
+        if (userElement.ValueKind == System.Text.Json.JsonValueKind.Undefined)
+            return NotFound("No user found with this email in Supabase Auth.");
+
+        var userId = userElement.GetProperty("id").GetString();
+        if (!Guid.TryParse(userId, out Guid supabaseUserId))
+            return BadRequest("Invalid user ID returned from Supabase.");
+
+        var deleteResponse = await httpClient.DeleteAsync($"/auth/v1/admin/users/{userId}");
+
+        var profile = _context.Profiles.Find(supabaseUserId);
+
+        var achievements = _context.ProfileAchievement.Where(pa => pa.profileId == supabaseUserId);
+        if (achievements.Any())
+            _context.ProfileAchievement.RemoveRange(achievements);
+
+        var exercises = _context.ProfileExercise.Where(pe => pe.profileId == supabaseUserId);
+        if (exercises.Any())
+            _context.ProfileExercise.RemoveRange(exercises);
+
+        var roomUsers = _context.RoomUser.Where(ru => ru.profileId == supabaseUserId);
+        if (roomUsers.Any())
+            _context.RoomUser.RemoveRange(roomUsers);
+
+        if (profile != null)
+            _context.Profiles.Remove(profile);
+
+        if (profile == null && !achievements.Any() && !exercises.Any() && !roomUsers.Any())
+            return NotFound();
+
+        _context.SaveChanges();
+
+        return NoContent();
+    }
 }
