@@ -29,9 +29,16 @@ namespace speedCode.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Profiles>()
-                .Property(p => p.createdAt)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            modelBuilder.Entity<Profiles>(entity =>
+            {
+                entity.Property(p => p.role)
+                    .HasConversion<int>()
+                    .HasDefaultValue(speedCode.Model.Profiles.Rol.user);
+
+                entity.Property(p => p.createdAt)
+                    .HasDefaultValueSql("NOW()");
+            });
+
 
             modelBuilder.Entity<Profiles>()
                 .Property(p => p.role)

@@ -35,7 +35,7 @@ builder.Services.AddSingleton<Judge0Client>(sp =>
     var httpClient = new HttpClient { BaseAddress = new Uri(builder.Configuration["Judge0:BaseUrl"]) };
     return new Judge0Client(httpClient);
 });
-builder.Services.AddTransient<JudgeCodeService>();
+builder.Services.AddScoped<JudgeCodeService>();
 
 var app = builder.Build();
 
@@ -44,7 +44,9 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    SeederManager.CreateSupabaseAuthUsersAsync(builder.Configuration["Supabase:Url"], builder.Configuration["Supabase:ServiceRoleKey"]).GetAwaiter().GetResult();
+    SeederManager
+        .CreateSupabaseAuthUsersAsync(builder.Configuration["Supabase:Url"],
+            builder.Configuration["Supabase:ServiceRoleKey"]).GetAwaiter().GetResult();
     SeederManager.SeedDatabase(db);
 }*/
 
