@@ -18,10 +18,102 @@ public class ProfilesController : ControllerBase
 
     // GET all
     [HttpGet]
-    public IActionResult GetProfiles()
+    public async Task<IActionResult> GetFullProfiles()
     {
+        var supabaseUrl = "https://supabase.speedcode.tech";
+        var serviceRoleKey = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc1NzU5MzgwMCwiZXhwIjo0OTEzMjY3NDAwLCJyb2xlIjoic2VydmljZV9yb2xlIn0.U5ovw3nz1VKJJCbKfzARWXuHTUr73U1LNtyBNyhT6pg";
+        using var httpClient = new HttpClient();
+        httpClient.BaseAddress = new Uri(supabaseUrl);
+        httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", serviceRoleKey);
+        httpClient.DefaultRequestHeaders.Add("apikey", serviceRoleKey);
+
+        var response = await httpClient.GetAsync("/auth/v1/admin/users");
+        var responseBody = await response.Content.ReadAsStringAsync();
+
+        if (!response.IsSuccessStatusCode)
+            return BadRequest($"Failed to fetch users from Supabase Auth: {responseBody}");
+
+        var doc = System.Text.Json.JsonDocument.Parse(responseBody);
+        if (!doc.RootElement.TryGetProperty("users", out var usersArray))
+            return Ok(new List<object>());
+
         var profiles = _context.Profiles.ToList();
-        return Ok(profiles);
+        var roomUsers = _context.RoomUser.ToList();
+        var rooms = _context.Rooms.ToList();
+        var profileExercises = _context.ProfileExercise.ToList();
+        var exercises = _context.Exercise.ToList();
+        var profileAchievements = _context.ProfileAchievement.ToList();
+        var achievements = _context.Achievement.ToList();
+
+        var result = new List<object>();
+
+        foreach (var userElement in usersArray.EnumerateArray())
+        {
+            var userIdStr = userElement.GetProperty("id").GetString();
+            var email = userElement.GetProperty("email").GetString();
+
+            Guid userId;
+            if (!Guid.TryParse(userIdStr, out userId))
+                continue;
+
+            var profile = profiles.FirstOrDefault(p => p.id == userId);
+
+            var userRoomUsers = roomUsers.Where(ru => ru.profileId == userId).Select(ru => new
+            {
+                roomUserId = ru.id,
+                room = rooms.FirstOrDefault(r => r.id == ru.roomId)
+            }).ToList();
+
+            var userProfileExercises = profileExercises.Where(pe => pe.profileId == userId).Select(pe => new
+            {
+                profileExerciseId = pe.id,
+                exercise = exercises.FirstOrDefault(ex => ex.id == pe.exerciseId)
+            }).ToList();
+
+            var userProfileAchievements = profileAchievements.Where(pa => pa.profileId == userId).Select(pa => new
+            {
+                profileAchievementId = pa.id,
+                achievement = achievements.FirstOrDefault(a => a.id == pa.achievementId)
+            }).ToList();
+
+            result.Add(new
+            {
+                id = userIdStr,
+                email,
+                avatarUrl = profile?.avatarUrl,
+                createdAt = profile?.createdAt,
+                nickName = profile?.nickName,
+                role = profile?.role.ToString() ?? "user",
+                rooms = userRoomUsers.Select(ru => new
+                {
+                    roomUserId = ru.roomUserId,
+                    roomId = ru.room?.id,
+                    roomName = ru.room?.roomName,
+                    roomLevel = ru.room?.roomLevel.ToString(),
+                    isPrivate = ru.room?.isPrivate,
+                    createdAt = ru.room?.createdAt
+                }),
+                exercises = userProfileExercises.Select(pe => new
+                {
+                    profileExerciseId = pe.profileExerciseId,
+                    exerciseId = pe.exercise?.id,
+                    title = pe.exercise?.title,
+                    description = pe.exercise?.description,
+                    points = pe.exercise?.points,
+                    createdAt = pe.exercise?.createdAt
+                }),
+                achievements = userProfileAchievements.Select(pa => new
+                {
+                    profileAchievementId = pa.profileAchievementId,
+                    achievementId = pa.achievement?.id,
+                    achievementName = pa.achievement?.achievementName,
+                    achievementDescription = pa.achievement?.achievementDescription,
+                    achievementIcon = pa.achievement?.achievementIcon
+                })
+            });
+        }
+
+        return Ok(result);
     }
 
     // GET by id
@@ -31,7 +123,7 @@ public class ProfilesController : ControllerBase
         var profile = _context.Profiles.Find(id);
         if (profile == null)
             return NotFound();
-    
+
         var supabaseUrl = "https://supabase.speedcode.tech";
         var serviceRoleKey = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc1NzU5MzgwMCwiZXhwIjo0OTEzMjY3NDAwLCJyb2xlIjoic2VydmljZV9yb2xlIn0.U5ovw3nz1VKJJCbKfzARWXuHTUr73U1LNtyBNyhT6pg";
         using var httpClient = new HttpClient();
@@ -41,46 +133,62 @@ public class ProfilesController : ControllerBase
     
         var response = await httpClient.GetAsync($"/auth/v1/admin/users/{id}");
         var responseBody = await response.Content.ReadAsStringAsync();
-    
+
         string userEmail = null;
+
         if (response.IsSuccessStatusCode)
         {
             var doc = System.Text.Json.JsonDocument.Parse(responseBody);
             if (doc.RootElement.TryGetProperty("email", out var emailElement))
                 userEmail = emailElement.GetString();
         }
-    
-        var roomUser = _context.RoomUser.FirstOrDefault(ru => ru.profileId == profile.id);
-        if (roomUser?.roomId == null)
-            return Ok($"Profile: id: {profile.id}, role: {profile.role}, email: {userEmail}");
-    
-        var room = _context.Rooms.Find(roomUser.roomId);
-        if (room == null)
-            return Ok($"Profile: id: {profile.id}, role: {profile.role}, email: {userEmail}, room niet gevonden");
-    
-        var exerciseUser = _context.ProfileExercise.FirstOrDefault(pe => pe.profileId == profile.id);
-        if (exerciseUser?.exerciseId == null)
-            return Ok($"Profile: id: {profile.id}, role: {profile.role}, email: {userEmail}");
-    
-        var exercise = _context.Exercise.Find(exerciseUser.exerciseId);
-        if (exercise == null)
-            return Ok($"Profile: id: {profile.id}, role: {profile.role}, email: {userEmail}, is in room: {room.roomName}, exercise niet gevonden");
-    
-        var profileAchievement = _context.ProfileAchievement.Where(pa => pa.profileId == profile.id).ToList();
-        if (profileAchievement == null || profileAchievement.Count == 0)
-            return Ok($"Profile: id: {profile.id}, role: {profile.role}, email: {userEmail}, is in room: {room.roomName}, Exercise: {exercise.title}, heeft nog geen achievements");
-    
-        var achievements = new List<string>();
-        foreach (var pa in profileAchievement)
+
+        var email = userEmail;
+
+        var roomUsers = _context.RoomUser.Where(ru => ru.profileId == id).ToList();
+        var rooms = _context.Rooms.ToList();
+        var profileExercises = _context.ProfileExercise.Where(pe => pe.profileId == id).ToList();
+        var exercises = _context.Exercise.ToList();
+        var profileAchievements = _context.ProfileAchievement.Where(pa => pa.profileId == id).ToList();
+        var achievements = _context.Achievement.ToList();
+
+        var result = new
         {
-            var achievement = _context.Achievement.Find(pa.achievementId);
-            if (achievement != null)
-                achievements.Add(achievement.achievementName);
-        }
-        if (achievements.Count == 0)
-            return Ok($"Profile: id: {profile.id}, role: {profile.role}, email: {userEmail}, is in room: {room.roomName}, Exercise: {exercise.title}, heeft nog geen achievements");
-    
-        return Ok($"Profile: id: {profile.id}, role: {profile.role}, email: {userEmail}, is in room: {room.roomName}, Exercise: {exercise.title}, Achievements: {string.Join(", ", achievements)}");
+            id = id.ToString(),
+            email,
+            avatarUrl = profile.avatarUrl,
+            createdAt = profile.createdAt,
+            nickName = profile.nickName,
+            role = profile.role.ToString(),
+            rooms = roomUsers.Select(ru => new
+            {
+                roomUserId = ru.id,
+                roomId = ru.roomId,
+                roomName = rooms.FirstOrDefault(r => r.id == ru.roomId)?.roomName,
+                roomLevel = rooms.FirstOrDefault(r => r.id == ru.roomId)?.roomLevel.ToString(),
+                isPrivate = rooms.FirstOrDefault(r => r.id == ru.roomId)?.isPrivate,
+                createdAt = rooms.FirstOrDefault(r => r.id == ru.roomId)?.createdAt
+            }),
+            exercises = profileExercises.Select(pe => new
+            {
+                profileExerciseId = pe.id,
+                exerciseId = pe.exerciseId,
+                title = exercises.FirstOrDefault(ex => ex.id == pe.exerciseId)?.title,
+                description = exercises.FirstOrDefault(ex => ex.id == pe.exerciseId)?.description,
+                points = exercises.FirstOrDefault(ex => ex.id == pe.exerciseId)?.points,
+                createdAt = exercises.FirstOrDefault(ex => ex.id == pe.exerciseId)?.createdAt
+            }),
+            achievements = profileAchievements.Select(pa => new
+            {
+                profileAchievementId = pa.id,
+                achievementId = pa.achievementId,
+                achievementName = achievements.FirstOrDefault(a => a.id == pa.achievementId)?.achievementName,
+                achievementDescription = achievements.FirstOrDefault(a => a.id == pa.achievementId)?.achievementDescription,
+                achievementIcon = achievements.FirstOrDefault(a => a.id == pa.achievementId)?.achievementIcon
+            })
+        };
+
+        return Ok(result);
     }
 
     // GET by email
@@ -94,8 +202,7 @@ public class ProfilesController : ControllerBase
         httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", serviceRoleKey);
         httpClient.DefaultRequestHeaders.Add("apikey", serviceRoleKey);
 
-        var requestUrl = $"/auth/v1/admin/users?email={email}";
-        var response = await httpClient.GetAsync(requestUrl);
+        var response = await httpClient.GetAsync($"/auth/v1/admin/users?email={email}");
         var responseBody = await response.Content.ReadAsStringAsync();
 
         if (!response.IsSuccessStatusCode)
@@ -105,7 +212,6 @@ public class ProfilesController : ControllerBase
         if (!doc.RootElement.TryGetProperty("users", out var usersArray) || usersArray.GetArrayLength() == 0)
             return NotFound("No user found with this email in Supabase Auth.");
 
-        // Filter users by exact email match
         var userElement = usersArray.EnumerateArray()
             .FirstOrDefault(u => u.TryGetProperty("email", out var e) && e.GetString() == email);
 
@@ -118,41 +224,54 @@ public class ProfilesController : ControllerBase
         if (!Guid.TryParse(userId, out Guid supabaseUserId))
             return BadRequest("Invalid user ID returned from Supabase.");
 
-        var profile = _context.Profiles.FirstOrDefault(p => p.id == supabaseUserId);
+        var profile = _context.Profiles.Find(supabaseUserId);
         if (profile == null)
-            return NotFound("Profile not found in database for this Supabase user.");
+            return NotFound();
 
-        var roomUser = _context.RoomUser.FirstOrDefault(ru => ru.profileId == profile.id);
-        if (roomUser?.roomId == null)
-            return Ok("Profile: id: " + profile.id + ", role: " + profile.role + ", email: " + userEmail);
+        var roomUsers = _context.RoomUser.Where(ru => ru.profileId == supabaseUserId).ToList();
+        var rooms = _context.Rooms.ToList();
+        var profileExercises = _context.ProfileExercise.Where(pe => pe.profileId == supabaseUserId).ToList();
+        var exercises = _context.Exercise.ToList();
+        var profileAchievements = _context.ProfileAchievement.Where(pa => pa.profileId == supabaseUserId).ToList();
+        var achievements = _context.Achievement.ToList();
 
-        var room = _context.Rooms.Find(roomUser.roomId);
-        if (room == null)
-            return Ok("Profile: id: " + profile.id + ", role: " + profile.role + ", email: " + userEmail + ", room niet gevonden");
-
-        var exerciseUser = _context.ProfileExercise.FirstOrDefault(pe => pe.profileId == profile.id);
-        if (exerciseUser?.exerciseId == null)
-            return Ok("Profile: id: " + profile.id + ", role: " + profile.role + ", email: " + userEmail);
-
-        var exercise = _context.Exercise.Find(exerciseUser.exerciseId);
-        if (exercise == null)
-            return Ok("Profile: id: " + profile.id + ", role: " + profile.role + ", email: " + userEmail + ", is in room: " + room.roomName + ", exercise niet gevonden");
-
-        var profileAchievement = _context.ProfileAchievement.Where(pa => pa.profileId == profile.id).ToList();
-        if (profileAchievement == null || profileAchievement.Count == 0)
-            return Ok("Profile: id: " + profile.id + ", role: " + profile.role + ", email: " + userEmail + ", is in room: " + room.roomName + ", Exercise: " + exercise.title + ", heeft nog geen achievements");
-
-        var achievements = new List<string>();
-        foreach (var pa in profileAchievement)
+        var result = new
         {
-            var achievement = _context.Achievement.Find(pa.achievementId);
-            if (achievement != null)
-                achievements.Add(achievement.achievementName);
-        }
-        if (achievements.Count == 0)
-            return Ok("Profile: id: " + profile.id + ", role: " + profile.role + ", email: " + userEmail + ", is in room: " + room.roomName + ", Exercise: " + exercise.title + ", heeft nog geen achievements");
+            id = profile.id.ToString(),
+            email,
+            avatarUrl = profile.avatarUrl,
+            createdAt = profile.createdAt,
+            nickName = profile.nickName,
+            role = profile.role.ToString(),
+            rooms = roomUsers.Select(ru => new
+            {
+                roomUserId = ru.id,
+                roomId = ru.roomId,
+                roomName = rooms.FirstOrDefault(r => r.id == ru.roomId)?.roomName,
+                roomLevel = rooms.FirstOrDefault(r => r.id == ru.roomId)?.roomLevel.ToString(),
+                isPrivate = rooms.FirstOrDefault(r => r.id == ru.roomId)?.isPrivate,
+                createdAt = rooms.FirstOrDefault(r => r.id == ru.roomId)?.createdAt
+            }),
+            exercises = profileExercises.Select(pe => new
+            {
+                profileExerciseId = pe.id,
+                exerciseId = pe.exerciseId,
+                title = exercises.FirstOrDefault(ex => ex.id == pe.exerciseId)?.title,
+                description = exercises.FirstOrDefault(ex => ex.id == pe.exerciseId)?.description,
+                points = exercises.FirstOrDefault(ex => ex.id == pe.exerciseId)?.points,
+                createdAt = exercises.FirstOrDefault(ex => ex.id == pe.exerciseId)?.createdAt
+            }),
+            achievements = profileAchievements.Select(pa => new
+            {
+                profileAchievementId = pa.id,
+                achievementId = pa.achievementId,
+                achievementName = achievements.FirstOrDefault(a => a.id == pa.achievementId)?.achievementName,
+                achievementDescription = achievements.FirstOrDefault(a => a.id == pa.achievementId)?.achievementDescription,
+                achievementIcon = achievements.FirstOrDefault(a => a.id == pa.achievementId)?.achievementIcon
+            })
+        };
 
-        return Ok("Profile: id: " + profile.id + ", role: " + profile.role + ", email: " + userEmail + ", is in room: " + room.roomName + ", Exercise: " + exercise.title + ", Achievements: " + string.Join(", ", achievements));
+        return Ok(result);
     }
 
     // POST
@@ -162,7 +281,6 @@ public class ProfilesController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        // Check if user already exists in Supabase Auth
         using var httpClient = new HttpClient();
         var supabaseUrl = "https://supabase.speedcode.tech";
         var serviceRoleKey = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc1NzU5MzgwMCwiZXhwIjo0OTEzMjY3NDAwLCJyb2xlIjoic2VydmljZV9yb2xlIn0.U5ovw3nz1VKJJCbKfzARWXuHTUr73U1LNtyBNyhT6pg";
@@ -177,7 +295,6 @@ public class ProfilesController : ControllerBase
 
         if (checkDoc.RootElement.TryGetProperty("users", out var usersArray))
         {
-            // Only return conflict if any user has the exact email
             bool emailExists = usersArray.EnumerateArray()
                 .Any(u => u.TryGetProperty("email", out var e) && e.GetString() == request.email);
 
@@ -185,7 +302,6 @@ public class ProfilesController : ControllerBase
                 return Conflict("A user with this email already exists.");
         }
 
-        // Check if nickname already exists in local DB
         var nickName = $"{request.firstName} {request.lastName}";
         if (_context.Profiles.Any(p => p.nickName == nickName))
             return Conflict("A profile with this nickname already exists.");
