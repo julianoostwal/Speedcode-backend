@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net.WebSockets;
 using System.Text;
 using speedCode.dto;
+using speedCode.poco;
 using speedCode.rooms;
 using speedCode.services;
 
@@ -12,7 +13,6 @@ namespace speedCode.Controllers;
 public class WsRoomController : ControllerBase
 {
     private readonly JudgeCodeService _judgeCodeService;
-
     public WsRoomController(JudgeCodeService judgeCodeService)
     {
         _judgeCodeService = judgeCodeService;
@@ -32,10 +32,18 @@ public class WsRoomController : ControllerBase
         }
     }
 
-    [HttpGet("testCode/{roomId}/{clientId}")]
-    public async Task<TestCodeAsyncResults> Post(string roomId, string clientId, [FromBody] TestCodeRequest request)
+    [HttpPost("testCode/{roomId}/{clientId}")]
+    public async Task<ApiResult<TestCodeAsyncResults>> TestCodeAsync(
+        string roomId, string clientId, [FromBody] TestCodeRequest request)
     {
-        
-        return await _judgeCodeService.TestCodeAsync(request);
+        if (!WSRoomsService.Rooms.TryGetValue(roomId, out var room))
+            return ApiResult<TestCodeAsyncResults>.Fail($"Room {roomId} not found.");
+
+        if (!room.Players.ContainsKey(clientId))
+            return ApiResult<TestCodeAsyncResults>.Fail($"Client {clientId} not found.");
+
+        var result = await _judgeCodeService.TestCodeAsync(request);
+        return ApiResult<TestCodeAsyncResults>.Ok(result);
     }
+
 }

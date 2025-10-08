@@ -16,6 +16,21 @@ public class Room
     {
         Players[player.ClientId] = player;
     }
+    
+    public async Task BroadcastAsync(object message)
+    {
+        string json = JsonSerializer.Serialize(message);
+        var buffer = Encoding.UTF8.GetBytes(json);
+        var segment = new ArraySegment<byte>(buffer);
+
+        foreach (var player in Players.Values)
+        {
+            if (player.Socket.State == WebSocketState.Open)
+            {
+                await player.Socket.SendAsync(segment, WebSocketMessageType.Text, true, CancellationToken.None);
+            }
+        }
+    }
 
     public void RemovePlayer(string clientId)
     {
