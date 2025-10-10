@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using speedCode.Model;
 
-public class CreateProfileRequest
+public class ProfileRequest
 {
     public string email { get; set; }
     public string password { get; set; }

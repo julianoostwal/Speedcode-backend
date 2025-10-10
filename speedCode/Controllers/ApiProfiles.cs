@@ -16,7 +16,7 @@ public class ProfilesController : ControllerBase
         _context = context;
     }
 
-    // GET all
+    // GET all profiles
     [HttpGet]
     public async Task<IActionResult> GetFullProfiles()
     {
@@ -42,8 +42,10 @@ public class ProfilesController : ControllerBase
         var rooms = _context.Rooms.ToList();
         var profileExercises = _context.ProfileExercise.ToList();
         var exercises = _context.Exercise.ToList();
+        var exerciseTests = _context.ExerciseTest.ToList();
         var profileAchievements = _context.ProfileAchievement.ToList();
         var achievements = _context.Achievement.ToList();
+        var testCodes = _context.TestCode.ToList();
 
         var result = new List<object>();
 
@@ -76,6 +78,10 @@ public class ProfilesController : ControllerBase
                 achievement = achievements.FirstOrDefault(a => a.id == pa.achievementId)
             }).ToList();
 
+            var userProfileTestcodes = testCodes.Where(pa => pa.authorId == userId).ToList();
+
+            var ExerciseTests = exerciseTests.Where(et => et.testId == userProfileTestcodes.FirstOrDefault()?.id).ToList();
+
             result.Add(new
             {
                 id = userIdStr,
@@ -101,6 +107,20 @@ public class ProfilesController : ControllerBase
                     description = pe.exercise?.description,
                     points = pe.exercise?.points,
                     createdAt = pe.exercise?.createdAt
+                }),
+                testcodes = userProfileTestcodes.Select(pt => new
+                {
+                    id = pt.id,
+                    authorId = pt.authorId,
+                    expectedResult = pt.expectedResult,
+                    type = pt.Type.ToString(),
+                    createdAt = pt.createdAt
+                }),
+                exerciseTests = ExerciseTests.Select(et => new
+                {
+                    id = et.id,
+                    testId = et.testId,
+                    exerciseId = et.exerciseId
                 }),
                 achievements = userProfileAchievements.Select(pa => new
                 {
@@ -151,6 +171,8 @@ public class ProfilesController : ControllerBase
         var exercises = _context.Exercise.ToList();
         var profileAchievements = _context.ProfileAchievement.Where(pa => pa.profileId == id).ToList();
         var achievements = _context.Achievement.ToList();
+        var testCodes = _context.TestCode.Where(pt => pt.authorId == id).ToList();
+        var exerciseTests = _context.ExerciseTest.Where(et => et.testId == testCodes.FirstOrDefault().id).ToList();
 
         var result = new
         {
@@ -177,6 +199,20 @@ public class ProfilesController : ControllerBase
                 description = exercises.FirstOrDefault(ex => ex.id == pe.exerciseId)?.description,
                 points = exercises.FirstOrDefault(ex => ex.id == pe.exerciseId)?.points,
                 createdAt = exercises.FirstOrDefault(ex => ex.id == pe.exerciseId)?.createdAt
+            }),
+            exerciseTests = exerciseTests.Select(et => new
+            {
+                id = et.id,
+                testId = et.testId,
+                exerciseId = et.exerciseId
+            }),
+            testcodes = testCodes.Select(pt => new
+            {
+                id = pt.id,
+                authorId = pt.authorId,
+                expectedResult = pt.expectedResult,
+                type = pt.Type.ToString(),
+                createdAt = pt.createdAt
             }),
             achievements = profileAchievements.Select(pa => new
             {
@@ -234,6 +270,8 @@ public class ProfilesController : ControllerBase
         var exercises = _context.Exercise.ToList();
         var profileAchievements = _context.ProfileAchievement.Where(pa => pa.profileId == supabaseUserId).ToList();
         var achievements = _context.Achievement.ToList();
+        var testCodes = _context.TestCode.Where(pt => pt.authorId == supabaseUserId).ToList();
+        var exerciseTests = _context.ExerciseTest.Where(et => et.testId == testCodes.FirstOrDefault().id).ToList();
 
         var result = new
         {
@@ -261,6 +299,20 @@ public class ProfilesController : ControllerBase
                 points = exercises.FirstOrDefault(ex => ex.id == pe.exerciseId)?.points,
                 createdAt = exercises.FirstOrDefault(ex => ex.id == pe.exerciseId)?.createdAt
             }),
+            exerciseTests = exerciseTests.Select(et => new
+            {
+                id = et.id,
+                testId = et.testId,
+                exerciseId = et.exerciseId
+            }),
+            testcodes = testCodes.Select(pt => new
+            {
+                id = pt.id,
+                authorId = pt.authorId,
+                expectedResult = pt.expectedResult,
+                type = pt.Type.ToString(),
+                createdAt = pt.createdAt
+            }),
             achievements = profileAchievements.Select(pa => new
             {
                 profileAchievementId = pa.id,
@@ -276,7 +328,7 @@ public class ProfilesController : ControllerBase
 
     // POST
     [HttpPost]
-    public async Task<IActionResult> CreateProfile([FromBody] CreateProfileRequest request)
+    public async Task<IActionResult> CreateProfile([FromBody] ProfileRequest request)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -523,6 +575,14 @@ public class ProfilesController : ControllerBase
             var response = await httpClient.DeleteAsync($"/auth/v1/admin/users/{id}");
         }
 
+        var testCodes = _context.TestCode.Where(tc => tc.authorId == id);
+        var exerciseTests = _context.ExerciseTest.Where(et => et.testId == testCodes.FirstOrDefault().id).ToList();
+        if (exerciseTests.Any())
+            _context.ExerciseTest.RemoveRange(exerciseTests);
+            
+        if (testCodes.Any())
+            _context.TestCode.RemoveRange(testCodes);
+
         var achievements = _context.ProfileAchievement.Where(pa => pa.profileId == id);
         if (achievements.Any())
             _context.ProfileAchievement.RemoveRange(achievements);
@@ -585,6 +645,14 @@ public class ProfilesController : ControllerBase
         var achievements = _context.ProfileAchievement.Where(pa => pa.profileId == supabaseUserId);
         if (achievements.Any())
             _context.ProfileAchievement.RemoveRange(achievements);
+
+        var testCodes = _context.TestCode.Where(tc => tc.authorId == supabaseUserId);
+        var exerciseTests = _context.ExerciseTest.Where(et => et.testId == testCodes.FirstOrDefault().id).ToList();
+        if (exerciseTests.Any())
+            _context.ExerciseTest.RemoveRange(exerciseTests);
+
+        if (testCodes.Any())
+            _context.TestCode.RemoveRange(testCodes);
 
         var exercises = _context.ProfileExercise.Where(pe => pe.profileId == supabaseUserId);
         if (exercises.Any())
