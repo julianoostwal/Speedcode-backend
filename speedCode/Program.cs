@@ -36,6 +36,7 @@ builder.Services.AddSingleton<Judge0Client>(sp =>
     return new Judge0Client(httpClient);
 });
 builder.Services.AddScoped<JudgeCodeService>();
+builder.Services.AddScoped<RoomService>();
 
 var app = builder.Build();
 
@@ -50,6 +51,7 @@ using (var scope = app.Services.CreateScope())
     SeederManager.SeedDatabase(db);
 }
 
+app.UseWebSockets();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

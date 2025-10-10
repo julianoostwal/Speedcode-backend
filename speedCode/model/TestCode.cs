@@ -13,9 +13,12 @@ namespace speedCode.Model
         [Column("expected_result", TypeName = "text[]")]
         public string[] expectedResult { get; set; }
 
+        [Column("expected_input", TypeName = "text[]")]
+        public string?[] expectedInput { get; set; }
+
         [Required] public Guid authorId { get; set; }
         [ForeignKey("authorId")] public virtual Profiles author { get; set; }
-        
+
         [Column("type")] [Required] public TestType Type { get; set; }
 
 
