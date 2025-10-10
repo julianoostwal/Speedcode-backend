@@ -19,6 +19,7 @@ public class RegexJudgeCode : JudgeCode
             Match match = Regex.Match(OutPut, expectedResult);
             results.Logs.Add(new JudgeCodeTestLog
             {
+                outPut = OutPut,
                 Regex = expectedResult,
                 TestType = TestType.Regex,
                 Accepted = match.Success

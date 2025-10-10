@@ -36,6 +36,7 @@ builder.Services.AddSingleton<Judge0Client>(sp =>
     return new Judge0Client(httpClient);
 });
 builder.Services.AddScoped<JudgeCodeService>();
+builder.Services.AddScoped<RoomService>();
 
 var app = builder.Build();
 

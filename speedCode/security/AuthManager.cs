@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -6,11 +7,14 @@ namespace speedCode.security;
 
 public static class AuthManager
 {
+    private static string _jwtSecret = "";
+
     public static void ConfigureJwt(WebApplicationBuilder builder)
     {
         var supabaseAuth = builder.Configuration.GetSection("SupabaseAuth").Get<SupabaseAuth>();
-        var byteKey = Encoding.UTF8.GetBytes(supabaseAuth.jwtSecret);
+        _jwtSecret = supabaseAuth.jwtSecret;
         var issuer = supabaseAuth.Authority;
+
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(jwtOptions =>
             {
@@ -19,10 +23,50 @@ public static class AuthManager
                     ValidateIssuer = false,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(byteKey),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSecret)),
                     ValidIssuer = issuer,
                     ValidAudience = "authenticated",
                 };
             });
+    }
+
+    public static bool ValidateToken(string token)
+    {
+        if (string.IsNullOrWhiteSpace(token)) return false;
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var key = Encoding.UTF8.GetBytes(_jwtSecret);
+        var validationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+        };
+        try
+        {
+            tokenHandler.ValidateToken(token, validationParameters, out _);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public static string? GetClientIdFromToken(string token)
+    {
+        if (!ValidateToken(token)) return null;
+
+        try
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadJwtToken(token);
+            return jwtToken.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
+        }
+        catch
+        {
+            return null;
+        }
     }
 }

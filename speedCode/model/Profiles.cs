@@ -7,9 +7,7 @@ namespace speedCode.Model
     [Table("profiles")]
     public class Profiles
     {
-        [Key]
-        [Column(TypeName = "uuid")]
-        public Guid id { get; set; }
+        [Key] [Column(TypeName = "uuid")] public Guid id { get; set; } = Guid.NewGuid();
 
         [Column("avatar_url", TypeName = "text")]
         public string? avatarUrl { get; set; }
@@ -19,7 +17,11 @@ namespace speedCode.Model
         [Column("nick_name", TypeName = "varchar(50)")]
         public string? nickName { get; set; }
 
-        public enum Rol { user, admin }
+        public enum Rol
+        {
+            user,
+            admin
+        }
 
         public Rol role { get; set; }
     }

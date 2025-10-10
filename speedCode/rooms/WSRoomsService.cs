@@ -1,5 +1,9 @@
 using System.Collections.Concurrent;
 using System.Net.WebSockets;
+using System.Text;
+using Microsoft.EntityFrameworkCore;
+using speedCode.Data;
+using speedCode.security;
 
 namespace speedCode.rooms;
 
@@ -25,40 +29,6 @@ public static class WSRoomsService
             room.RemovePlayer(clientId);
             if (room.Players.IsEmpty)
                 Rooms.TryRemove(roomId, out _);
-        }
-    }
-
-    public static async Task HandleClientAsync(string roomId, string clientId, WebSocket socket)
-    {
-        var player = new Player
-        {
-            ClientId = clientId,
-            Socket = socket,
-            ConnectedAt = DateTime.UtcNow,
-            IsCompleted = false
-        };
-
-        JoinRoom(roomId, player);
-
-        var buffer = new byte[1024 * 4];
-
-        try
-        {
-            while (socket.State == WebSocketState.Open)
-            {
-                var result = await socket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-
-                if (result.MessageType == WebSocketMessageType.Close)
-                {
-                    LeaveRoom(roomId, clientId);
-                    await socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closed", CancellationToken.None);
-                    break;
-                }
-            }
-        }
-        catch
-        {
-            LeaveRoom(roomId, clientId);
         }
     }
 }
