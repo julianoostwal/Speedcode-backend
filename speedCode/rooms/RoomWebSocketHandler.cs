@@ -1,24 +1,24 @@
 using System.Net.WebSockets;
 using System.Text;
-using speedCode.dto.room;
 using speedCode.security;
+using speedCode.services;
 
 namespace speedCode.rooms;
 
-public class WebSocketHandler
+public class RoomWebSocketHandler
 {
     private readonly RoomValidator _validator;
+    private readonly RoomService _roomService;
 
-    public WebSocketHandler(RoomValidator validator)
+    public RoomWebSocketHandler(RoomValidator validator, RoomService roomService)
     {
         _validator = validator;
+        _roomService = roomService;
     }
 
-    public async Task HandleAsync(string roomId, WebSocket socket)
+    public async Task HandleAsync(Guid roomId, WebSocket socket)
     {
-        var clientId = await AuthenticateAsync(socket);
-        if (string.IsNullOrEmpty(clientId)) return;
-
+        Guid clientId = await AuthenticateAsync(socket);
         if (!await _validator.RoomExistsAsync(roomId) || !await _validator.ClientExistsAsync(clientId))
         {
             var msg = Encoding.UTF8.GetBytes("Room or client not found");
@@ -34,14 +34,16 @@ public class WebSocketHandler
             ClientId = clientId,
             Socket = socket,
             ConnectedAt = DateTime.UtcNow,
-            IsCompleted = false
         };
-        PlayerManager.AddPlayer(roomId, player);
 
-        await ReceiveLoopAsync(roomId, player);
+
+        Room room = WSRoomsService.GetOrCreateRoom(roomId);
+        PlayerManager.AddPlayer(room, player);
+        _roomService.JoinRoom(clientId, roomId);
+        await ReceiveLoopAsync(room, player);
     }
 
-    private async Task<string?> AuthenticateAsync(WebSocket socket)
+    private async Task<Guid> AuthenticateAsync(WebSocket socket)
     {
         var buffer = new byte[1024 * 4];
         var result = await socket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
@@ -60,7 +62,6 @@ public class WebSocketHandler
             await socket.SendAsync(new ArraySegment<byte>(msg), WebSocketMessageType.Text, true,
                 CancellationToken.None);
             await socket.CloseAsync(WebSocketCloseStatus.PolicyViolation, "Missing token", CancellationToken.None);
-            return null;
         }
 
         var token = tokenProp.GetString();
@@ -73,15 +74,13 @@ public class WebSocketHandler
             await socket.CloseAsync(WebSocketCloseStatus.PolicyViolation, "Unauthorized", CancellationToken.None);
         }
 
-        return clientId;
+        return Guid.Parse(clientId);
     }
 
-    private async Task ReceiveLoopAsync(string roomId, Player player)
+    private async Task ReceiveLoopAsync(Room room, Player player)
     {
         var buffer = new byte[1024 * 4];
-        if (!WSRoomsService.Rooms.TryGetValue(roomId, out var room))
-            return;
-        await BroadcastRoomStateAsync(room);
+        await room.BroadcastRoomUpdateAsync();
 
         try
         {
@@ -90,7 +89,7 @@ public class WebSocketHandler
                 var result = await player.Socket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
                 if (result.MessageType == WebSocketMessageType.Close)
                 {
-                    PlayerManager.RemovePlayer(roomId, player.ClientId);
+                    PlayerManager.RemovePlayer(room, player.ClientId);
                     await player.Socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closed",
                         CancellationToken.None);
                     break;
@@ -99,27 +98,13 @@ public class WebSocketHandler
                 if (result.MessageType == WebSocketMessageType.Text)
                 {
                     var msg = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                    // TODO: messages
+                    // TODO==: messages
                 }
             }
         }
         catch
         {
-            PlayerManager.RemovePlayer(roomId, player.ClientId);
+            PlayerManager.RemovePlayer(room, player.ClientId);
         }
-    }
-
-    private async Task BroadcastRoomStateAsync(Room room)
-    {
-        var update = new UpdateRoomStateDto
-        {
-            Players = room.Players.Values.Select(p => new PlayerStateDto
-            {
-                ClientId = p.ClientId,
-                IsCompleted = p.IsCompleted
-            }).ToList()
-        };
-
-        await room.BroadcastAsync(update);
     }
 }

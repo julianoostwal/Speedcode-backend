@@ -1,3 +1,5 @@
+using speedCode.dto.room;
+
 namespace speedCode.rooms;
 
 using System.Net.WebSockets;
@@ -7,19 +9,28 @@ using System.Text.Json;
 
 public class Room
 {
-    public string RoomId { get; set; } = "";
+    public Guid RoomId { get; set; }
 
-    public ConcurrentDictionary<string, Player> Players { get; set; } = new();
+    public ConcurrentDictionary<Guid, Player> Players { get; set; } = new();
 
 
     public void AddPlayer(Player player)
     {
         Players[player.ClientId] = player;
     }
-    
-    public async Task BroadcastAsync(object message)
+
+    public async Task BroadcastRoomUpdateAsync()
     {
-        string json = JsonSerializer.Serialize(message);
+        var update = new UpdateRoomStateDto
+        {
+            Players = Players.Values.Select(p => new PlayerStateDto
+            {
+                ClientId = p.ClientId,
+                FinishedExcise = p.FinishedExcise
+            }).ToList()
+        };
+
+        string json = JsonSerializer.Serialize(update);
         var buffer = Encoding.UTF8.GetBytes(json);
         var segment = new ArraySegment<byte>(buffer);
 
@@ -32,7 +43,7 @@ public class Room
         }
     }
 
-    public void RemovePlayer(string clientId)
+    public void RemovePlayer(Guid clientId)
     {
         Players.TryRemove(clientId, out _);
     }

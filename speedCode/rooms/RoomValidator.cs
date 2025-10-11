@@ -12,15 +12,13 @@ public class RoomValidator
         _db = db;
     }
 
-    public async Task<bool> RoomExistsAsync(string roomId)
+    public async Task<bool> RoomExistsAsync(Guid roomId)
     {
-        if (!Guid.TryParse(roomId, out var roomGuid)) return false;
-        return await _db.Rooms.AnyAsync(r => r.id == roomGuid);
+        return await _db.Rooms.AnyAsync(r => r.id == roomId);
     }
 
-    public async Task<bool> ClientExistsAsync(string clientId)
+    public async Task<bool> ClientExistsAsync(Guid clientId)
     {
-        if (!Guid.TryParse(clientId, out var clientGuid)) return false;
-        return await _db.Profiles.AnyAsync(p => p.id == clientGuid);
+        return await _db.Profiles.AnyAsync(p => p.id == clientId);
     }
 }

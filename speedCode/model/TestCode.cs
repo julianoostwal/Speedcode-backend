@@ -14,7 +14,7 @@ namespace speedCode.Model
         public string[] expectedResult { get; set; }
 
         [Column("expected_input", TypeName = "text[]")]
-        public string?[] expectedInput { get; set; }
+        public string?[]? expectedInput { get; set; }
 
         [Required] public Guid authorId { get; set; }
         [ForeignKey("authorId")] public virtual Profiles author { get; set; }
@@ -24,5 +24,7 @@ namespace speedCode.Model
 
         public virtual ICollection<ExerciseTest> ExerciseTests { get; set; } = new List<ExerciseTest>();
         [Required] public DateTime createdAt { get; set; }
+
+        [NotMapped] public string Judge0Stdin => expectedInput != null ? string.Join("\n", expectedInput) : "";
     }
 }

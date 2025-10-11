@@ -20,17 +20,21 @@ public class JudgeCodeService
     }
 
 
-    public async Task<TestCodeAsyncResults> TestCodeAsyncForRoom(TestCodeRequest request, string roomId,
-        string clientId)
+    public async Task<TestCodeAsyncResults> TestCodeAsyncForRoom(TestCodeRequest request, Guid roomId,
+        Guid clientId)
     {
         TestCodeAsyncResults result = await TestCodeAsync(request);
 
         if (result.IsPassed)
         {
-            PlayerManager.markPlayerCompleted(roomId, clientId);
+            if (WSRoomsService.Rooms.TryGetValue(roomId, out var roomValue))
+            {
+                PlayerManager.CompletedAExercise(roomValue, clientId, request.ExerciseId);
+            }
+
             ProfileExercise profileExercise = new ProfileExercise()
             {
-                profileId = Guid.Parse(clientId),
+                profileId = clientId,
                 exerciseId = request.ExerciseId
             };
             _dbContext.ProfileExercise.Add(profileExercise);
@@ -55,7 +59,9 @@ public class JudgeCodeService
             JudgeCode judgeCodeFactoryResults = JudgeCodeFactory.CreateJudgeCode(testCode.Type);
             judgeCodeFactoryResults.ExpectedResults = testCode.expectedResult;
             judgeCodeFactoryResults.OutPut =
-                _judge0Client.SubmitCodeAsync(request.Code, request.LanguageId).Result.Stdout;
+                _judge0Client
+                    .SubmitCodeAsync(new SubmissionRequest(request.Code, request.LanguageId, testCode.Judge0Stdin))
+                    .Result.Stdout;
             JudgeCodeTestResults output = judgeCodeFactoryResults.TestOutput();
             results.TestProcess.Add(output);
         }

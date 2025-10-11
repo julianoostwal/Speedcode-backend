@@ -1,10 +1,6 @@
-using System.Net;
-using Moq;
-using Moq.Protected;
 using speedCode.codeTesting;
 using speedCode.dto;
 using Microsoft.Extensions.Configuration;
-using System.Net.Http.Json;
 using speedCode.Tests.dto;
 
 namespace speedCode.speedCode.Tests
@@ -18,7 +14,7 @@ namespace speedCode.speedCode.Tests
                 .AddUserSecrets<Judge0ClientTests>()
                 .AddEnvironmentVariables()
                 .Build();
-            
+
             string baseUrl = config["Judge0:BaseUrl"] ?? "http://localhost:2358";
             var httpClient = new HttpClient
             {
@@ -27,7 +23,12 @@ namespace speedCode.speedCode.Tests
 
             var client = new Judge0Client(httpClient);
 
-            SubmissionResult result = await client.SubmitCodeAsync("print('Hello World')", 70);
+            SubmissionResult result = await client.SubmitCodeAsync(new SubmissionRequest()
+            {
+                LanguageId = 70,
+                SourceCode = "print('Hello World')",
+                Stdin = ""
+            });
 
             Assert.Equal(Judge0Statuses.Accepted, result.Status.Id);
             Assert.Equal(result.Stdout, "Hello World\n");
