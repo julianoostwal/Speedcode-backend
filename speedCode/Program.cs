@@ -6,6 +6,7 @@ using speedCode.security;
 using speedCode.Seeder;
 using speedCode.services;
 using speedCode.Controllers;
+using speedCode.rooms;
 
 var builder = WebApplication.CreateBuilder(args);
 AuthManager.ConfigureJwt(builder);
@@ -37,6 +38,7 @@ builder.Services.AddSingleton<Judge0Client>(sp =>
 });
 builder.Services.AddScoped<JudgeCodeService>();
 builder.Services.AddScoped<RoomService>();
+builder.Services.AddScoped<RoomValidator>();
 
 var app = builder.Build();
 

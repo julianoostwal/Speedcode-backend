@@ -13,10 +13,12 @@ public class WsRoomController : ControllerBase
 {
     private readonly JudgeCodeService _judgeCodeService;
     private readonly RoomService _roomService;
+    private readonly RoomValidator _validator;
 
-    public WsRoomController(JudgeCodeService judgeCodeService, RoomService roomService)
+    public WsRoomController(JudgeCodeService judgeCodeService, RoomService roomService, RoomValidator validator)
     {
         _judgeCodeService = judgeCodeService;
+        _validator = validator;
         _roomService = roomService;
     }
 
@@ -37,8 +39,7 @@ public class WsRoomController : ControllerBase
         }
 
         var socket = await HttpContext.WebSockets.AcceptWebSocketAsync();
-        var validator = new RoomValidator(db);
-        var handler = new RoomWebSocketHandler(validator, _roomService);
+        var handler = new RoomWebSocketHandler(_validator, _roomService);
         await handler.HandleAsync(roomId, socket);
     }
 
