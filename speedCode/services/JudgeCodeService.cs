@@ -27,7 +27,10 @@ public class JudgeCodeService
 
         if (result.IsPassed)
         {
-            PlayerManager.markPlayerCompleted(roomId, clientId);
+            if (WSRoomsService.Rooms.TryGetValue(roomId, out var roomValue))
+            {
+                PlayerManager.CompletedAExercise(roomValue, clientId, request.ExerciseId);
+            }
             ProfileExercise profileExercise = new ProfileExercise()
             {
                 profileId = Guid.Parse(clientId),
@@ -55,7 +58,9 @@ public class JudgeCodeService
             JudgeCode judgeCodeFactoryResults = JudgeCodeFactory.CreateJudgeCode(testCode.Type);
             judgeCodeFactoryResults.ExpectedResults = testCode.expectedResult;
             judgeCodeFactoryResults.OutPut =
-                _judge0Client.SubmitCodeAsync(request.Code, request.LanguageId).Result.Stdout;
+                _judge0Client
+                    .SubmitCodeAsync(new SubmissionRequest(request.Code, request.LanguageId, testCode.Judge0Stdin))
+                    .Result.Stdout;
             JudgeCodeTestResults output = judgeCodeFactoryResults.TestOutput();
             results.TestProcess.Add(output);
         }

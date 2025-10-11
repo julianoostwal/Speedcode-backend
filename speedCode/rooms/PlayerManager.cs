@@ -4,27 +4,12 @@ namespace speedCode.rooms;
 
 public static class PlayerManager
 {
-    public static void AddPlayer(string roomId, Player player) => WSRoomsService.JoinRoom(roomId, player);
-    public static void RemovePlayer(string roomId, string clientId) => WSRoomsService.LeaveRoom(roomId, clientId);
+    public static void AddPlayer(Room room, Player player) => WSRoomsService.JoinRoom(room, player);
+    public static void RemovePlayer(Room room, string clientId) => WSRoomsService.LeaveRoom(room, clientId);
 
-    public static async Task markPlayerCompleted(string roomId, string clientId)
+    public static void CompletedAExercise(Room room, string clientId, Guid finishedExcise)
     {
-        if (WSRoomsService.Rooms.TryGetValue(roomId, out var room))
-        {
-            room.Players[clientId].IsCompleted = true;
-        }
-
-        await room.BroadcastAsync(new UpdateRoomStateDto
-        {
-            Players = room.Players.Values.Select(p => new PlayerStateDto
-            {
-                ClientId = p.ClientId,
-                IsCompleted = p.IsCompleted
-            }).ToList()
-        });
-    }
-
-    public static void AfterCodeTest()
-    {
+        room.Players[clientId].FinishedExcise.Add(finishedExcise);
+        room.BroadcastRoomUpdateAsync();
     }
 }

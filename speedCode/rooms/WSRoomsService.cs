@@ -16,19 +16,15 @@ public static class WSRoomsService
         return Rooms.GetOrAdd(roomId, id => new Room { RoomId = id });
     }
 
-    public static void JoinRoom(string roomId, Player player)
+    public static void JoinRoom(Room room, Player player)
     {
-        var room = GetOrCreateRoom(roomId);
-        room.AddPlayer(player);
+        GetOrCreateRoom(room.RoomId).AddPlayer(player);
     }
 
-    public static void LeaveRoom(string roomId, string clientId)
+    public static void LeaveRoom(Room room, string clientId)
     {
-        if (Rooms.TryGetValue(roomId, out var room))
-        {
-            room.RemovePlayer(clientId);
-            if (room.Players.IsEmpty)
-                Rooms.TryRemove(roomId, out _);
-        }
+        room.RemovePlayer(clientId);
+        if (room.Players.IsEmpty)
+            Rooms.TryRemove(room.RoomId, out _);
     }
 }

@@ -7,5 +7,6 @@ public class Player
     public string ClientId { get; set; } = "";
     public WebSocket Socket { get; set; } = default!;
     public DateTime ConnectedAt { get; set; } = DateTime.UtcNow;
-    public bool IsCompleted { get; set; }
+
+    public List<Guid> FinishedExcise { get; set; } = new List<Guid>();
 }

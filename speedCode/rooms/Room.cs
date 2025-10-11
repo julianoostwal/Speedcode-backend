@@ -1,3 +1,5 @@
+using speedCode.dto.room;
+
 namespace speedCode.rooms;
 
 using System.Net.WebSockets;
@@ -16,10 +18,19 @@ public class Room
     {
         Players[player.ClientId] = player;
     }
-    
-    public async Task BroadcastAsync(object message)
+
+    public async Task BroadcastRoomUpdateAsync()
     {
-        string json = JsonSerializer.Serialize(message);
+        var update = new UpdateRoomStateDto
+        {
+            Players = Players.Values.Select(p => new PlayerStateDto
+            {
+                ClientId = p.ClientId,
+                FinishedExcise = p.FinishedExcise
+            }).ToList()
+        };
+
+        string json = JsonSerializer.Serialize(update);
         var buffer = Encoding.UTF8.GetBytes(json);
         var segment = new ArraySegment<byte>(buffer);
 

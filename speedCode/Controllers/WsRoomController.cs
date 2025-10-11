@@ -63,8 +63,8 @@ public class WsRoomController : ControllerBase
 
         if (!room.Players.TryGetValue(clientId, out var player))
             return NotFound($"Client {clientId} not found.");
-        
-        var result = await _judgeCodeService.TestCodeAsyncForRoom(request,roomId, clientId);
+
+        var result = await _judgeCodeService.TestCodeAsyncForRoom(request, roomId, clientId);
         return Ok(result);
     }
 }
