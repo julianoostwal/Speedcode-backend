@@ -1,23 +1,24 @@
 using System.Net.WebSockets;
 using System.Text;
 using speedCode.security;
+using speedCode.services;
 
 namespace speedCode.rooms;
 
-public class WebSocketHandler
+public class RoomWebSocketHandler
 {
     private readonly RoomValidator _validator;
+    private readonly RoomService _roomService;
 
-    public WebSocketHandler(RoomValidator validator)
+    public RoomWebSocketHandler(RoomValidator validator, RoomService roomService)
     {
         _validator = validator;
+        _roomService = roomService;
     }
 
-    public async Task HandleAsync(string roomId, WebSocket socket)
+    public async Task HandleAsync(Guid roomId, WebSocket socket)
     {
-        var clientId = await AuthenticateAsync(socket);
-        if (string.IsNullOrEmpty(clientId)) return;
-
+        Guid clientId = await AuthenticateAsync(socket);
         if (!await _validator.RoomExistsAsync(roomId) || !await _validator.ClientExistsAsync(clientId))
         {
             var msg = Encoding.UTF8.GetBytes("Room or client not found");
@@ -38,10 +39,11 @@ public class WebSocketHandler
 
         Room room = WSRoomsService.GetOrCreateRoom(roomId);
         PlayerManager.AddPlayer(room, player);
+        _roomService.JoinRoom(clientId, roomId);
         await ReceiveLoopAsync(room, player);
     }
 
-    private async Task<string?> AuthenticateAsync(WebSocket socket)
+    private async Task<Guid> AuthenticateAsync(WebSocket socket)
     {
         var buffer = new byte[1024 * 4];
         var result = await socket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
@@ -60,7 +62,6 @@ public class WebSocketHandler
             await socket.SendAsync(new ArraySegment<byte>(msg), WebSocketMessageType.Text, true,
                 CancellationToken.None);
             await socket.CloseAsync(WebSocketCloseStatus.PolicyViolation, "Missing token", CancellationToken.None);
-            return null;
         }
 
         var token = tokenProp.GetString();
@@ -73,7 +74,7 @@ public class WebSocketHandler
             await socket.CloseAsync(WebSocketCloseStatus.PolicyViolation, "Unauthorized", CancellationToken.None);
         }
 
-        return clientId;
+        return Guid.Parse(clientId);
     }
 
     private async Task ReceiveLoopAsync(Room room, Player player)
@@ -97,7 +98,7 @@ public class WebSocketHandler
                 if (result.MessageType == WebSocketMessageType.Text)
                 {
                     var msg = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                    // TODO: messages
+                    // TODO==: messages
                 }
             }
         }

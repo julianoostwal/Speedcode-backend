@@ -4,7 +4,7 @@ namespace speedCode.rooms;
 
 public class Player
 {
-    public string ClientId { get; set; } = "";
+    public Guid ClientId { get; set; }
     public WebSocket Socket { get; set; } = default!;
     public DateTime ConnectedAt { get; set; } = DateTime.UtcNow;
 

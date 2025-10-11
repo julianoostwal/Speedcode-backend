@@ -9,9 +9,9 @@ using System.Text.Json;
 
 public class Room
 {
-    public string RoomId { get; set; } = "";
+    public Guid RoomId { get; set; }
 
-    public ConcurrentDictionary<string, Player> Players { get; set; } = new();
+    public ConcurrentDictionary<Guid, Player> Players { get; set; } = new();
 
 
     public void AddPlayer(Player player)
@@ -43,7 +43,7 @@ public class Room
         }
     }
 
-    public void RemovePlayer(string clientId)
+    public void RemovePlayer(Guid clientId)
     {
         Players.TryRemove(clientId, out _);
     }

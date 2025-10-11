@@ -12,10 +12,12 @@ namespace speedCode.Controllers;
 public class WsRoomController : ControllerBase
 {
     private readonly JudgeCodeService _judgeCodeService;
+    private readonly RoomService _roomService;
 
-    public WsRoomController(JudgeCodeService judgeCodeService)
+    public WsRoomController(JudgeCodeService judgeCodeService, RoomService roomService)
     {
         _judgeCodeService = judgeCodeService;
+        _roomService = roomService;
     }
 
     /// <summary>
@@ -25,7 +27,7 @@ public class WsRoomController : ControllerBase
     /// </summary>
     /// <param name="roomId">The ID of an existing room in the database.</param>
     [HttpGet("{roomId}")]
-    public async Task Get(string roomId, [FromServices] AppDbContext db)
+    public async Task Get(Guid roomId, [FromServices] AppDbContext db)
     {
         if (!HttpContext.WebSockets.IsWebSocketRequest)
         {
@@ -36,7 +38,7 @@ public class WsRoomController : ControllerBase
 
         var socket = await HttpContext.WebSockets.AcceptWebSocketAsync();
         var validator = new RoomValidator(db);
-        var handler = new WebSocketHandler(validator);
+        var handler = new RoomWebSocketHandler(validator, _roomService);
         await handler.HandleAsync(roomId, socket);
     }
 
@@ -56,7 +58,7 @@ public class WsRoomController : ControllerBase
     /// <response code="400">Invalid or missing request data.</response>
     [HttpPost("testCode/{roomId}/{clientId}")]
     public async Task<ActionResult<TestCodeAsyncResults>> TestCodeAsync(
-        string roomId, string clientId, [FromBody] TestCodeRequest request)
+        Guid roomId, Guid clientId, [FromBody] TestCodeRequest request)
     {
         if (!WSRoomsService.Rooms.TryGetValue(roomId, out var room))
             return NotFound($"Room {roomId} not found.");

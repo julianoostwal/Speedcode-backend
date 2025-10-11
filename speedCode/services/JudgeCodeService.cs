@@ -20,8 +20,8 @@ public class JudgeCodeService
     }
 
 
-    public async Task<TestCodeAsyncResults> TestCodeAsyncForRoom(TestCodeRequest request, string roomId,
-        string clientId)
+    public async Task<TestCodeAsyncResults> TestCodeAsyncForRoom(TestCodeRequest request, Guid roomId,
+        Guid clientId)
     {
         TestCodeAsyncResults result = await TestCodeAsync(request);
 
@@ -31,9 +31,10 @@ public class JudgeCodeService
             {
                 PlayerManager.CompletedAExercise(roomValue, clientId, request.ExerciseId);
             }
+
             ProfileExercise profileExercise = new ProfileExercise()
             {
-                profileId = Guid.Parse(clientId),
+                profileId = clientId,
                 exerciseId = request.ExerciseId
             };
             _dbContext.ProfileExercise.Add(profileExercise);
