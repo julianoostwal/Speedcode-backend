@@ -2,7 +2,6 @@ using speedCode.Data;
 using speedCode.dto.room;
 using speedCode.Mapper;
 using speedCode.Model;
-using speedCode.rooms;
 
 namespace speedCode.services;
 

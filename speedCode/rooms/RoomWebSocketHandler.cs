@@ -9,9 +9,11 @@ public class RoomWebSocketHandler
 {
     private readonly RoomValidator _validator;
     private readonly RoomService _roomService;
+    private readonly RoomUserService _roomUserService;
 
-    public RoomWebSocketHandler(RoomValidator validator, RoomService roomService)
+    public RoomWebSocketHandler(RoomValidator validator, RoomService roomService, RoomUserService roomUserService)
     {
+        _roomUserService = roomUserService;
         _validator = validator;
         _roomService = roomService;
     }
@@ -34,6 +36,7 @@ public class RoomWebSocketHandler
             ClientId = clientId,
             Socket = socket,
             ConnectedAt = DateTime.UtcNow,
+            FinishedExcise = _roomUserService.GetAllFinishedExcisesByRoomAndUserId(roomId, clientId)
         };
 
 
