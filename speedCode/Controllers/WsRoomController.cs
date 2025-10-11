@@ -12,14 +12,11 @@ namespace speedCode.Controllers;
 public class WsRoomController : ControllerBase
 {
     private readonly JudgeCodeService _judgeCodeService;
-    private readonly RoomService _roomService;
-    private readonly RoomValidator _validator;
+    private readonly RoomWebSocketHandler _wsHandler;
 
-    public WsRoomController(JudgeCodeService judgeCodeService, RoomService roomService, RoomValidator validator)
+    public WsRoomController(JudgeCodeService judgeCodeService, RoomWebSocketHandler wsHandler)
     {
-        _judgeCodeService = judgeCodeService;
-        _validator = validator;
-        _roomService = roomService;
+        _wsHandler = wsHandler;
     }
 
     /// <summary>
@@ -39,8 +36,7 @@ public class WsRoomController : ControllerBase
         }
 
         var socket = await HttpContext.WebSockets.AcceptWebSocketAsync();
-        var handler = new RoomWebSocketHandler(_validator, _roomService);
-        await handler.HandleAsync(roomId, socket);
+        await _wsHandler.HandleAsync(roomId, socket);
     }
 
     /// <summary>

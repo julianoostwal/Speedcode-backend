@@ -36,6 +36,9 @@ builder.Services.AddSingleton<Judge0Client>(sp =>
     var httpClient = new HttpClient { BaseAddress = new Uri(builder.Configuration["Judge0:BaseUrl"]) };
     return new Judge0Client(httpClient);
 });
+
+builder.Services.AddScoped<RoomWebSocketHandler>();
+builder.Services.AddScoped<RoomUserService>();
 builder.Services.AddScoped<JudgeCodeService>();
 builder.Services.AddScoped<RoomService>();
 builder.Services.AddScoped<RoomValidator>();
