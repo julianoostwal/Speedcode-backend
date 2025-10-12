@@ -18,5 +18,10 @@ namespace speedCode.Model
         public virtual Guid profileId { get; set; }
         [ForeignKey("profileId")]
         public virtual Profiles profile { get; set; }
+        
+        [Required]
+        public int memory { get; set; }
+        [Required]
+        public DateTime time{get;set;}
     }
 }
