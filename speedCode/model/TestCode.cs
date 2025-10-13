@@ -8,14 +8,7 @@ namespace speedCode.Model
     public class TestCode
     {
         [Key] public Guid id { get; set; } = Guid.NewGuid();
-
-        [Required]
-        [Column("expected_result", TypeName = "text[]")]
-        public string[] expectedResult { get; set; }
-
-        [Column("expected_input", TypeName = "text[]")]
-        public string?[]? expectedInput { get; set; }
-
+        
         [Required] public Guid authorId { get; set; }
         [ForeignKey("authorId")] public virtual Profiles author { get; set; }
 
@@ -23,8 +16,8 @@ namespace speedCode.Model
 
 
         public virtual ICollection<ExerciseTest> ExerciseTests { get; set; } = new List<ExerciseTest>();
+        public virtual ICollection<TestExpectIO> TestExpectIOs { get; set; } = new List<TestExpectIO>();
         [Required] public DateTime createdAt { get; set; }
 
-        [NotMapped] public string Judge0Stdin => expectedInput != null ? string.Join("\n", expectedInput) : "";
     }
 }

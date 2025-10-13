@@ -12,7 +12,6 @@ namespace speedCode.Seeder
 {
     public class SeederManager
     {
-
         // Creates users in Supabase Auth
 
         public static async Task CreateSupabaseAuthUsersAsync(string supabaseUrl, string serviceRoleKey)
@@ -34,7 +33,8 @@ namespace speedCode.Seeder
                 if (usersResponse.IsSuccessStatusCode)
                 {
                     using var doc = JsonDocument.Parse(usersJson);
-                    if (doc.RootElement.TryGetProperty("users", out var usersArray) && usersArray.ValueKind == JsonValueKind.Array)
+                    if (doc.RootElement.TryGetProperty("users", out var usersArray) &&
+                        usersArray.ValueKind == JsonValueKind.Array)
                     {
                         bool exists = usersArray.EnumerateArray().Any(u =>
                             u.TryGetProperty("email", out var e) && e.GetString() == email
@@ -132,7 +132,8 @@ namespace speedCode.Seeder
                     },
                     new Rooms
                     {
-                        roomName = "Room2", roomLevel = Rooms.Level.Medium, isPrivate = false, createdAt = DateTime.UtcNow
+                        roomName = "Room2", roomLevel = Rooms.Level.Medium, isPrivate = false,
+                        createdAt = DateTime.UtcNow
                     },
                     new Rooms
                     {
@@ -143,17 +144,43 @@ namespace speedCode.Seeder
                 context.SaveChanges();
             }
 
-            // Seed TestCode
 
+            // Seed TestCode and testExpectIOs
             if (!context.TestCode.Any() && context.Profiles.Any())
             {
                 var testCodes = new List<TestCode>();
                 int count = context.Profiles.Count();
 
+                var profiles = context.Profiles.ToList();
+
                 for (int i = 0; i < count; i++)
                 {
-                    testCodes.Add(new TestCode { expectedResult = new[] { $"TestCode{i + 1}" }, authorId = context.Profiles.Skip(i).First().id, createdAt = DateTime.UtcNow, Type = TestType.Exactly });
+                    var author = profiles[i];
+
+                    var testCode = new TestCode
+                    {
+                        authorId = author.id,
+                        createdAt = DateTime.UtcNow,
+                        Type = TestType.Exactly
+                    };
+
+                    testCode.TestExpectIOs = new List<TestExpectIO>
+                    {
+                        new TestExpectIO
+                        {
+                            input = $"Input for TestCode {i + 1} - Case 1",
+                            output = $"Output for TestCode {i + 1} - Case 1"
+                        },
+                        new TestExpectIO
+                        {
+                            input = $"Input for TestCode {i + 1} - Case 2",
+                            output = $"Output for TestCode {i + 1} - Case 2"
+                        }
+                    };
+
+                    testCodes.Add(testCode);
                 }
+
                 context.TestCode.AddRange(testCodes);
                 context.SaveChanges();
             }
@@ -168,8 +195,12 @@ namespace speedCode.Seeder
 
                 for (int i = 0; i < Math.Min(countExercise, countTestCode); i++)
                 {
-                    exerciseTests.Add(new ExerciseTest { testId = context.TestCode.Skip(i).First().id, exerciseId = context.Exercise.Skip(i).First().id });
+                    exerciseTests.Add(new ExerciseTest
+                    {
+                        testId = context.TestCode.Skip(i).First().id, exerciseId = context.Exercise.Skip(i).First().id
+                    });
                 }
+
                 context.ExerciseTest.AddRange(exerciseTests);
                 context.SaveChanges();
             }
@@ -184,8 +215,13 @@ namespace speedCode.Seeder
 
                 for (int i = 0; i < Math.Min(countExercise, countProfiles); i++)
                 {
-                    profileExercises.Add(new ProfileExercise { exerciseId = context.Exercise.Skip(i).First().id, profileId = context.Profiles.Skip(i).First().id });
+                    profileExercises.Add(new ProfileExercise
+                    {
+                        exerciseId = context.Exercise.Skip(i).First().id,
+                        profileId = context.Profiles.Skip(i).First().id
+                    });
                 }
+
                 context.ProfileExercise.AddRange(profileExercises);
                 context.SaveChanges();
             }
@@ -213,6 +249,7 @@ namespace speedCode.Seeder
                         });
                     }
                 }
+
                 context.RoomUser.AddRange(roomUsers);
                 context.SaveChanges();
             }
