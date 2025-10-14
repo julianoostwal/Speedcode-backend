@@ -10,18 +10,20 @@ namespace speedCode.Controllers;
 public class ProfilesController : ControllerBase
 {
     private readonly AppDbContext _context;
+    private readonly IConfiguration _configuration;
 
-    public ProfilesController(AppDbContext context)
+    public ProfilesController(AppDbContext context, IConfiguration configuration)
     {
         _context = context;
+        _configuration = configuration;
     }
 
     // GET all profiles
     [HttpGet]
     public async Task<IActionResult> GetFullProfiles()
     {
-        var supabaseUrl = "https://supabase.speedcode.tech";
-        var serviceRoleKey = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc1NzU5MzgwMCwiZXhwIjo0OTEzMjY3NDAwLCJyb2xlIjoic2VydmljZV9yb2xlIn0.U5ovw3nz1VKJJCbKfzARWXuHTUr73U1LNtyBNyhT6pg";
+        var supabaseUrl = _configuration["Supabase:Url"];
+        var serviceRoleKey = _configuration["Supabase:ServiceRoleKey"];
         using var httpClient = new HttpClient();
         httpClient.BaseAddress = new Uri(supabaseUrl);
         httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", serviceRoleKey);
@@ -46,6 +48,7 @@ public class ProfilesController : ControllerBase
         var profileAchievements = _context.ProfileAchievement.ToList();
         var achievements = _context.Achievement.ToList();
         var testCodes = _context.TestCode.ToList();
+        var testExpectIOs = _context.TestExpectIO.ToList();
 
         var result = new List<object>();
 
@@ -82,6 +85,8 @@ public class ProfilesController : ControllerBase
 
             var ExerciseTests = exerciseTests.Where(et => et.testId == userProfileTestcodes.FirstOrDefault()?.id).ToList();
 
+            var userTestExpectIOs = testExpectIOs.Where(te => te.testCodeId == userProfileTestcodes.FirstOrDefault()?.id).ToList();
+
             result.Add(new
             {
                 id = userIdStr,
@@ -103,6 +108,8 @@ public class ProfilesController : ControllerBase
                 {
                     profileExerciseId = pe.profileExerciseId,
                     exerciseId = pe.exercise?.id,
+                    memory = profileExercises.FirstOrDefault(p => p.id == pe.profileExerciseId)?.memory,
+                    time = profileExercises.FirstOrDefault(p => p.id == pe.profileExerciseId)?.time,
                     title = pe.exercise?.title,
                     description = pe.exercise?.description,
                     points = pe.exercise?.points,
@@ -114,7 +121,14 @@ public class ProfilesController : ControllerBase
                     authorId = pt.authorId,
                     expectedResults = pt.TestExpectIOs.Select(io => io.output).ToList(),
                     type = pt.Type.ToString(),
-                    createdAt = pt.createdAt
+                    createdAt = pt.createdAt,
+                    testExpectIOs = userTestExpectIOs.Select(te => new
+                    {
+                        id = te.id,
+                        input = te.input,
+                        output = te.output,
+                        testCodeId = te.testCodeId
+                    })
                 }),
                 exerciseTests = ExerciseTests.Select(et => new
                 {
@@ -144,8 +158,8 @@ public class ProfilesController : ControllerBase
         if (profile == null)
             return NotFound();
 
-        var supabaseUrl = "https://supabase.speedcode.tech";
-        var serviceRoleKey = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc1NzU5MzgwMCwiZXhwIjo0OTEzMjY3NDAwLCJyb2xlIjoic2VydmljZV9yb2xlIn0.U5ovw3nz1VKJJCbKfzARWXuHTUr73U1LNtyBNyhT6pg";
+        var supabaseUrl = _configuration["Supabase:Url"];
+        var serviceRoleKey = _configuration["Supabase:ServiceRoleKey"];
         using var httpClient = new HttpClient();
         httpClient.BaseAddress = new Uri(supabaseUrl);
         httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", serviceRoleKey);
@@ -172,6 +186,7 @@ public class ProfilesController : ControllerBase
         var profileAchievements = _context.ProfileAchievement.Where(pa => pa.profileId == id).ToList();
         var achievements = _context.Achievement.ToList();
         var testCodes = _context.TestCode.Where(pt => pt.authorId == id).ToList();
+        var testExpectIOs = _context.TestExpectIO.Where(te => te.testCodeId == testCodes.FirstOrDefault().id).ToList();
         var exerciseTests = _context.ExerciseTest.Where(et => et.testId == testCodes.FirstOrDefault().id).ToList();
 
         var result = new
@@ -195,6 +210,8 @@ public class ProfilesController : ControllerBase
             {
                 profileExerciseId = pe.id,
                 exerciseId = pe.exerciseId,
+                memory = pe.memory,
+                time = pe.time,
                 title = exercises.FirstOrDefault(ex => ex.id == pe.exerciseId)?.title,
                 description = exercises.FirstOrDefault(ex => ex.id == pe.exerciseId)?.description,
                 points = exercises.FirstOrDefault(ex => ex.id == pe.exerciseId)?.points,
@@ -212,7 +229,14 @@ public class ProfilesController : ControllerBase
                 authorId = pt.authorId,
                 expectedResults = pt.TestExpectIOs.Select(io => io.output).ToList(),
                 type = pt.Type.ToString(),
-                createdAt = pt.createdAt
+                createdAt = pt.createdAt,
+                testExpectIOs = testExpectIOs.Select(te => new
+                {
+                    id = te.id,
+                    input = te.input,
+                    output = te.output,
+                    testCodeId = te.testCodeId
+                })
             }),
             achievements = profileAchievements.Select(pa => new
             {
@@ -231,8 +255,8 @@ public class ProfilesController : ControllerBase
     [HttpGet("email/{email}")]
     public async Task<IActionResult> GetProfileByEmail(string email)
     {
-        var supabaseUrl = "https://supabase.speedcode.tech";
-        var serviceRoleKey = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc1NzU5MzgwMCwiZXhwIjo0OTEzMjY3NDAwLCJyb2xlIjoic2VydmljZV9yb2xlIn0.U5ovw3nz1VKJJCbKfzARWXuHTUr73U1LNtyBNyhT6pg";
+        var supabaseUrl = _configuration["Supabase:Url"];
+        var serviceRoleKey = _configuration["Supabase:ServiceRoleKey"];
         using var httpClient = new HttpClient();
         httpClient.BaseAddress = new Uri(supabaseUrl);
         httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", serviceRoleKey);
@@ -271,6 +295,7 @@ public class ProfilesController : ControllerBase
         var profileAchievements = _context.ProfileAchievement.Where(pa => pa.profileId == supabaseUserId).ToList();
         var achievements = _context.Achievement.ToList();
         var testCodes = _context.TestCode.Where(pt => pt.authorId == supabaseUserId).ToList();
+        var testExpectIOs = _context.TestExpectIO.Where(te => te.testCodeId == testCodes.FirstOrDefault().id).ToList();
         var exerciseTests = _context.ExerciseTest.Where(et => et.testId == testCodes.FirstOrDefault().id).ToList();
 
         var result = new
@@ -294,6 +319,8 @@ public class ProfilesController : ControllerBase
             {
                 profileExerciseId = pe.id,
                 exerciseId = pe.exerciseId,
+                memory = pe.memory,
+                time = pe.time,
                 title = exercises.FirstOrDefault(ex => ex.id == pe.exerciseId)?.title,
                 description = exercises.FirstOrDefault(ex => ex.id == pe.exerciseId)?.description,
                 points = exercises.FirstOrDefault(ex => ex.id == pe.exerciseId)?.points,
@@ -311,7 +338,14 @@ public class ProfilesController : ControllerBase
                 authorId = pt.authorId,
                 expectedResults = pt.TestExpectIOs.Select(io => io.output).ToList(),
                 type = pt.Type.ToString(),
-                createdAt = pt.createdAt
+                createdAt = pt.createdAt,
+                testExpectIOs = testExpectIOs.Select(te => new
+                {
+                    id = te.id,
+                    input = te.input,
+                    output = te.output,
+                    testCodeId = te.testCodeId
+                })
             }),
             achievements = profileAchievements.Select(pa => new
             {
@@ -334,8 +368,8 @@ public class ProfilesController : ControllerBase
             return BadRequest(ModelState);
 
         using var httpClient = new HttpClient();
-        var supabaseUrl = "https://supabase.speedcode.tech";
-        var serviceRoleKey = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc1NzU5MzgwMCwiZXhwIjo0OTEzMjY3NDAwLCJyb2xlIjoic2VydmljZV9yb2xlIn0.U5ovw3nz1VKJJCbKfzARWXuHTUr73U1LNtyBNyhT6pg";
+        var supabaseUrl = _configuration["Supabase:Url"];
+        var serviceRoleKey = _configuration["Supabase:ServiceRoleKey"];
         httpClient.BaseAddress = new Uri(supabaseUrl);
         httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", serviceRoleKey);
         httpClient.DefaultRequestHeaders.Add("apikey", serviceRoleKey);
@@ -433,8 +467,8 @@ public class ProfilesController : ControllerBase
 
         _context.SaveChanges();
 
-        var supabaseUrl = "https://supabase.speedcode.tech";
-        var serviceRoleKey = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc1NzU5MzgwMCwiZXhwIjo0OTEzMjY3NDAwLCJyb2xlIjoic2VydmljZV9yb2xlIn0.U5ovw3nz1VKJJCbKfzARWXuHTUr73U1LNtyBNyhT6pg";
+        var supabaseUrl = _configuration["Supabase:Url"];
+        var serviceRoleKey = _configuration["Supabase:ServiceRoleKey"];
         using var httpClient = new HttpClient();
         httpClient.BaseAddress = new Uri(supabaseUrl);
         httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", serviceRoleKey);
@@ -477,8 +511,8 @@ public class ProfilesController : ControllerBase
     [HttpPut("email/{email}")]
     public async Task<IActionResult> UpdateProfileByEmail(string email, [FromBody] UpdateProfileRequest updatedProfile)
     {
-        var supabaseUrl = "https://supabase.speedcode.tech";
-        var serviceRoleKey = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc1NzU5MzgwMCwiZXhwIjo0OTEzMjY3NDAwLCJyb2xlIjoic2VydmljZV9yb2xlIn0.U5ovw3nz1VKJJCbKfzARWXuHTUr73U1LNtyBNyhT6pg";
+        var supabaseUrl = _configuration["Supabase:Url"];
+        var serviceRoleKey = _configuration["Supabase:ServiceRoleKey"];
         using var httpClient = new HttpClient();
         httpClient.BaseAddress = new Uri(supabaseUrl);
         httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", serviceRoleKey);
@@ -564,8 +598,8 @@ public class ProfilesController : ControllerBase
     {
         var profile = _context.Profiles.Find(id);
 
-        var supabaseUrl = "https://supabase.speedcode.tech";
-        var serviceRoleKey = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc1NzU5MzgwMCwiZXhwIjo0OTEzMjY3NDAwLCJyb2xlIjoic2VydmljZV9yb2xlIn0.U5ovw3nz1VKJJCbKfzARWXuHTUr73U1LNtyBNyhT6pg";
+        var supabaseUrl = _configuration["Supabase:Url"];
+        var serviceRoleKey = _configuration["Supabase:ServiceRoleKey"];
         using (var httpClient = new HttpClient())
         {
             httpClient.BaseAddress = new Uri(supabaseUrl);
@@ -578,6 +612,10 @@ public class ProfilesController : ControllerBase
         var testCodes = _context.TestCode.Where(tc => tc.authorId == id).ToList();
         var testCodeIds = testCodes.Select(tc => tc.id).ToList();
         var exerciseTests = _context.ExerciseTest.Where(et => testCodeIds.Contains(et.testId)).ToList();
+        var testExpectIOs = _context.TestExpectIO.Where(te => testCodeIds.Contains(te.testCodeId)).ToList();
+        if (testExpectIOs.Any())
+            _context.TestExpectIO.RemoveRange(testExpectIOs);
+
         if (exerciseTests.Any())
             _context.ExerciseTest.RemoveRange(exerciseTests);
 
@@ -611,8 +649,8 @@ public class ProfilesController : ControllerBase
     [HttpDelete("email/{email}")]
     public async Task<IActionResult> DeleteProfileByEmail(string email)
     {
-        var supabaseUrl = "https://supabase.speedcode.tech";
-        var serviceRoleKey = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc1NzU5MzgwMCwiZXhwIjo0OTEzMjY3NDAwLCJyb2xlIjoic2VydmljZV9yb2xlIn0.U5ovw3nz1VKJJCbKfzARWXuHTUr73U1LNtyBNyhT6pg";
+        var supabaseUrl = _configuration["Supabase:Url"];
+        var serviceRoleKey = _configuration["Supabase:ServiceRoleKey"];
         using var httpClient = new HttpClient();
         httpClient.BaseAddress = new Uri(supabaseUrl);
         httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", serviceRoleKey);
@@ -650,6 +688,10 @@ public class ProfilesController : ControllerBase
         var testCodes = _context.TestCode.Where(tc => tc.authorId == supabaseUserId).ToList();
         var testCodeIds = testCodes.Select(tc => tc.id).ToList();
         var exerciseTests = _context.ExerciseTest.Where(et => testCodeIds.Contains(et.testId)).ToList();
+        var testExpectIOs = _context.TestExpectIO.Where(te => testCodeIds.Contains(te.testCodeId)).ToList();
+        if (testExpectIOs.Any())
+            _context.TestExpectIO.RemoveRange(testExpectIOs);
+            
         if (exerciseTests.Any())
             _context.ExerciseTest.RemoveRange(exerciseTests);
 

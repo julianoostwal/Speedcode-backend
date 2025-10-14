@@ -10,18 +10,20 @@ namespace speedCode.Controllers;
 public class ExercisesController : ControllerBase
 {
     private readonly AppDbContext _context;
+    private readonly IConfiguration _configuration;
 
-    public ExercisesController(AppDbContext context)
+    public ExercisesController(AppDbContext context, IConfiguration configuration)
     {
         _context = context;
+        _configuration = configuration;
     }
 
     // GET all exercises
     [HttpGet]
     public async Task<IActionResult> GetFullExercises()
     {
-        var supabaseUrl = "https://supabase.speedcode.tech";
-        var serviceRoleKey = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc1NzU5MzgwMCwiZXhwIjo0OTEzMjY3NDAwLCJyb2xlIjoic2VydmljZV9yb2xlIn0.U5ovw3nz1VKJJCbKfzARWXuHTUr73U1LNtyBNyhT6pg";
+        var supabaseUrl = _configuration["Supabase:Url"];
+        var serviceRoleKey = _configuration["Supabase:ServiceRoleKey"];
         using var httpClient = new HttpClient();
         httpClient.BaseAddress = new Uri(supabaseUrl);
         httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", serviceRoleKey);
@@ -40,6 +42,7 @@ public class ExercisesController : ControllerBase
         var exercises = _context.Exercise.ToList();
         var exerciseTests = _context.ExerciseTest.ToList();
         var testCodes = _context.TestCode.ToList();
+        var testExpectIOs = _context.TestExpectIO.ToList();
         var profileExercises = _context.ProfileExercise.ToList();
         var profiles = _context.Profiles.ToList();
         var roomExercises = _context.RoomExercise.ToList();
@@ -84,7 +87,61 @@ public class ExercisesController : ControllerBase
                 isRoomExcise = exercise.isRoomExcise,
                 points = exercise.points,
                 createdAt = exercise.createdAt,
-                profiles = exerciseProfiles
+                profiles = exerciseProfiles,
+                profileExercises = profileExerciseList
+                    .Where(pe => pe.exerciseId == exercise.id)
+                    .Select(pe => new
+                    {
+                        id = pe.id,
+                        profileId = pe.profileId,
+                        exerciseId = pe.exerciseId,
+                        memory = pe.memory,
+                        time = pe.time
+                    }),
+                roomExercises = roomExercises
+                    .Where(re => re.exerciseId == exercise.id)
+                    .Select(re => new
+                    {
+                        id = re.id,
+                        roomId = re.roomId,
+                        exerciseId = re.exerciseId
+                    }),
+                rooms = rooms
+                    .Where(r => roomExercises.Any(re => re.roomId == r.id && re.exerciseId == exercise.id))
+                    .Select(r => new
+                    {
+                        id = r.id,
+                        roomName = r.roomName,
+                        roomLevel = r.roomLevel,
+                        isPrivate = r.isPrivate,
+                        createdAt = r.createdAt
+                    }),
+                exerciseTests = exerciseTests
+                    .Where(et => et.exerciseId == exercise.id)
+                    .Select(et => new
+                    {
+                        id = et.id,
+                        exerciseId = et.exerciseId,
+                        testId = et.testId
+                    }),
+                testCodes = testCodes
+                    .Where(tc => exerciseTests.Any(et => et.testId == tc.id && et.exerciseId == exercise.id))
+                    .Select(tc => new
+                    {
+                        id = tc.id,
+                        authorId = tc.authorId,
+                        type = tc.Type.ToString(),
+                        createdAt = tc.createdAt,
+                        testExpectIOs = testExpectIOs
+                            .Where(te => te.testCodeId == tc.id)
+                            .Select(te => new
+                            {
+                                id = te.id,
+                                input = te.input,
+                                output = te.output,
+                                testCodeId = te.testCodeId
+                            })
+                    })
             });
         }
         return Ok(result);
@@ -98,8 +155,8 @@ public class ExercisesController : ControllerBase
         if (exercise == null)
             return NotFound("Exercise not found");
 
-        var supabaseUrl = "https://supabase.speedcode.tech";
-        var serviceRoleKey = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc1NzU5MzgwMCwiZXhwIjo0OTEzMjY3NDAwLCJyb2xlIjoic2VydmljZV9yb2xlIn0.U5ovw3nz1VKJJCbKfzARWXuHTUr73U1LNtyBNyhT6pg";
+        var supabaseUrl = _configuration["Supabase:Url"];
+        var serviceRoleKey = _configuration["Supabase:ServiceRoleKey"];
         using var httpClient = new HttpClient();
         httpClient.BaseAddress = new Uri(supabaseUrl);
         httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", serviceRoleKey);
