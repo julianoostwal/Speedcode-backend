@@ -8,7 +8,7 @@ namespace speedCode.Model
     public class TestCode
     {
         [Key] public Guid id { get; set; } = Guid.NewGuid();
-        
+
         [Required] public Guid authorId { get; set; }
         [ForeignKey("authorId")] public virtual Profiles author { get; set; }
 
@@ -19,5 +19,17 @@ namespace speedCode.Model
         public virtual ICollection<TestExpectIO> TestExpectIOs { get; set; } = new List<TestExpectIO>();
         [Required] public DateTime createdAt { get; set; }
 
+        [NotMapped]
+        public string Judge0Stdin
+        {
+            get
+            {
+                if (TestExpectIOs == null || !TestExpectIOs.Any())
+                    return string.Empty;
+                return string.Join("\n", TestExpectIOs
+                    .Where(io => !string.IsNullOrWhiteSpace(io.input))
+                    .Select(io => io.input.Trim()));
+            }
+        }
     }
 }
