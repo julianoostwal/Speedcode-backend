@@ -9,7 +9,8 @@ public class ExactJudgeCode : JudgeCode
 {
     public override string ExpectedResult { get; set; }
     public override string OutPut { get; set; }
-
+    
+    public override string Input { get; set; }
     public override JudgeCodeTestResults TestOutput()
     {
         var results = new JudgeCodeTestResults()
@@ -21,6 +22,7 @@ public class ExactJudgeCode : JudgeCode
 
         results.Logs.Add(new JudgeCodeTestLog
         {
+            input = Input,
             outPut = OutPut,
             Regex = ExpectedResult,
             TestType = TestType.Exactly,
