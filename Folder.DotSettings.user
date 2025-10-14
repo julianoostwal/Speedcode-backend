@@ -11,7 +11,7 @@
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AThrowHelper_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003FUsers_003Fzuohuangcai_003FLibrary_003FApplication_0020Support_003FJetBrains_003FRider2025_002E2_003Fresharper_002Dhost_003FSourcesCache_003F8874fa6fbc50b05ba8332188d36141eb4bba81fb1f92189ba9d7a25f545_003FThrowHelper_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AVoid_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003FUsers_003Fzuohuangcai_003FLibrary_003FApplication_0020Support_003FJetBrains_003FRider2025_002E2_003Fresharper_002Dhost_003FSourcesCache_003F6d2342c247c64eb7a9b3702e481e4443f83e00_003F_005Fe67e6_003FVoid_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AWebSocketMessageType_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003FUsers_003Fzuohuangcai_003FLibrary_003FApplication_0020Support_003FJetBrains_003FRider2025_002E2_003Fresharper_002Dhost_003FSourcesCache_003Fa6d85e44d20042c9b388b965cd68a9823ae00_003F_005F6901c_003FWebSocketMessageType_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=4f27dffa_002D7013_002D4fda_002D9012_002D7eaa11bc1116/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="CreateJudgeCode_ShouldReturnExactJudgeCode_WhenExactTestTypeGiven" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=4f27dffa_002D7013_002D4fda_002D9012_002D7eaa11bc1116/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="CreateJudgeCode_ShouldReturnExactJudgeCode_WhenExactTestTypeGiven" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;TestAncestor&gt;
     &lt;TestId&gt;xUnit::158CF656-0AB0-B5A5-180D-2A1B2D8FADE9::net9.0::speedCode.tests.JudgeCodeFactoryTests&lt;/TestId&gt;
     &lt;TestId&gt;xUnit::158CF656-0AB0-B5A5-180D-2A1B2D8FADE9::net9.0::speedCode.speedCode.Tests.Judge0ClientTests&lt;/TestId&gt;
@@ -24,16 +24,4 @@
     &lt;TestId&gt;xUnit::158CF656-0AB0-B5A5-180D-2A1B2D8FADE9::net9.0::speedCode.Tests.ExactJudgeCodeTests&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=58c56b00_002Df81e_002D48fd_002Da74f_002Dc8e84271fcf4/@EntryIndexedValue">&lt;SessionState ContinuousTestingIsOn="True" ContinuousTestingMode="3" IsActive="True" Name="Continuous Testing" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
-  &lt;TestAncestor&gt;
-    &lt;TestId&gt;xUnit::158CF656-0AB0-B5A5-180D-2A1B2D8FADE9::net9.0::speedCode.tests.JudgeCodeFactoryTests&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::158CF656-0AB0-B5A5-180D-2A1B2D8FADE9::net9.0::speedCode.speedCode.Tests.Judge0ClientTests&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::158CF656-0AB0-B5A5-180D-2A1B2D8FADE9::net9.0::speedCode.Tests.RegexJudgeCodeTests.TestJudgeCodeTestResultsWithRegex_ShouldReturnTrue_WhenPatternMatches&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::158CF656-0AB0-B5A5-180D-2A1B2D8FADE9::net9.0::speedCode.Tests.RegexJudgeCodeTests.TestJudgeCodeTestResultsWithRegex_ShouldReturnFalse_WhenPatternDoesNotMatch&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::158CF656-0AB0-B5A5-180D-2A1B2D8FADE9::net9.0::speedCode.Tests.RegexJudgeCodeTests&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::158CF656-0AB0-B5A5-180D-2A1B2D8FADE9::net9.0::speedCode.Tests.ContainJudgeCodeTests&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::158CF656-0AB0-B5A5-180D-2A1B2D8FADE9::net9.0::speedCode.Tests.ExactJudgeCodeTests.TestExactJudgeCode_ShouldFail_WhenOutputMissingExpected&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::158CF656-0AB0-B5A5-180D-2A1B2D8FADE9::net9.0::speedCode.Tests.ExactJudgeCodeTests.TestExactJudgeCode_ShouldPass_WhenOutputContainsExpected&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::158CF656-0AB0-B5A5-180D-2A1B2D8FADE9::net9.0::speedCode.Tests.ExactJudgeCodeTests&lt;/TestId&gt;
-  &lt;/TestAncestor&gt;
-&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
+	</wpf:ResourceDictionary>

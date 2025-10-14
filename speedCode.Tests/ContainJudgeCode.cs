@@ -12,7 +12,8 @@ namespace speedCode.Tests
             var judgeCode = new ContainJudgeCode
             {
                 OutPut = "Hello World from speedCode",
-                ExpectedResults = new string[] { "Hello", "speedCode" }
+                Input = "hello",
+                ExpectedResult = "Hello World from speedCode"
             };
 
             var result = judgeCode.TestOutput();
@@ -26,8 +27,9 @@ namespace speedCode.Tests
         {
             var judgeCode = new ContainJudgeCode
             {
-                OutPut = "Hello World",
-                ExpectedResults = new string[] { "Hello", "speedCode" }
+                OutPut = "Hello World from speedCode",
+                Input = "hello",
+                ExpectedResult = "Hello World from speedCode123"
             };
 
             var result = judgeCode.TestOutput();

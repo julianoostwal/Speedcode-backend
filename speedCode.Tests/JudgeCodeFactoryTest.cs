@@ -9,7 +9,8 @@ namespace speedCode.tests
     [JudgeTypesAttributes(TestType.Exactly)]
     public class ExactJudgeCode : JudgeCode
     {
-        public override string[] ExpectedResults { get; set; }
+        public override string ExpectedResult { get; set; }
+        public override string Input { get; set; }
         public override string OutPut { get; set; }
 
         public override JudgeCodeTestResults TestOutput()

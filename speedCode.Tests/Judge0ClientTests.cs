@@ -25,13 +25,13 @@ namespace speedCode.speedCode.Tests
 
             SubmissionResult result = await client.SubmitCodeAsync(new SubmissionRequest()
             {
-                LanguageId = 70,
-                SourceCode = "print('Hello World')",
+                LanguageId = 71,
+                SourceCode = "print('Hello World',end='')",
                 Stdin = ""
             });
 
             Assert.Equal(Judge0Statuses.Accepted, result.Status.Id);
-            Assert.Equal(result.Stdout, "Hello World\n");
+            Assert.Equal(result.Stdout, "Hello World");
         }
     }
 }

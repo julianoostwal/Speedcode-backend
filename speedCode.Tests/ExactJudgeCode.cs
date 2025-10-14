@@ -12,7 +12,8 @@ namespace speedCode.Tests
             var judgeCode = new ExactJudgeCode
             {
                 OutPut = "Hello World from speedCode",
-                ExpectedResults = new string[] { "Hello World from speedCode" }
+                Input = "hello",
+                ExpectedResult = "Hello World from speedCode"
             };
 
             var result = judgeCode.TestOutput();
@@ -24,10 +25,12 @@ namespace speedCode.Tests
         [Fact]
         public void TestExactJudgeCode_ShouldFail_WhenOutputMissingExpected()
         {
+            
             var judgeCode = new ExactJudgeCode
             {
-                OutPut = "Hello World",
-                ExpectedResults = new string[] { "Hello", "speedCode", "Hello World" }
+                OutPut = "Hello World from speedCode",
+                Input = "hello",
+                ExpectedResult = "Hello World from speedCode123"
             };
 
             var result = judgeCode.TestOutput();

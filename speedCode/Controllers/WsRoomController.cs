@@ -3,6 +3,7 @@ using speedCode.Data;
 using speedCode.dto;
 using speedCode.dto.room;
 using speedCode.rooms;
+using speedCode.security;
 using speedCode.services;
 
 namespace speedCode.Controllers;
@@ -47,23 +48,32 @@ public class WsRoomController : ControllerBase
     /// After evaluation, it broadcasts the updated room state to all participants.
     /// </remarks>
     /// <param name="roomId">The ID of the room where the code is being tested.</param>
-    /// <param name="clientId">The ID of the client (user) submitting the code, logged in via Supabase.</param>
     /// <param name="request">The code submission request containing the code and language information.</param>
     /// <returns>Returns the results of the code test, including pass/fail status and logs.</returns>
     /// <response code="200">Code tested successfully, returns the test results.</response>
     /// <response code="404">Room or client not found.</response>
     /// <response code="400">Invalid or missing request data.</response>
-    [HttpPost("testCode/{roomId}/{clientId}")]
+    [HttpPost("{roomId:guid}/test")]
     public async Task<ActionResult<TestCodeAsyncResults>> TestCodeAsync(
-        Guid roomId, Guid clientId, [FromBody] TestCodeRequest request)
+        Guid roomId, [FromBody] TestCodeRequest request)
     {
         if (!WSRoomsService.Rooms.TryGetValue(roomId, out var room))
             return NotFound($"Room {roomId} not found.");
+        var clientIdStr = User.FindFirst("sub")?.Value;
+        if (string.IsNullOrEmpty(clientIdStr) || !Guid.TryParse(clientIdStr, out var clientId))
+            return Unauthorized("Invalid token or missing user ID (sub).");
 
         if (!room.Players.TryGetValue(clientId, out var player))
-            return NotFound($"Client {clientId} not found.");
+            return NotFound($"Client {clientId} not found in room.");
 
-        var result = await _judgeCodeService.TestCodeAsyncForRoom(request, roomId, clientId);
-        return Ok(result);
+        try
+        {
+            var result = await _judgeCodeService.TestCodeAsyncForRoom(request, roomId, clientId);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal error while testing code: {ex.Message}");
+        }
     }
 }
