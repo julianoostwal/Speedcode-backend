@@ -50,9 +50,11 @@ public class JudgeCodeService
         List<TestCode> testCodes = await _dbContext.Exercise
             .Include(e => e.ExerciseTests)
             .ThenInclude(et => et.test)
+            .ThenInclude(t => t.TestExpectIOs)
             .Where(e => e.id == request.ExerciseId)
             .SelectMany(e => e.ExerciseTests.Select(et => et.test))
             .ToListAsync();
+
 
         foreach (var testCode in testCodes)
         {
@@ -60,6 +62,7 @@ public class JudgeCodeService
             {
                 JudgeCode judgeCodeFactoryResults = JudgeCodeFactory.CreateJudgeCode(testCode.Type);
                 judgeCodeFactoryResults.ExpectedResult = testExpectIO.output;
+                judgeCodeFactoryResults.Input = testExpectIO.input;
                 judgeCodeFactoryResults.OutPut = _judge0Client
                     .SubmitCodeAsync(new SubmissionRequest(request.Code, request.LanguageId, testExpectIO.input)).Result
                     .Stdout;
@@ -67,6 +70,7 @@ public class JudgeCodeService
                 results.TestProcess.Add(output);
             }
         }
+
         return await Task.FromResult(results);
     }
 }

@@ -8,7 +8,10 @@ namespace speedCode.codeTesting;
 public class ContainJudgeCode : JudgeCode
 {
     public override required string ExpectedResult { get; set; }
+
     public override required string OutPut { get; set; }
+
+    public override string Input { get; set; }
 
     public override JudgeCodeTestResults TestOutput()
     {
@@ -23,6 +26,7 @@ public class ContainJudgeCode : JudgeCode
 
         results.Logs.Add(new JudgeCodeTestLog
         {
+            input = Input,
             outPut = OutPut,
             TestType = TestType.Contains,
             Regex = ExpectedResult,
