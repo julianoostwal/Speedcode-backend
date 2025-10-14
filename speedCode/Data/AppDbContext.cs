@@ -44,9 +44,16 @@ namespace speedCode.Data
                 .Property(p => p.role)
                 .HasConversion<string>();
 
-            modelBuilder.Entity<Rooms>()
-                .Property(e => e.roomLevel)
-                .HasConversion<string>();
+
+            modelBuilder.Entity<Rooms>(entity =>
+            {
+                entity.Property(p => p.roomLevel)
+                    .HasConversion<string>();
+
+                entity.Property(p => p.createdAt)
+                    .HasDefaultValueSql("NOW()");
+            });
+
 
             modelBuilder.Entity<ExerciseTest>()
                 .HasKey(et => new { et.exerciseId, et.testId });

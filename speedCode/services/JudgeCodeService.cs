@@ -4,6 +4,7 @@ using speedCode.codeTesting.enums;
 using speedCode.Data;
 using speedCode.dto;
 using speedCode.Model;
+using speedCode.rooms;
 
 namespace speedCode.services;
 
@@ -16,6 +17,31 @@ public class JudgeCodeService
     {
         _judge0Client = judge0Client;
         _dbContext = dbContext;
+    }
+
+
+    public async Task<TestCodeAsyncResults> TestCodeAsyncForRoom(TestCodeRequest request, Guid roomId,
+        Guid clientId)
+    {
+        TestCodeAsyncResults result = await TestCodeAsync(request);
+
+        if (result.IsPassed)
+        {
+            if (WSRoomsService.Rooms.TryGetValue(roomId, out var roomValue))
+            {
+                PlayerManager.CompletedAExercise(roomValue, clientId, request.ExerciseId);
+            }
+
+            ProfileExercise profileExercise = new ProfileExercise()
+            {
+                profileId = clientId,
+                exerciseId = request.ExerciseId
+            };
+            _dbContext.ProfileExercise.Add(profileExercise);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        return result;
     }
 
     public async Task<TestCodeAsyncResults> TestCodeAsync(TestCodeRequest request)
@@ -33,17 +59,11 @@ public class JudgeCodeService
             JudgeCode judgeCodeFactoryResults = JudgeCodeFactory.CreateJudgeCode(testCode.Type);
             judgeCodeFactoryResults.ExpectedResults = testCode.expectedResult;
             judgeCodeFactoryResults.OutPut =
-                _judge0Client.SubmitCodeAsync(request.Code, request.LanguageId).Result.Stdout;
+                _judge0Client
+                    .SubmitCodeAsync(new SubmissionRequest(request.Code, request.LanguageId, testCode.Judge0Stdin))
+                    .Result.Stdout;
             JudgeCodeTestResults output = judgeCodeFactoryResults.TestOutput();
             results.TestProcess.Add(output);
-        }
-
-        foreach (var proces in results.TestProcess)
-        {
-            if (proces.Status != JudgeCodeTestStatus.Passed)
-            {
-                results.IsPassed = false;
-            }
         }
 
         return await Task.FromResult(results);

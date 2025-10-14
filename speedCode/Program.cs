@@ -6,6 +6,7 @@ using speedCode.security;
 using speedCode.Seeder;
 using speedCode.services;
 using speedCode.Controllers;
+using speedCode.rooms;
 
 var builder = WebApplication.CreateBuilder(args);
 AuthManager.ConfigureJwt(builder);
@@ -35,7 +36,12 @@ builder.Services.AddSingleton<Judge0Client>(sp =>
     var httpClient = new HttpClient { BaseAddress = new Uri(builder.Configuration["Judge0:BaseUrl"]) };
     return new Judge0Client(httpClient);
 });
+
+builder.Services.AddScoped<RoomWebSocketHandler>();
+builder.Services.AddScoped<RoomUserService>();
 builder.Services.AddScoped<JudgeCodeService>();
+builder.Services.AddScoped<RoomService>();
+builder.Services.AddScoped<RoomValidator>();
 
 var app = builder.Build();
 
@@ -50,6 +56,7 @@ using (var scope = app.Services.CreateScope())
     SeederManager.SeedDatabase(db);
 }*/
 
+app.UseWebSockets();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
