@@ -21,6 +21,7 @@ namespace speedCode.Data
         public DbSet<FooterSectionLinks> FooterSectionLinks { get; set; }
         public DbSet<ContactInfo> ContactInfo { get; set; }
         public DbSet<SocialLink> SocialLink { get; set; }
+        public DbSet<TestExpectIO> TestExpectIO { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
