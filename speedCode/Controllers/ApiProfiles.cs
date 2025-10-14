@@ -112,7 +112,7 @@ public class ProfilesController : ControllerBase
                 {
                     id = pt.id,
                     authorId = pt.authorId,
-                    expectedResult = pt.expectedResult,
+                    expectedResults = pt.TestExpectIOs.Select(io => io.output).ToList(),
                     type = pt.Type.ToString(),
                     createdAt = pt.createdAt
                 }),
@@ -150,7 +150,7 @@ public class ProfilesController : ControllerBase
         httpClient.BaseAddress = new Uri(supabaseUrl);
         httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", serviceRoleKey);
         httpClient.DefaultRequestHeaders.Add("apikey", serviceRoleKey);
-    
+
         var response = await httpClient.GetAsync($"/auth/v1/admin/users/{id}");
         var responseBody = await response.Content.ReadAsStringAsync();
 
@@ -210,7 +210,7 @@ public class ProfilesController : ControllerBase
             {
                 id = pt.id,
                 authorId = pt.authorId,
-                expectedResult = pt.expectedResult,
+                expectedResults = pt.TestExpectIOs.Select(io => io.output).ToList(),
                 type = pt.Type.ToString(),
                 createdAt = pt.createdAt
             }),
@@ -309,7 +309,7 @@ public class ProfilesController : ControllerBase
             {
                 id = pt.id,
                 authorId = pt.authorId,
-                expectedResult = pt.expectedResult,
+                expectedResults = pt.TestExpectIOs.Select(io => io.output).ToList(),
                 type = pt.Type.ToString(),
                 createdAt = pt.createdAt
             }),
@@ -575,11 +575,12 @@ public class ProfilesController : ControllerBase
             var response = await httpClient.DeleteAsync($"/auth/v1/admin/users/{id}");
         }
 
-        var testCodes = _context.TestCode.Where(tc => tc.authorId == id);
-        var exerciseTests = _context.ExerciseTest.Where(et => et.testId == testCodes.FirstOrDefault().id).ToList();
+        var testCodes = _context.TestCode.Where(tc => tc.authorId == id).ToList();
+        var testCodeIds = testCodes.Select(tc => tc.id).ToList();
+        var exerciseTests = _context.ExerciseTest.Where(et => testCodeIds.Contains(et.testId)).ToList();
         if (exerciseTests.Any())
             _context.ExerciseTest.RemoveRange(exerciseTests);
-            
+
         if (testCodes.Any())
             _context.TestCode.RemoveRange(testCodes);
 
@@ -606,7 +607,7 @@ public class ProfilesController : ControllerBase
         return NoContent();
     }
 
-    //Delete by email
+    // Delete by email
     [HttpDelete("email/{email}")]
     public async Task<IActionResult> DeleteProfileByEmail(string email)
     {
@@ -646,8 +647,9 @@ public class ProfilesController : ControllerBase
         if (achievements.Any())
             _context.ProfileAchievement.RemoveRange(achievements);
 
-        var testCodes = _context.TestCode.Where(tc => tc.authorId == supabaseUserId);
-        var exerciseTests = _context.ExerciseTest.Where(et => et.testId == testCodes.FirstOrDefault().id).ToList();
+        var testCodes = _context.TestCode.Where(tc => tc.authorId == supabaseUserId).ToList();
+        var testCodeIds = testCodes.Select(tc => tc.id).ToList();
+        var exerciseTests = _context.ExerciseTest.Where(et => testCodeIds.Contains(et.testId)).ToList();
         if (exerciseTests.Any())
             _context.ExerciseTest.RemoveRange(exerciseTests);
 
