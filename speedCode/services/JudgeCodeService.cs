@@ -56,16 +56,17 @@ public class JudgeCodeService
 
         foreach (var testCode in testCodes)
         {
-            JudgeCode judgeCodeFactoryResults = JudgeCodeFactory.CreateJudgeCode(testCode.Type);
-            judgeCodeFactoryResults.ExpectedResults = testCode.expectedResult;
-            judgeCodeFactoryResults.OutPut =
-                _judge0Client
-                    .SubmitCodeAsync(new SubmissionRequest(request.Code, request.LanguageId, testCode.Judge0Stdin))
-                    .Result.Stdout;
-            JudgeCodeTestResults output = judgeCodeFactoryResults.TestOutput();
-            results.TestProcess.Add(output);
+            foreach (var testExpectIO in testCode.TestExpectIOs)
+            {
+                JudgeCode judgeCodeFactoryResults = JudgeCodeFactory.CreateJudgeCode(testCode.Type);
+                judgeCodeFactoryResults.ExpectedResult = testExpectIO.output;
+                judgeCodeFactoryResults.OutPut = _judge0Client
+                    .SubmitCodeAsync(new SubmissionRequest(request.Code, request.LanguageId, testExpectIO.input)).Result
+                    .Stdout;
+                JudgeCodeTestResults output = judgeCodeFactoryResults.TestOutput();
+                results.TestProcess.Add(output);
+            }
         }
-
         return await Task.FromResult(results);
     }
 }
