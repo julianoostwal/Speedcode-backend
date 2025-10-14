@@ -7,7 +7,7 @@ namespace speedCode.codeTesting;
 [JudgeTypesAttributes(TestType.Exactly)]
 public class ExactJudgeCode : JudgeCode
 {
-    public override string[] ExpectedResults { get; set; }
+    public override string ExpectedResult { get; set; }
     public override string OutPut { get; set; }
 
     public override JudgeCodeTestResults TestOutput()
@@ -17,22 +17,19 @@ public class ExactJudgeCode : JudgeCode
             Status = JudgeCodeTestStatus.Passed
         };
 
-        foreach (var expected in ExpectedResults)
+        bool match = string.Equals(OutPut, ExpectedResult, StringComparison.Ordinal);
+
+        results.Logs.Add(new JudgeCodeTestLog
         {
-            bool match = string.Equals(OutPut, expected, StringComparison.Ordinal);
+            outPut = OutPut,
+            Regex = ExpectedResult,
+            TestType = TestType.Exactly,
+            Accepted = match
+        });
 
-            results.Logs.Add(new JudgeCodeTestLog
-            {
-                outPut = OutPut,
-                Regex = expected,
-                TestType = TestType.Exactly,
-                Accepted = match
-            });
-
-            if (!match)
-            {
-                results.Status = JudgeCodeTestStatus.NotPassed;
-            }
+        if (!match)
+        {
+            results.Status = JudgeCodeTestStatus.NotPassed;
         }
 
         return results;

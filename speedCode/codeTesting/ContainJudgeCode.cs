@@ -7,7 +7,7 @@ namespace speedCode.codeTesting;
 [JudgeTypesAttributes(TestType.Contains)]
 public class ContainJudgeCode : JudgeCode
 {
-    public override required string[] ExpectedResults { get; set; }
+    public override required string ExpectedResult { get; set; }
     public override required string OutPut { get; set; }
 
     public override JudgeCodeTestResults TestOutput()
@@ -17,23 +17,21 @@ public class ContainJudgeCode : JudgeCode
             Status = JudgeCodeTestStatus.Passed
         };
 
-        foreach (var expected in ExpectedResults)
+
+        bool contains = OutPut?.Contains(ExpectedResult, StringComparison.OrdinalIgnoreCase) ?? false;
+
+
+        results.Logs.Add(new JudgeCodeTestLog
         {
-            bool contains = OutPut?.Contains(expected, StringComparison.OrdinalIgnoreCase) ?? false;
+            outPut = OutPut,
+            TestType = TestType.Contains,
+            Regex = ExpectedResult,
+            Accepted = contains
+        });
 
-
-            results.Logs.Add(new JudgeCodeTestLog
-            {
-                outPut = OutPut,
-                TestType = TestType.Contains,
-                Regex = expected,
-                Accepted = contains
-            });
-
-            if (!contains)
-            {
-                results.Status = JudgeCodeTestStatus.NotPassed;
-            }
+        if (!contains)
+        {
+            results.Status = JudgeCodeTestStatus.NotPassed;
         }
 
         return results;
