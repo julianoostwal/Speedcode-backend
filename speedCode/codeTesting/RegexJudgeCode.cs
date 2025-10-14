@@ -11,6 +11,8 @@ public class RegexJudgeCode : JudgeCode
     public override required string ExpectedResult { get; set; }
     public override required string OutPut { get; set; }
 
+    public override string Input { get; set; }
+
     public override JudgeCodeTestResults TestOutput()
     {
         JudgeCodeTestResults results = new JudgeCodeTestResults();
@@ -18,6 +20,7 @@ public class RegexJudgeCode : JudgeCode
         Match match = Regex.Match(OutPut, ExpectedResult);
         results.Logs.Add(new JudgeCodeTestLog
         {
+            input = Input,
             outPut = OutPut,
             Regex = ExpectedResult,
             TestType = TestType.Regex,
