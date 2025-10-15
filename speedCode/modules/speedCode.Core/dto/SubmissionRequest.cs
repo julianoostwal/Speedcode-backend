@@ -1,7 +1,5 @@
 using System.Text.Json.Serialization;
 
-namespace speedCode.dto;
-
 public class SubmissionRequest
 {
     [JsonPropertyName("source_code")] public string SourceCode { get; set; }

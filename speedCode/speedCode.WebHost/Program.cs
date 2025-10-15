@@ -1,10 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using speedCode.codeTesting;
-using speedCode.Data;
-using speedCode.security;
-using speedCode.Seeder;
-using speedCode.services;
-using speedCode.rooms;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddUserSecrets<Program>(optional: true);
