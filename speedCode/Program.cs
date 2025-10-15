@@ -9,6 +9,7 @@ using speedCode.Controllers;
 using speedCode.rooms;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Configuration.AddUserSecrets<Program>(optional: true);
 AuthManager.ConfigureJwt(builder);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -19,7 +20,6 @@ builder.Services.AddSwaggerGen(c =>
 });
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -47,14 +47,18 @@ var app = builder.Build();
 
 MigrationHelper.ApplyMigrations(app);
 
-using (var scope = app.Services.CreateScope())
+if (app.Environment.IsDevelopment())
 {
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    SeederManager
-        .CreateSupabaseAuthUsersAsync(builder.Configuration["Supabase:Url"],
-            builder.Configuration["Supabase:ServiceRoleKey"]).GetAwaiter().GetResult();
-    SeederManager.SeedDatabase(db);
+    using (var scope = app.Services.CreateScope())
+    {
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        SeederManager
+            .CreateSupabaseAuthUsersAsync(builder.Configuration["Supabase:Url"],
+                builder.Configuration["Supabase:ServiceRoleKey"]).GetAwaiter().GetResult();
+        SeederManager.SeedDatabase(db);
+    }
 }
+
 
 app.UseWebSockets();
 app.UseHttpsRedirection();
@@ -65,3 +69,7 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.Run();
+
+public partial class Program
+{
+}
