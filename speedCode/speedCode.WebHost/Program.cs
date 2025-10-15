@@ -1,11 +1,9 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using speedCode.codeTesting;
 using speedCode.Data;
 using speedCode.security;
 using speedCode.Seeder;
 using speedCode.services;
-using speedCode.Controllers;
 using speedCode.rooms;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,7 +37,7 @@ builder.Services.AddSingleton<Judge0Client>(sp =>
 
 builder.Services.AddScoped<RoomWebSocketHandler>();
 builder.Services.AddScoped<RoomUserService>();
-builder.Services.AddScoped<JudgeCodeService>();
+builder.Services.AddScoped<ExciseService>();
 builder.Services.AddScoped<RoomService>();
 builder.Services.AddScoped<RoomValidator>();
 

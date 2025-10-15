@@ -8,19 +8,19 @@ using speedCode.rooms;
 
 namespace speedCode.services;
 
-public class JudgeCodeService
+public class ExciseService
 {
     private readonly Judge0Client _judge0Client;
     private readonly AppDbContext _dbContext;
 
-    public JudgeCodeService(Judge0Client judge0Client, AppDbContext dbContext)
+    public ExciseService(Judge0Client judge0Client, AppDbContext dbContext)
     {
         _judge0Client = judge0Client;
         _dbContext = dbContext;
     }
 
 
-    public async Task<TestCodeAsyncResults> TestCodeAsyncForRoom(TestCodeRequest request, Guid roomId,
+    public async Task<TestCodeAsyncResults> TestCodeAsyncForWSRoom(TestCodeRequest request, Guid roomId,
         Guid clientId)
     {
         TestCodeAsyncResults result = await TestCodeAsync(request);

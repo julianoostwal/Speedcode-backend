@@ -12,10 +12,10 @@ namespace speedCode.Controllers;
 [Route("ws")]
 public class WsRoomController : ControllerBase
 {
-    private readonly JudgeCodeService _judgeCodeService;
+    private readonly ExciseService _exciseService;
     private readonly RoomWebSocketHandler _wsHandler;
 
-    public WsRoomController(JudgeCodeService judgeCodeService, RoomWebSocketHandler wsHandler)
+    public WsRoomController(ExciseService exciseService, RoomWebSocketHandler wsHandler)
     {
         _wsHandler = wsHandler;
     }
@@ -68,7 +68,7 @@ public class WsRoomController : ControllerBase
 
         try
         {
-            var result = await _judgeCodeService.TestCodeAsyncForRoom(request, roomId, clientId);
+            var result = await _exciseService.TestCodeAsyncForWSRoom(request, roomId, clientId);
             return Ok(result);
         }
         catch (Exception ex)

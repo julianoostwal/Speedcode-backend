@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using speedCode.Data;
 using speedCode.Model;
@@ -34,6 +35,25 @@ public class ProfilesController : ControllerBase
         return Ok(profile);
     }
 
+    [HttpGet("me")]
+    public IActionResult GetMyProfile()
+    {
+        string? userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                               ?? User.FindFirst("sub")?.Value;
+
+        if (string.IsNullOrEmpty(userIdString))
+            return Unauthorized("User ID not found in token.");
+
+        if (!Guid.TryParse(userIdString, out Guid userId))
+            return BadRequest("Invalid user ID format.");
+
+        var profile = _context.Profiles.FirstOrDefault(p => p.id == userId);
+        if (profile == null)
+            return NotFound("Profile not found.");
+
+        return Ok(profile);
+    }
+
     // POST
     [HttpPost]
     public async Task<IActionResult> CreateProfile([FromBody] CreateProfileRequest request)
@@ -43,9 +63,11 @@ public class ProfilesController : ControllerBase
 
         using var httpClient = new HttpClient();
         var supabaseUrl = "https://supabase.speedcode.tech";
-        var serviceRoleKey = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc1NzU5MzgwMCwiZXhwIjo0OTEzMjY3NDAwLCJyb2xlIjoic2VydmljZV9yb2xlIn0.U5ovw3nz1VKJJCbKfzARWXuHTUr73U1LNtyBNyhT6pg";
+        var serviceRoleKey =
+            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc1NzU5MzgwMCwiZXhwIjo0OTEzMjY3NDAwLCJyb2xlIjoic2VydmljZV9yb2xlIn0.U5ovw3nz1VKJJCbKfzARWXuHTUr73U1LNtyBNyhT6pg";
         httpClient.BaseAddress = new Uri(supabaseUrl);
-        httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", serviceRoleKey);
+        httpClient.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", serviceRoleKey);
         httpClient.DefaultRequestHeaders.Add("apikey", serviceRoleKey);
 
         var payload = new
@@ -113,11 +135,13 @@ public class ProfilesController : ControllerBase
         var profile = _context.Profiles.Find(id);
 
         var supabaseUrl = "https://supabase.speedcode.tech";
-        var serviceRoleKey = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc1NzU5MzgwMCwiZXhwIjo0OTEzMjY3NDAwLCJyb2xlIjoic2VydmljZV9yb2xlIn0.U5ovw3nz1VKJJCbKfzARWXuHTUr73U1LNtyBNyhT6pg";
+        var serviceRoleKey =
+            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc1NzU5MzgwMCwiZXhwIjo0OTEzMjY3NDAwLCJyb2xlIjoic2VydmljZV9yb2xlIn0.U5ovw3nz1VKJJCbKfzARWXuHTUr73U1LNtyBNyhT6pg";
         using (var httpClient = new HttpClient())
         {
             httpClient.BaseAddress = new Uri(supabaseUrl);
-            httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", serviceRoleKey);
+            httpClient.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", serviceRoleKey);
             httpClient.DefaultRequestHeaders.Add("apikey", serviceRoleKey);
 
             var response = await httpClient.DeleteAsync($"/auth/v1/admin/users/{id}");

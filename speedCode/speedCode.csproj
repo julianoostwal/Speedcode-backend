@@ -30,8 +30,27 @@
 
     <ItemGroup>
       <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
+        <Link>speedCode.WebHost\.dockerignore</Link>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="modules\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="speedCode.Data\obj\project.assets.json" />
+      <_ContentIncludedByDefault Remove="speedCode.Data\obj\speedCode.Data.csproj.nuget.dgspec.json" />
+      <_ContentIncludedByDefault Remove="speedCode.ExciseTest\obj\project.assets.json" />
+      <_ContentIncludedByDefault Remove="speedCode.ExciseTest\obj\speedCode.ExciseTest.csproj.nuget.dgspec.json" />
+      <_ContentIncludedByDefault Remove="speedCode.Profile\obj\project.assets.json" />
+      <_ContentIncludedByDefault Remove="speedCode.Profile\obj\speedCode.Profile.csproj.nuget.dgspec.json" />
+      <_ContentIncludedByDefault Remove="speedCode.ProfileAchivements\obj\project.assets.json" />
+      <_ContentIncludedByDefault Remove="speedCode.ProfileAchivements\obj\speedCode.ProfileAchivements.csproj.nuget.dgspec.json" />
+      <_ContentIncludedByDefault Remove="speedCode.RoomUser\obj\project.assets.json" />
+      <_ContentIncludedByDefault Remove="speedCode.RoomUser\obj\speedCode.RoomUser.csproj.nuget.dgspec.json" />
+      <_ContentIncludedByDefault Remove="speedCode.TestCode\obj\project.assets.json" />
+      <_ContentIncludedByDefault Remove="speedCode.TestCode\obj\speedCode.TestCode.csproj.nuget.dgspec.json" />
     </ItemGroup>
 
 </Project>

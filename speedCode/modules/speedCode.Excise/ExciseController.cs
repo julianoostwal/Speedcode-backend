@@ -10,18 +10,18 @@ namespace speedCode.Controllers;
 /// </summary>
 [ApiController]
 [Route("[controller]")]
-public class JudgeCodeController : ControllerBase
+public class ExciseController : ControllerBase
 {
-    private readonly JudgeCodeService _judgeCodeService;
+    private readonly ExciseService _exciseService;
 
-    public JudgeCodeController(JudgeCodeService judgeCodeService)
+    public ExciseController(ExciseService exciseService)
     {
-        _judgeCodeService = judgeCodeService;
+        _exciseService = exciseService;
     }
 
     [HttpPost("judgecode")]
     public async Task<TestCodeAsyncResults> Post([FromBody] TestCodeRequest request)
     {
-        return await _judgeCodeService.TestCodeAsync(request);
+        return await _exciseService.TestCodeAsync(request);
     }
 }

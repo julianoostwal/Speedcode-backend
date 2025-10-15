@@ -15,12 +15,6 @@ namespace speedCode.Data
         public DbSet<Exercise> Exercise { get; set; }
         public DbSet<Achievement> Achievement { get; set; }
         public DbSet<ProfileAchivement> ProfileAchievement { get; set; }
-        public DbSet<NavItem> NavItem { get; set; }
-        public DbSet<DropdownItems> DropdownItems { get; set; }
-        public DbSet<FooterSection> FooterSection { get; set; }
-        public DbSet<FooterSectionLinks> FooterSectionLinks { get; set; }
-        public DbSet<ContactInfo> ContactInfo { get; set; }
-        public DbSet<SocialLink> SocialLink { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
