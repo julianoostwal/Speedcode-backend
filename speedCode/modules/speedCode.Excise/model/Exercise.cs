@@ -1,8 +1,9 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using speedCode.Model;
 
-namespace speedCode.Model
+namespace speedCode.Excise.model
 {
     [Table("exercises")]
     public class Exercise

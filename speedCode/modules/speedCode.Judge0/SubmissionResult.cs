@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using speedCode.Core.judge0.dto;
 
 namespace speedCode.dto;
 

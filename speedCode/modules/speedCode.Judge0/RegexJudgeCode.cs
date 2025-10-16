@@ -1,7 +1,8 @@
 using System.Text.RegularExpressions;
-using speedCode.codeTesting.attributes;
-using speedCode.codeTesting.enums;
+using speedCode.Core.judge0.dto;
+using speedCode.Core.judge0.enums;
 using speedCode.dto;
+using speedCode.Judge0.attributes;
 
 namespace speedCode.codeTesting;
 

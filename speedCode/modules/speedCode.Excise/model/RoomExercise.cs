@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace speedCode.Model
+namespace speedCode.Excise.model
 {
     [Table("room_exercises")]
     public class RoomExercise

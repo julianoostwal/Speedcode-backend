@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace speedCode.Model;
+namespace speedCode.Excise.model;
 
 [Table("testExpectIO")]
 public class TestExpectIO

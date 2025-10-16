@@ -40,7 +40,7 @@ public class ProfilesController : ControllerBase
                                ?? User.FindFirst("sub")?.Value;
 
         if (string.IsNullOrEmpty(userIdString))
-            return Unauthorized("User ID not found in token.");
+            return Unauthorized();
 
         if (!Guid.TryParse(userIdString, out Guid userId))
             return BadRequest("Invalid user ID format.");
@@ -131,7 +131,7 @@ public class ProfilesController : ControllerBase
     public async Task<IActionResult> DeleteProfile(Guid id)
     {
         var profile = _context.Profiles.Find(id);
-    
+
         var supabaseUrl = "https://supabase.speedcode.tech";
         var serviceRoleKey =
             "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc1NzU5MzgwMCwiZXhwIjo0OTEzMjY3NDAwLCJyb2xlIjoic2VydmljZV9yb2xlIn0.U5ovw3nz1VKJJCbKfzARWXuHTUr73U1LNtyBNyhT6pg";
@@ -141,18 +141,18 @@ public class ProfilesController : ControllerBase
             httpClient.DefaultRequestHeaders.Authorization =
                 new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", serviceRoleKey);
             httpClient.DefaultRequestHeaders.Add("apikey", serviceRoleKey);
-    
+
             var response = await httpClient.DeleteAsync($"/auth/v1/admin/users/{id}");
         }
-    
+
         var achievements = _context.ProfileAchievement.Where(pa => pa.profileId == id);
         if (achievements.Any())
             _context.ProfileAchievement.RemoveRange(achievements);
-    
+
         var roomUsers = _context.RoomUser.Where(ru => ru.profileId == id);
         if (roomUsers.Any())
             _context.RoomUser.RemoveRange(roomUsers);
-    
+
         if (profile != null)
             _context.Profiles.Remove(profile);
         _context.SaveChanges();

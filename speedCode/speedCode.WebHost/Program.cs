@@ -17,15 +17,12 @@ builder.Services.AddSwaggerGen(c =>
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     c.IncludeXmlComments(xmlPath);
 });
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
     });
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
 
 builder.WebHost.ConfigureKestrel(options => { options.ListenAnyIP(8080); });
 
@@ -36,11 +33,7 @@ builder.Services.AddSingleton<Judge0Client>(sp =>
     return new Judge0Client(httpClient);
 });
 
-builder.Services.AddScoped<RoomWebSocketHandler>();
-builder.Services.AddScoped<RoomUserService>();
-builder.Services.AddScoped<ExciseService>();
 builder.Services.AddScoped<RoomService>();
-builder.Services.AddScoped<RoomValidator>();
 
 var app = builder.Build();
 

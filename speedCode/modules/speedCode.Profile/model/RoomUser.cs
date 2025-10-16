@@ -1,7 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using speedCode.Model;
 
-namespace speedCode.Model
+namespace speedCode.Profile.model
 {
     [Table("room_users")]
     public class RoomUser

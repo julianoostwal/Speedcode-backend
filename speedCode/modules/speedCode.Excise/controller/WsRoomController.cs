@@ -60,7 +60,7 @@ public class WsRoomController : ControllerBase
             return NotFound($"Room {roomId} not found.");
         var clientIdStr = User.FindFirst("sub")?.Value;
         if (string.IsNullOrEmpty(clientIdStr) || !Guid.TryParse(clientIdStr, out var clientId))
-            return Unauthorized("Invalid token or missing user ID (sub).");
+            return Unauthorized();
 
         if (!room.Players.TryGetValue(clientId, out var player))
             return NotFound($"Client {clientId} not found in room.");
