@@ -1,6 +1,8 @@
+using Microsoft.EntityFrameworkCore;
 using speedCode.codeTesting;
 using speedCode.Core.judge0.dto;
-using speedCode.Data;
+using speedCode.Excise;
+using speedCode.Judge0;
 using speedCode.Model;
 using speedCode.rooms;
 
@@ -9,14 +11,23 @@ namespace speedCode.services;
 public class ExciseService
 {
     private readonly Judge0Client _judge0Client;
-    private readonly AppDbContext _dbContext;
+    private readonly ExciseDb _dbContext;
 
-    public ExciseService(Judge0Client judge0Client, AppDbContext dbContext)
+    public ExciseService(Judge0Client judge0Client, ExciseDb dbContext)
     {
         _judge0Client = judge0Client;
         _dbContext = dbContext;
     }
 
+    public List<Guid> GetAllFinishedExcisesByRoomAndUserId(Guid roomId, Guid profileId)
+    {
+        return (from pe in _dbContext.ProfileExercise
+                join re in _dbContext.RoomExercise
+                    on pe.exerciseId equals re.exerciseId
+                where pe.profileId == profileId && re.roomId == roomId
+                select pe.exerciseId)
+            .ToList();
+    }
 
     public async Task<TestCodeAsyncResults> TestCodeAsyncForWSRoom(TestCodeRequest request, Guid roomId,
         Guid clientId)

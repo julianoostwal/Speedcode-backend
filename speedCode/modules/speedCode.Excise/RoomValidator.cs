@@ -1,13 +1,15 @@
 using Microsoft.EntityFrameworkCore;
-using speedCode.Data;
+using speedCode.Excise;
+using speedCode.Profile;
 
-namespace speedCode.rooms;
+namespace speedCode.Excise;
 
 public class RoomValidator
 {
-    private readonly AppDbContext _db;
+    private readonly ExciseDb _db;
+    private readonly ProfileDb _profileDb;
 
-    public RoomValidator(AppDbContext db)
+    public RoomValidator(ExciseDb db)
     {
         _db = db;
     }
@@ -19,6 +21,6 @@ public class RoomValidator
 
     public async Task<bool> ClientExistsAsync(Guid clientId)
     {
-        return await _db.Profiles.AnyAsync(p => p.id == clientId);
+        return await _profileDb.Profiles.AnyAsync(p => p.id == clientId);
     }
 }

@@ -1,5 +1,5 @@
-using speedCode.Data;
 using speedCode.Model;
+using speedCode.Profile;
 
 namespace speedCode.Excise;
 
@@ -12,6 +12,9 @@ public class ExciseDb : DbContext
     public DbSet<ExerciseTest> ExerciseTest { get; set; }
     public DbSet<Exercise> Exercise { get; set; }
 
+    public DbSet<RoomExercise> RoomExercise { get; set; }
+    public DbSet<ProfileExercise> ProfileExercise { get; set; }
+
     public ExciseDb(DbContextOptions<ExciseDb> options)
         : base(options)
     {
@@ -23,7 +26,7 @@ public class ExciseDb : DbContext
         {
             entity.Property(p => p.role)
                 .HasConversion<int>()
-                .HasDefaultValue(Profiles.Rol.user);
+                .HasDefaultValue(Rol.user);
 
             entity.Property(p => p.createdAt)
                 .HasDefaultValueSql("NOW()");

@@ -1,19 +1,22 @@
 using System.Net.WebSockets;
 using System.Text;
-using speedCode.security;
+using speedCode.Core.utils;
+using speedCode.Excise.service;
+using speedCode.rooms;
 using speedCode.services;
 
-namespace speedCode.rooms;
+namespace speedCode.Excise;
 
 public class RoomWebSocketHandler
 {
     private readonly RoomValidator _validator;
     private readonly RoomService _roomService;
-    private readonly RoomUserService _roomUserService;
+    private readonly ExciseService _exciseService;
+    private readonly JwtService _jwtService;
 
-    public RoomWebSocketHandler(RoomValidator validator, RoomService roomService, RoomUserService roomUserService)
+    public RoomWebSocketHandler(RoomValidator validator, RoomService roomService, ExciseService exciseService)
     {
-        _roomUserService = roomUserService;
+        _exciseService = exciseService;
         _validator = validator;
         _roomService = roomService;
     }
@@ -36,7 +39,7 @@ public class RoomWebSocketHandler
             ClientId = clientId,
             Socket = socket,
             ConnectedAt = DateTime.UtcNow,
-            FinishedExcise = _roomUserService.GetAllFinishedExcisesByRoomAndUserId(roomId, clientId)
+            FinishedExcise = _exciseService.GetAllFinishedExcisesByRoomAndUserId(roomId, clientId)
         };
 
 
@@ -68,7 +71,7 @@ public class RoomWebSocketHandler
         }
 
         var token = tokenProp.GetString();
-        var clientId = AuthManager.GetClientIdFromToken(token);
+        var clientId = _jwtService.GetClientIdFromToken(token);
         if (string.IsNullOrEmpty(clientId))
         {
             var msg = Encoding.UTF8.GetBytes("Unauthorized");

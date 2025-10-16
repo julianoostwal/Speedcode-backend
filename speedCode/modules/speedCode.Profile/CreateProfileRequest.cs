@@ -1,5 +1,7 @@
 using System.Text.Json.Serialization;
-using speedCode.Model;
+using speedCode.Profile;
+
+namespace speedCode.Profile;
 
 public class CreateProfileRequest
 {
@@ -10,5 +12,5 @@ public class CreateProfileRequest
     public string? nickName { get; set; }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public Profiles.Rol role { get; set; }
+    public Rol role { get; set; }
 }

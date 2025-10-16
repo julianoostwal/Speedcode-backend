@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using speedCode.Profile;
 
 namespace speedCode.Model
 {
@@ -16,13 +17,6 @@ namespace speedCode.Model
 
         [Column("nick_name", TypeName = "varchar(50)")]
         public string? nickName { get; set; }
-
-        public enum Rol
-        {
-            user,
-            admin
-        }
-
         public Rol role { get; set; }
     }
 }

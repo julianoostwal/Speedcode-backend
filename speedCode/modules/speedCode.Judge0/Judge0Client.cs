@@ -1,8 +1,10 @@
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
+using speedCode.Core.judge0.dto;
 using speedCode.dto;
 
-namespace speedCode.codeTesting;
+namespace speedCode.Judge0;
 
 public class Judge0Client
 {

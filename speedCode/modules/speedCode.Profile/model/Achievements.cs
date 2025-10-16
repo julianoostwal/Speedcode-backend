@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace speedCode.Achievements
+namespace speedCode.Profile.model
 {
     [Table("achievements")]
     public class Achievement

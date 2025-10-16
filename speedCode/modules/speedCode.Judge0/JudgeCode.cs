@@ -1,3 +1,5 @@
+using speedCode.Core.judge0.dto;
+
 namespace speedCode.codeTesting;
 
 public abstract class JudgeCode

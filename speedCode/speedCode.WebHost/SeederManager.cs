@@ -1,12 +1,14 @@
 using Microsoft.EntityFrameworkCore;
-using speedCode.Model;
-using speedCode.Data;
-using speedCode.dto;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using speedCode.Core.judge0.dto;
+using speedCode.Core.rooms.enums;
+using speedCode.Data;
+using speedCode.Model;
+using speedCode.Profile.model;
 
 namespace speedCode.Seeder
 {
@@ -128,16 +130,16 @@ namespace speedCode.Seeder
                 {
                     new Rooms
                     {
-                        roomName = "Room1", roomLevel = Rooms.Level.Easy, isPrivate = false, createdAt = DateTime.UtcNow
+                        roomName = "Room1", roomLevel = Level.Easy, isPrivate = false, createdAt = DateTime.UtcNow
                     },
                     new Rooms
                     {
-                        roomName = "Room2", roomLevel = Rooms.Level.Medium, isPrivate = false,
+                        roomName = "Room2", roomLevel = Level.Medium, isPrivate = false,
                         createdAt = DateTime.UtcNow
                     },
                     new Rooms
                     {
-                        roomName = "Room3", roomLevel = Rooms.Level.Hard, isPrivate = false, createdAt = DateTime.UtcNow
+                        roomName = "Room3", roomLevel = Level.Hard, isPrivate = false, createdAt = DateTime.UtcNow
                     }
                 };
                 context.Rooms.AddRange(rooms);

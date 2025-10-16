@@ -1,7 +1,6 @@
-using speedCode.dto;
-using speedCode.Model;
+using speedCode.Core.judge0.dto;
 
-namespace speedCode.codeTesting.attributes;
+namespace speedCode.Judge0.attributes;
 
 [AttributeUsage(
     AttributeTargets.Class,

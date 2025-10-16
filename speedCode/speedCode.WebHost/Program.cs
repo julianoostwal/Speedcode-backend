@@ -1,4 +1,11 @@
 using Microsoft.EntityFrameworkCore;
+using speedCode.Data;
+using speedCode.Excise;
+using speedCode.Excise.service;
+using speedCode.Judge0;
+using speedCode.security;
+using speedCode.Seeder;
+using speedCode.services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddUserSecrets<Program>(optional: true);
@@ -36,8 +43,6 @@ builder.Services.AddScoped<RoomService>();
 builder.Services.AddScoped<RoomValidator>();
 
 var app = builder.Build();
-
-MigrationHelper.ApplyMigrations(app);
 
 if (app.Environment.IsDevelopment())
 {

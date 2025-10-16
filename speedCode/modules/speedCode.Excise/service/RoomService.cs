@@ -1,15 +1,16 @@
 using speedCode.Core.rooms.dto;
 using speedCode.Core.rooms.Mapper;
-using speedCode.Data;
 using speedCode.Model;
+using speedCode.Profile;
 
 namespace speedCode.Excise.service;
 
 public class RoomService
 {
-    private readonly AppDbContext _db;
+    private readonly ExciseDb _db;
+    private readonly ProfileDb _profileDb;
 
-    public RoomService(AppDbContext db)
+    public RoomService(ExciseDb db)
     {
         _db = db;
     }
@@ -29,7 +30,7 @@ public class RoomService
             roomId = roomId,
             profileId = profielId
         };
-        _db.RoomUser.Add(roomUser);
+        _profileDb.RoomUser.Add(roomUser);
         await _db.SaveChangesAsync();
 
         return roomUser;

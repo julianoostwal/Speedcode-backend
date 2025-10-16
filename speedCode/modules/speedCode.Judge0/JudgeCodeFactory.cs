@@ -1,9 +1,10 @@
-using speedCode.dto;
+using speedCode.codeTesting;
+using speedCode.Core.judge0.dto;
+using speedCode.Judge0.attributes;
 
-namespace speedCode.codeTesting;
+namespace speedCode.Judge0;
 
 using System.Reflection;
-using speedCode.codeTesting.attributes;
 
 public static class JudgeCodeFactory
 {
@@ -11,7 +12,7 @@ public static class JudgeCodeFactory
 
     static JudgeCodeFactory()
     {
-        string targetNamespace = "speedCode.codeTesting";
+        string targetNamespace = "speedCode.Judge0";
 
         _typeMap = Assembly.GetExecutingAssembly()
             .GetTypes()
