@@ -32,6 +32,9 @@ namespace speedCode.Profile
             modelBuilder.Entity<Profiles>()
                 .Property(p => p.role)
                 .HasConversion<string>();
+            
+            modelBuilder.Entity<ProfileAchivement>()
+                .HasKey(pa => new { pa.profileId, pa.achievementId });
         }
     }
 }

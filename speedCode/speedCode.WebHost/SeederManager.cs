@@ -263,7 +263,7 @@ namespace speedCode.Seeder
 
             // Seed RoomExercise
 
-            if (!exciseDb.RoomExercise.Any() && exciseDb.Rooms.Any() && exciseDb.Exercise.Any())
+            if (!exciseDb.RoomExercise.Any() && roomsDb.rooms.Any() && exciseDb.Exercise.Any())
             {
                 var roomExercises = new List<RoomExercise>();
                 int countRooms = roomsDb.rooms.Count();
