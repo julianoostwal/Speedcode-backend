@@ -18,6 +18,10 @@ public class ExercisesController : ControllerBase
         _configuration = configuration;
     }
 
+    /// <summary>
+    /// werkt nog niet helemaal, eerst moet de room api gemaakt worden zodat alle rooms worden opgehaald daarna maakt Joshua hem verder af
+    /// </summary>
+
     // GET all exercises
     [HttpGet]
     public async Task<IActionResult> GetFullExercises()
@@ -28,7 +32,7 @@ public class ExercisesController : ControllerBase
         httpClient.BaseAddress = new Uri(supabaseUrl);
         httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", serviceRoleKey);
         httpClient.DefaultRequestHeaders.Add("apikey", serviceRoleKey);
-
+        
         var response = await httpClient.GetAsync("/auth/v1/admin/users");
         var responseBody = await response.Content.ReadAsStringAsync();
 
@@ -50,13 +54,6 @@ public class ExercisesController : ControllerBase
 
         var result = new List<object>();
 
-        var userEmailDict = usersArray.EnumerateArray()
-            .Where(u => u.TryGetProperty("id", out var idProp) && u.TryGetProperty("email", out var emailProp))
-            .ToDictionary(
-                u => u.GetProperty("id").GetString(),
-                u => u.GetProperty("email").GetString()
-            );
-
         foreach (var exercise in exercises)
         {
             var profileExerciseList = profileExercises.Where(pe => pe.exerciseId == exercise.id).ToList();
@@ -66,11 +63,15 @@ public class ExercisesController : ControllerBase
                 {
                     var profile = profiles.FirstOrDefault(p => p.id == pe.profileId);
                     var profileIdStr = pe.profileId.ToString();
-                    var email = userEmailDict.ContainsKey(profileIdStr) ? userEmailDict[profileIdStr] : null;
+                    var userElement = usersArray.EnumerateArray()
+                        .FirstOrDefault(u => u.GetProperty("id").ToString() == pe.profileId.ToString());
+                    var email = userElement.ValueKind != System.Text.Json.JsonValueKind.Undefined
+                        ? userElement.GetProperty("email").GetString()
+                        : null;
 
                     return new
                     {
-                        id = profileIdStr,
+                        id = pe.profileId.ToString(),
                         email,
                         avatarUrl = profile?.avatarUrl,
                         createdAt = profile?.createdAt,
@@ -89,7 +90,6 @@ public class ExercisesController : ControllerBase
                 createdAt = exercise.createdAt,
                 profiles = exerciseProfiles,
                 profileExercises = profileExerciseList
-                    .Where(pe => pe.exerciseId == exercise.id)
                     .Select(pe => new
                     {
                         id = pe.id,
@@ -148,7 +148,7 @@ public class ExercisesController : ControllerBase
     }
 
     // GET by id
-    /*[HttpGet("id/{id}")]
+    [HttpGet("id/{id}")]
     public async Task<IActionResult> GetExercise(Guid id)
     {
         var exercise = _context.Exercise.Find(id);
@@ -173,26 +173,26 @@ public class ExercisesController : ControllerBase
             return Ok(new List<object>());
 
         var exercises = _context.Exercise.Where(e => e.id  == id).ToList();
-        var exerciseTests = _context.ExerciseTest.Where(et => et.exerciseId == id).ToList();
-        var testCodes = _context.TestCode.Where(tc => tc.id == exerciseTests.FirstOrDefault().testId).ToList();
+        //var exerciseTests = _context.ExerciseTest.Where(et => et.exerciseId == id).ToList();
+        //var testCodes = _context.TestCode.Where(tc => tc.id == exerciseTests.FirstOrDefault().testId).ToList();
         var profileExercises = _context.ProfileExercise.Where(pe => pe.exerciseId == id).ToList();
-        var roomExercises = _context.RoomExercise.Where(re => re.exerciseId == id).ToList();
-        var rooms = _context.Rooms.Where(r => r.id == roomExercises.FirstOrDefault().roomId).ToList();
+        //var roomExercises = _context.RoomExercise.Where(re => re.exerciseId == id).ToList();
+        //var rooms = _context.Rooms.Where(r => r.id == roomExercises.FirstOrDefault().roomId).ToList();
         var profiles = _context.Profiles.Where(p => p.id == profileExercises.FirstOrDefault().profileId).ToList();
         
-        var exerciseProfiles = testCodes
+        var exerciseProfiles = profileExercises
                 .Select(pe =>
                 {
-                    var profile = profiles.FirstOrDefault(p => p.id == pe.authorId);
+                    var profile = profiles.FirstOrDefault(p => p.id == pe.profileId);
                     var userElement = usersArray.EnumerateArray()
-                        .FirstOrDefault(u => u.GetProperty("id").GetString() == pe.authorId.ToString());
+                        .FirstOrDefault(u => u.GetProperty("id").GetString() == pe.profileId.ToString());
                     var email = userElement.ValueKind != System.Text.Json.JsonValueKind.Undefined
                         ? userElement.GetProperty("email").GetString()
                         : null;
 
                     return new
                     {
-                        id = pe.authorId.ToString(),
+                        id = pe.profileId.ToString(),
                         email,
                         avatarUrl = profile?.avatarUrl,
                         createdAt = profile?.createdAt,
@@ -205,7 +205,7 @@ public class ExercisesController : ControllerBase
 
         result.Add(new
         {
-            id = exercise.id,
+            /*id = exercise.id,
             title = exercise.title,
             description = exercise.description,
             isRoomExcise = exercise.isRoomExcise,
@@ -224,9 +224,9 @@ public class ExercisesController : ControllerBase
                 expectedResult = tc.expectedResult,
                 type = tc.Type.ToString(),
                 createdAt = tc.createdAt
-            }),
-            profiles = exerciseProfiles,
-            profileExercises = profileExercises.Select(pe => new
+            }),*/
+            profiles = exerciseProfiles
+            /*profileExercises = profileExercises.Select(pe => new
             {
                 id = pe.id,
                 profileId = pe.profileId,
@@ -244,7 +244,7 @@ public class ExercisesController : ControllerBase
                 title = r.title,
                 description = r.description,
                 createdAt = r.createdAt
-            })
+            })*/
         });
 
         return Ok(result);

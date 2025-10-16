@@ -29,15 +29,33 @@ public class ProfilesController : ControllerBase
         httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", serviceRoleKey);
         httpClient.DefaultRequestHeaders.Add("apikey", serviceRoleKey);
 
-        var response = await httpClient.GetAsync("/auth/v1/admin/users");
-        var responseBody = await response.Content.ReadAsStringAsync();
+        var allUsers = new List<System.Text.Json.JsonElement>();
+        int page = 1;
+        int perPage = 50;
+        bool hasMore = true;
+        while (hasMore)
+        {
+            var response = await httpClient.GetAsync($"/auth/v1/admin/users?page={page}&per_page={perPage}");
+            var responseBody = await response.Content.ReadAsStringAsync();
+            if (!response.IsSuccessStatusCode)
+                return BadRequest($"Failed to fetch users from Supabase Auth: {responseBody}");
 
-        if (!response.IsSuccessStatusCode)
-            return BadRequest($"Failed to fetch users from Supabase Auth: {responseBody}");
+            var doc = System.Text.Json.JsonDocument.Parse(responseBody);
+            if (!doc.RootElement.TryGetProperty("users", out var usersArray) || usersArray.GetArrayLength() == 0)
+                break;
 
-        var doc = System.Text.Json.JsonDocument.Parse(responseBody);
-        if (!doc.RootElement.TryGetProperty("users", out var usersArray))
-            return Ok(new List<object>());
+            allUsers.AddRange(usersArray.EnumerateArray());
+            hasMore = usersArray.GetArrayLength() == perPage;
+            page++;
+        }
+
+        var userIdToEmail = allUsers
+            .Select(u => new {
+                Id = u.GetProperty("id").GetString(),
+                Email = u.GetProperty("email").GetString()
+            })
+            .Where(x => Guid.TryParse(x.Id, out _))
+            .ToDictionary(x => Guid.Parse(x.Id), x => x.Email);
 
         var profiles = _context.Profiles.ToList();
         var roomUsers = _context.RoomUser.ToList();
@@ -51,37 +69,29 @@ public class ProfilesController : ControllerBase
         var testExpectIOs = _context.TestExpectIO.ToList();
 
         var result = new List<object>();
-
-        foreach (var userElement in usersArray.EnumerateArray())
+        foreach (var profile in profiles)
         {
-            var userIdStr = userElement.GetProperty("id").GetString();
-            var email = userElement.GetProperty("email").GetString();
+            var email = userIdToEmail.TryGetValue(profile.id, out var foundEmail) ? foundEmail : null;
 
-            Guid userId;
-            if (!Guid.TryParse(userIdStr, out userId))
-                continue;
-
-            var profile = profiles.FirstOrDefault(p => p.id == userId);
-
-            var userRoomUsers = roomUsers.Where(ru => ru.profileId == userId).Select(ru => new
+            var userRoomUsers = roomUsers.Where(ru => ru.profileId == profile.id).Select(ru => new
             {
                 roomUserId = ru.id,
                 room = rooms.FirstOrDefault(r => r.id == ru.roomId)
             }).ToList();
 
-            var userProfileExercises = profileExercises.Where(pe => pe.profileId == userId).Select(pe => new
+            var userProfileExercises = profileExercises.Where(pe => pe.profileId == profile.id).Select(pe => new
             {
                 profileExerciseId = pe.id,
                 exercise = exercises.FirstOrDefault(ex => ex.id == pe.exerciseId)
             }).ToList();
 
-            var userProfileAchievements = profileAchievements.Where(pa => pa.profileId == userId).Select(pa => new
+            var userProfileAchievements = profileAchievements.Where(pa => pa.profileId == profile.id).Select(pa => new
             {
                 profileAchievementId = pa.id,
                 achievement = achievements.FirstOrDefault(a => a.id == pa.achievementId)
             }).ToList();
 
-            var userProfileTestcodes = testCodes.Where(pa => pa.authorId == userId).ToList();
+            var userProfileTestcodes = testCodes.Where(pa => pa.authorId == profile.id).ToList();
 
             var ExerciseTests = exerciseTests.Where(et => et.testId == userProfileTestcodes.FirstOrDefault()?.id).ToList();
 
@@ -89,12 +99,12 @@ public class ProfilesController : ControllerBase
 
             result.Add(new
             {
-                id = userIdStr,
+                id = profile.id.ToString(),
                 email,
-                avatarUrl = profile?.avatarUrl,
-                createdAt = profile?.createdAt,
-                nickName = profile?.nickName,
-                role = profile?.role.ToString() ?? "user",
+                avatarUrl = profile.avatarUrl,
+                createdAt = profile.createdAt,
+                nickName = profile.nickName,
+                role = profile.role.ToString(),
                 rooms = userRoomUsers.Select(ru => new
                 {
                     roomUserId = ru.roomUserId,
@@ -181,13 +191,23 @@ public class ProfilesController : ControllerBase
 
         var roomUsers = _context.RoomUser.Where(ru => ru.profileId == id).ToList();
         var rooms = _context.Rooms.ToList();
+
         var profileExercises = _context.ProfileExercise.Where(pe => pe.profileId == id).ToList();
         var exercises = _context.Exercise.ToList();
+
         var profileAchievements = _context.ProfileAchievement.Where(pa => pa.profileId == id).ToList();
         var achievements = _context.Achievement.ToList();
+
         var testCodes = _context.TestCode.Where(pt => pt.authorId == id).ToList();
-        var testExpectIOs = _context.TestExpectIO.Where(te => te.testCodeId == testCodes.FirstOrDefault().id).ToList();
-        var exerciseTests = _context.ExerciseTest.Where(et => et.testId == testCodes.FirstOrDefault().id).ToList();
+        Guid? firstTestCodeId = testCodes.FirstOrDefault()?.id;
+
+        var exerciseTests = firstTestCodeId != null
+            ? _context.ExerciseTest.Where(et => et.testId == firstTestCodeId).ToList()
+            : new List<ExerciseTest>();
+
+        var testExpectIOs = firstTestCodeId != null
+            ? _context.TestExpectIO.Where(te => te.testCodeId == firstTestCodeId).ToList()
+            : new List<TestExpectIO>();
 
         var result = new
         {
@@ -262,18 +282,31 @@ public class ProfilesController : ControllerBase
         httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", serviceRoleKey);
         httpClient.DefaultRequestHeaders.Add("apikey", serviceRoleKey);
 
-        var response = await httpClient.GetAsync($"/auth/v1/admin/users?email={email}");
-        var responseBody = await response.Content.ReadAsStringAsync();
+        var allUsers = new List<System.Text.Json.JsonElement>();
+        int page = 1;
+        int perPage = 50;
+        bool hasMore = true;
+        while (hasMore)
+        {
+            var response = await httpClient.GetAsync($"/auth/v1/admin/users?page={page}&per_page={perPage}");
+            var responseBody = await response.Content.ReadAsStringAsync();
+            if (!response.IsSuccessStatusCode)
+                return BadRequest($"Failed to fetch users from Supabase Auth: {responseBody}");
 
-        if (!response.IsSuccessStatusCode)
-            return BadRequest($"Failed to fetch user from Supabase Auth: {responseBody}");
+            var doc = System.Text.Json.JsonDocument.Parse(responseBody);
+            if (!doc.RootElement.TryGetProperty("users", out var usersArray) || usersArray.GetArrayLength() == 0)
+                break;
 
-        var doc = System.Text.Json.JsonDocument.Parse(responseBody);
-        if (!doc.RootElement.TryGetProperty("users", out var usersArray) || usersArray.GetArrayLength() == 0)
-            return NotFound("No user found with this email in Supabase Auth.");
+            allUsers.AddRange(usersArray.EnumerateArray());
+            hasMore = usersArray.GetArrayLength() == perPage;
+            page++;
+        }
 
-        var userElement = usersArray.EnumerateArray()
-            .FirstOrDefault(u => u.TryGetProperty("email", out var e) && e.GetString() == email);
+        var userElement = allUsers
+            .FirstOrDefault(u =>
+                u.TryGetProperty("email", out var e) &&
+                string.Equals(e.GetString(), email, StringComparison.OrdinalIgnoreCase)
+            );
 
         if (userElement.ValueKind == System.Text.Json.JsonValueKind.Undefined)
             return NotFound("No user found with this email in Supabase Auth.");
@@ -290,13 +323,23 @@ public class ProfilesController : ControllerBase
 
         var roomUsers = _context.RoomUser.Where(ru => ru.profileId == supabaseUserId).ToList();
         var rooms = _context.Rooms.ToList();
+
         var profileExercises = _context.ProfileExercise.Where(pe => pe.profileId == supabaseUserId).ToList();
         var exercises = _context.Exercise.ToList();
+
         var profileAchievements = _context.ProfileAchievement.Where(pa => pa.profileId == supabaseUserId).ToList();
         var achievements = _context.Achievement.ToList();
+
         var testCodes = _context.TestCode.Where(pt => pt.authorId == supabaseUserId).ToList();
-        var testExpectIOs = _context.TestExpectIO.Where(te => te.testCodeId == testCodes.FirstOrDefault().id).ToList();
-        var exerciseTests = _context.ExerciseTest.Where(et => et.testId == testCodes.FirstOrDefault().id).ToList();
+        Guid? firstTestCodeId = testCodes.FirstOrDefault()?.id;
+
+        var exerciseTests = firstTestCodeId != null
+            ? _context.ExerciseTest.Where(et => et.testId == firstTestCodeId).ToList()
+            : new List<ExerciseTest>();
+
+        var testExpectIOs = firstTestCodeId != null
+            ? _context.TestExpectIO.Where(te => te.testCodeId == firstTestCodeId).ToList()
+            : new List<TestExpectIO>();
 
         var result = new
         {
