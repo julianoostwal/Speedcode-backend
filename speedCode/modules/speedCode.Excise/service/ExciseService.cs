@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using speedCode.codeTesting;
 using speedCode.Core.judge0.dto;
 using speedCode.Excise;
+using speedCode.Excise.model;
 using speedCode.Judge0;
 using speedCode.Model;
 using speedCode.rooms;

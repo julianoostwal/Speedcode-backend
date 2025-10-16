@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using speedCode.Core.rooms.dto;
 using speedCode.Excise.service;
-using speedCode.Rooms.Model;
+using speedCode.Room.Model;
 namespace speedCode.Excise.controller;
 
 [ApiController]

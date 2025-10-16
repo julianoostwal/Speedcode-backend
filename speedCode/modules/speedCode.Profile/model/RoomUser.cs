@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using speedCode.Model;
+using speedCode.Room.Model;
 
 namespace speedCode.Profile.model
 {

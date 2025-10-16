@@ -2,6 +2,7 @@ using System.Net.WebSockets;
 using System.Text;
 using speedCode.Core.utils;
 using speedCode.Excise.service;
+using speedCode.Profile;
 using speedCode.rooms;
 using speedCode.services;
 
@@ -10,15 +11,15 @@ namespace speedCode.Excise;
 public class RoomWebSocketHandler
 {
     private readonly RoomValidator _validator;
-    private readonly RoomService _roomService;
+    private readonly RoomUserService _roomUserService;
     private readonly ExciseService _exciseService;
     private readonly JwtService _jwtService;
 
-    public RoomWebSocketHandler(RoomValidator validator, RoomService roomService, ExciseService exciseService)
+    public RoomWebSocketHandler(RoomValidator validator, RoomUserService roomUserService, ExciseService exciseService)
     {
         _exciseService = exciseService;
         _validator = validator;
-        _roomService = roomService;
+        _roomUserService = roomUserService;
     }
 
     public async Task HandleAsync(Guid roomId, WebSocket socket)
@@ -43,9 +44,9 @@ public class RoomWebSocketHandler
         };
 
 
-        Room room = WSRoomsService.GetOrCreateRoom(roomId);
+        rooms.Room room = WSRoomsService.GetOrCreateRoom(roomId);
         PlayerManager.AddPlayer(room, player);
-        _roomService.JoinRoom(clientId, roomId);
+        _roomUserService.JoinRoom(clientId, roomId);
         await ReceiveLoopAsync(room, player);
     }
 
@@ -83,7 +84,7 @@ public class RoomWebSocketHandler
         return Guid.Parse(clientId);
     }
 
-    private async Task ReceiveLoopAsync(Room room, Player player)
+    private async Task ReceiveLoopAsync(rooms.Room room, Player player)
     {
         var buffer = new byte[1024 * 4];
         await room.BroadcastRoomUpdateAsync();

@@ -1,5 +1,7 @@
+using speedCode.Excise.model;
 using speedCode.Model;
 using speedCode.Profile;
+using speedCode.Room.Model;
 
 namespace speedCode.Excise;
 
@@ -7,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 public class ExciseDb : DbContext
 {
     public DbSet<TestCode> TestCode { get; set; }
-    public DbSet<global::Rooms> Rooms { get; set; }
+    public DbSet<Rooms> Rooms { get; set; }
     public DbSet<ExerciseTest> ExerciseTest { get; set; }
     public DbSet<Exercise> Exercise { get; set; }
 

@@ -127,7 +127,7 @@ public class ProfilesController : ControllerBase
     }
 
     // DELETE
-    // [HttpDelete("{id}")]
+    [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteProfile(Guid id)
     {
         var profile = _context.Profiles.Find(id);
