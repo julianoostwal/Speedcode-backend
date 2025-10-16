@@ -1,6 +1,7 @@
-using speedCode.codeTesting.enums;
+using speedCode.Core.judge0.enums;
 
-namespace speedCode.codeTesting;
+namespace speedCode.Core.judge0.dto;
+
 
 public class JudgeCodeTestResults
 {

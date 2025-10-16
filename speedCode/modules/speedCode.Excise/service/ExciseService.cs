@@ -1,8 +1,6 @@
-using Microsoft.EntityFrameworkCore;
 using speedCode.codeTesting;
-using speedCode.codeTesting.enums;
+using speedCode.Core.judge0.dto;
 using speedCode.Data;
-using speedCode.dto;
 using speedCode.Model;
 using speedCode.rooms;
 

@@ -1,8 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
-using speedCode.Data;
 using speedCode.Model;
-using speedCode.dto;
+using speedCode.Profile;
 
 namespace speedCode.Controllers;
 
@@ -10,9 +9,9 @@ namespace speedCode.Controllers;
 [Route("api/[controller]")]
 public class ProfilesController : ControllerBase
 {
-    private readonly AppDbContext _context;
+    private readonly ProfileDbContext _context;
 
-    public ProfilesController(AppDbContext context)
+    public ProfilesController(ProfileDbContext context)
     {
         _context = context;
     }
@@ -129,43 +128,43 @@ public class ProfilesController : ControllerBase
     }
 
     // DELETE
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteProfile(Guid id)
-    {
-        var profile = _context.Profiles.Find(id);
-
-        var supabaseUrl = "https://supabase.speedcode.tech";
-        var serviceRoleKey =
-            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc1NzU5MzgwMCwiZXhwIjo0OTEzMjY3NDAwLCJyb2xlIjoic2VydmljZV9yb2xlIn0.U5ovw3nz1VKJJCbKfzARWXuHTUr73U1LNtyBNyhT6pg";
-        using (var httpClient = new HttpClient())
-        {
-            httpClient.BaseAddress = new Uri(supabaseUrl);
-            httpClient.DefaultRequestHeaders.Authorization =
-                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", serviceRoleKey);
-            httpClient.DefaultRequestHeaders.Add("apikey", serviceRoleKey);
-
-            var response = await httpClient.DeleteAsync($"/auth/v1/admin/users/{id}");
-        }
-
-        var achievements = _context.ProfileAchievement.Where(pa => pa.profileId == id);
-        if (achievements.Any())
-            _context.ProfileAchievement.RemoveRange(achievements);
-
-        var exercises = _context.ProfileExercise.Where(pe => pe.profileId == id);
-        if (exercises.Any())
-            _context.ProfileExercise.RemoveRange(exercises);
-
-        var roomUsers = _context.RoomUser.Where(ru => ru.profileId == id);
-        if (roomUsers.Any())
-            _context.RoomUser.RemoveRange(roomUsers);
-
-        if (profile != null)
-            _context.Profiles.Remove(profile);
-
-        if (profile == null && !achievements.Any() && !exercises.Any() && !roomUsers.Any())
-            return NotFound();
-
-        _context.SaveChanges();
-        return NoContent();
-    }
+    // [HttpDelete("{id}")]
+    // public async Task<IActionResult> DeleteProfile(Guid id)
+    // {
+    //     var profile = _context.Profiles.Find(id);
+    //
+    //     var supabaseUrl = "https://supabase.speedcode.tech";
+    //     var serviceRoleKey =
+    //         "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc1NzU5MzgwMCwiZXhwIjo0OTEzMjY3NDAwLCJyb2xlIjoic2VydmljZV9yb2xlIn0.U5ovw3nz1VKJJCbKfzARWXuHTUr73U1LNtyBNyhT6pg";
+    //     using (var httpClient = new HttpClient())
+    //     {
+    //         httpClient.BaseAddress = new Uri(supabaseUrl);
+    //         httpClient.DefaultRequestHeaders.Authorization =
+    //             new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", serviceRoleKey);
+    //         httpClient.DefaultRequestHeaders.Add("apikey", serviceRoleKey);
+    //
+    //         var response = await httpClient.DeleteAsync($"/auth/v1/admin/users/{id}");
+    //     }
+    //
+    //     var achievements = _context.ProfileAchievement.Where(pa => pa.profileId == id);
+    //     if (achievements.Any())
+    //         _context.ProfileAchievement.RemoveRange(achievements);
+    //
+    //     var exercises = _context.ProfileExercise.Where(pe => pe.profileId == id);
+    //     if (exercises.Any())
+    //         _context.ProfileExercise.RemoveRange(exercises);
+    //
+    //     var roomUsers = _context.RoomUser.Where(ru => ru.profileId == id);
+    //     if (roomUsers.Any())
+    //         _context.RoomUser.RemoveRange(roomUsers);
+    //
+    //     if (profile != null)
+    //         _context.Profiles.Remove(profile);
+    //
+    //     if (profile == null && !achievements.Any() && !exercises.Any() && !roomUsers.Any())
+    //         return NotFound();
+    //
+    //     _context.SaveChanges();
+    //     return NoContent();
+    // }
 }

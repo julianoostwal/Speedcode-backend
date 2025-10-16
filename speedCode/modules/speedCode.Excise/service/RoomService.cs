@@ -1,9 +1,9 @@
+using speedCode.Core.rooms.dto;
+using speedCode.Core.rooms.Mapper;
 using speedCode.Data;
-using speedCode.dto.room;
-using speedCode.Mapper;
 using speedCode.Model;
 
-namespace speedCode.services;
+namespace speedCode.Excise.service;
 
 public class RoomService
 {

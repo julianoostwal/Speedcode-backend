@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using speedCode.dto.room;
+using speedCode.Core.rooms.dto;
+using speedCode.Excise.service;
 using speedCode.Model;
-using speedCode.services;
 
-namespace speedCode.Controllers;
+namespace speedCode.Excise.controller;
 
 [ApiController]
 [Route("rooms")]

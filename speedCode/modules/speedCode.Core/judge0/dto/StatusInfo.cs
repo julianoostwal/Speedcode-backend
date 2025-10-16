@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 
-namespace speedCode.dto;
+namespace speedCode.Core.judge0.dto;
+
 
 public record StatusInfo(
     [property: JsonPropertyName("id")] int Id,

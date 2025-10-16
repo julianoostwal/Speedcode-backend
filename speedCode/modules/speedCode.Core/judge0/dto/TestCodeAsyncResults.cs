@@ -1,8 +1,6 @@
-using speedCode.codeTesting;
-using speedCode.codeTesting.enums;
+using speedCode.Core.judge0.enums;
 
-namespace speedCode.dto;
-
+namespace speedCode.Core.judge0.dto;
 public class TestCodeAsyncResults
 {
     public List<JudgeCodeTestResults> TestProcess { get; set; } = new List<JudgeCodeTestResults>();

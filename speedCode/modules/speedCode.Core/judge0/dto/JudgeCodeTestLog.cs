@@ -1,6 +1,4 @@
-using speedCode.dto;
-
-namespace speedCode.codeTesting;
+namespace speedCode.Core.judge0.dto;
 
 public class JudgeCodeTestLog
 {

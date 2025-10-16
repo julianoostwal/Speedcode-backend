@@ -1,4 +1,4 @@
-namespace speedCode.dto;
+namespace speedCode.Core.judge0.dto;
 
 public enum TestType
 {

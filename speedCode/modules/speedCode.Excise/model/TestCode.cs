@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using speedCode.dto;
+using speedCode.Core.judge0.dto;
 
 namespace speedCode.Model
 {

@@ -1,9 +1,8 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using speedCode.Data;
-using speedCode.dto;
-using speedCode.dto.room;
+using speedCode.Core.judge0.dto;
+using speedCode.Excise;
 using speedCode.rooms;
-using speedCode.security;
 using speedCode.services;
 
 namespace speedCode.Controllers;
@@ -27,7 +26,7 @@ public class WsRoomController : ControllerBase
     /// </summary>
     /// <param name="roomId">The ID of an existing room in the database.</param>
     [HttpGet("{roomId}")]
-    public async Task Get(Guid roomId, [FromServices] AppDbContext db)
+    public async Task Get(Guid roomId, [FromServices] ExciseDb db)
     {
         if (!HttpContext.WebSockets.IsWebSocketRequest)
         {

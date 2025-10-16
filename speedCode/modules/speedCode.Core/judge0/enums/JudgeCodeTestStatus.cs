@@ -1,6 +1,6 @@
 using System.ComponentModel;
+namespace speedCode.Core.judge0.enums;
 
-namespace speedCode.codeTesting.enums;
 
 public enum JudgeCodeTestStatus
 {

@@ -1,11 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using speedCode.Model;
 
 namespace speedCode.Data
 {
     public class AppDbContext : DbContext
     {
-        public DbSet<Profiles> Profiles { get; set; }
         public DbSet<TestCode> TestCode { get; set; }
         public DbSet<Rooms> Rooms { get; set; }
         public DbSet<RoomUser> RoomUser { get; set; }

@@ -1,7 +1,9 @@
-using speedCode.dto.room;
+
+using speedCode.Core.rooms.dto;
+using speedCode.Core.rooms.enums;
 using speedCode.Model;
 
-namespace speedCode.Mapper;
+namespace speedCode.Core.rooms.Mapper;
 
 public class RoomMapper
 {

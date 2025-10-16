@@ -1,12 +1,11 @@
-using speedCode.Model;
-
-namespace speedCode.dto.room;
+using speedCode.Core.rooms.enums;
+namespace speedCode.Core.rooms.dto;
 
 public class CreateRoomDTO
 {
     public string RoomName { get; set; }
 
-    public Rooms.Level RoomLevel { get; set; }
+    public Level RoomLevel { get; set; }
 
     public bool IsPrivate { get; set; }
 }
