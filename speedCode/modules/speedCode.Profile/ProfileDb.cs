@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using speedCode.Model;
 using speedCode.Profile.model;
+using speedCode.Room.Model;
 
 namespace speedCode.Profile
 {
@@ -18,6 +19,9 @@ namespace speedCode.Profile
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            
+            modelBuilder.Ignore<Rooms>();
+            
             modelBuilder.Entity<Profiles>(entity =>
             {
                 entity.Property(p => p.role)

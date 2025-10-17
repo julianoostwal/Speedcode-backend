@@ -124,6 +124,7 @@ namespace speedCode.Seeder
                 };
                 exciseDb.Exercise.AddRange(exercises);
                 exciseDb.SaveChanges();
+                profileDb.SaveChanges();
             }
 
             // Seed Rooms
@@ -189,6 +190,7 @@ namespace speedCode.Seeder
 
                 exciseDb.TestCode.AddRange(testCodes);
                 exciseDb.SaveChanges();
+                profileDb.SaveChanges();
             }
 
             // Seed ExerciseTest
@@ -230,6 +232,7 @@ namespace speedCode.Seeder
 
                 exciseDb.ProfileExercise.AddRange(profileExercises);
                 exciseDb.SaveChanges();
+                profileDb.SaveChanges();
             }
 
             // Seed RoomUser
