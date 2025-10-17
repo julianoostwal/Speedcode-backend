@@ -4,7 +4,7 @@ services:
   speedcode:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: speedCode.WebHost/Dockerfile
     image: speedcode:latest
     container_name: speedcode
     environment:
