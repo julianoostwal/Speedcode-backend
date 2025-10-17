@@ -1,7 +1,7 @@
 using System.Net.WebSockets;
 using System.Text;
+using System.Text.Json;
 using speedCode.Core.utils;
-using speedCode.Excise.service;
 using speedCode.Profile;
 using speedCode.rooms;
 using speedCode.services;
@@ -15,11 +15,13 @@ public class RoomWebSocketHandler
     private readonly ExciseService _exciseService;
     private readonly JwtService _jwtService;
 
-    public RoomWebSocketHandler(RoomValidator validator, RoomUserService roomUserService, ExciseService exciseService)
+    public RoomWebSocketHandler(RoomValidator validator, RoomUserService roomUserService, ExciseService exciseService,
+        JwtService jwtService)
     {
         _exciseService = exciseService;
         _validator = validator;
         _roomUserService = roomUserService;
+        _jwtService = jwtService;
     }
 
     public async Task HandleAsync(Guid roomId, WebSocket socket)
@@ -55,33 +57,64 @@ public class RoomWebSocketHandler
         var buffer = new byte[1024 * 4];
         var result = await socket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
         var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
-        var json = System.Text.Json.JsonDocument.Parse(message);
+
+        if (string.IsNullOrWhiteSpace(message))
+        {
+            await CloseWithMessageAsync(socket, "Empty auth message", "Missing authentication message");
+            throw new InvalidOperationException("Received empty WebSocket auth message");
+        }
+
+        JsonDocument json;
+        try
+        {
+            json = JsonDocument.Parse(message);
+        }
+        catch (JsonException ex)
+        {
+            await CloseWithMessageAsync(socket, "Invalid JSON", "Invalid authentication message format");
+            Console.WriteLine($"❌ Invalid JSON: {ex.Message}");
+            throw;
+        }
 
         var root = json.RootElement;
 
-        bool hasType = root.TryGetProperty("type", out var typeProp);
-        bool hasToken = root.TryGetProperty("token", out var tokenProp);
-        string? type = hasType ? typeProp.GetString() : null;
-
-        if (type != "auth" || !hasToken)
+        if (!root.TryGetProperty("type", out var typeProp) ||
+            !root.TryGetProperty("token", out var tokenProp))
         {
-            var msg = Encoding.UTF8.GetBytes("Missing token");
-            await socket.SendAsync(new ArraySegment<byte>(msg), WebSocketMessageType.Text, true,
-                CancellationToken.None);
-            await socket.CloseAsync(WebSocketCloseStatus.PolicyViolation, "Missing token", CancellationToken.None);
+            await CloseWithMessageAsync(socket, "Missing fields", "Missing type or token in auth message");
+            throw new InvalidOperationException("Missing type/token fields in auth JSON");
+        }
+
+        var type = typeProp.GetString();
+        if (type != "auth")
+        {
+            await CloseWithMessageAsync(socket, "Invalid type", "Expected type='auth'");
+            throw new InvalidOperationException($"Invalid auth type: {type}");
         }
 
         var token = tokenProp.GetString();
+        if (string.IsNullOrWhiteSpace(token))
+        {
+            await CloseWithMessageAsync(socket, "Missing token", "Token cannot be empty");
+            throw new InvalidOperationException("Token is missing or empty");
+        }
+
         var clientId = _jwtService.GetClientIdFromToken(token);
         if (string.IsNullOrEmpty(clientId))
         {
-            var msg = Encoding.UTF8.GetBytes("Unauthorized");
-            await socket.SendAsync(new ArraySegment<byte>(msg), WebSocketMessageType.Text, true,
-                CancellationToken.None);
-            await socket.CloseAsync(WebSocketCloseStatus.PolicyViolation, "Unauthorized", CancellationToken.None);
+            await CloseWithMessageAsync(socket, "Unauthorized", "Invalid or expired token");
+            throw new UnauthorizedAccessException("Invalid JWT token");
         }
 
+        Console.WriteLine($"✅ Authenticated client {clientId}");
         return Guid.Parse(clientId);
+    }
+
+    private static async Task CloseWithMessageAsync(WebSocket socket, string message, string reason)
+    {
+        var msg = Encoding.UTF8.GetBytes(message);
+        await socket.SendAsync(new ArraySegment<byte>(msg), WebSocketMessageType.Text, true, CancellationToken.None);
+        await socket.CloseAsync(WebSocketCloseStatus.PolicyViolation, reason, CancellationToken.None);
     }
 
     private async Task ReceiveLoopAsync(rooms.Room room, Player player)
