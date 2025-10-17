@@ -43,6 +43,7 @@ if (app.Environment.IsDevelopment())
         var roomsDb = serviceProvider.GetRequiredService<RoomsDb>();
         var exciseDb = serviceProvider.GetRequiredService<ExciseDb>();
         var profileDb = serviceProvider.GetRequiredService<ProfileDb>();
+ //seed database
         SeederManager
             .CreateSupabaseAuthUsersAsync(builder.Configuration["Supabase:Url"],
                 builder.Configuration["Supabase:ServiceRoleKey"]).GetAwaiter().GetResult();
