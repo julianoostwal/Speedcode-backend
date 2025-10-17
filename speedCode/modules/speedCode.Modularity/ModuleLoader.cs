@@ -29,7 +29,25 @@ public static class ModuleLoader
 
     private static IEnumerable<IModule> LoadModules()
     {
-        var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+        var assemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
+
+        var loadedNames = assemblies.Select(a => a.GetName().Name).ToHashSet();
+        var referenced = assemblies
+            .SelectMany(a => a.GetReferencedAssemblies())
+            .Where(a => !loadedNames.Contains(a.Name))
+            .ToList();
+
+        foreach (var asmName in referenced)
+        {
+            try
+            {
+                var asm = AppDomain.CurrentDomain.Load(asmName);
+                assemblies.Add(asm);
+            }
+            catch
+            {
+            }
+        }
 
         var moduleTypes = assemblies
             .SelectMany(a => a.GetTypes())

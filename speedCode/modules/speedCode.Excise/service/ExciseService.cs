@@ -4,7 +4,6 @@ using speedCode.Core.judge0.dto;
 using speedCode.Excise;
 using speedCode.Excise.model;
 using speedCode.Judge0;
-using speedCode.Model;
 using speedCode.rooms;
 
 namespace speedCode.services;
@@ -28,6 +27,15 @@ public class ExciseService
                 where pe.profileId == profileId && re.roomId == roomId
                 select pe.exerciseId)
             .ToList();
+    }
+    public List<Exercise> GetAllExcisesByProfileId(Guid profileId)
+    {
+        return (from e in _dbContext.Exercise
+                join pe in _dbContext.ProfileExercise
+                    on e.id equals pe.exerciseId into peGroup
+                from pe in peGroup.DefaultIfEmpty()
+                where pe.profileId == profileId
+                select e).ToList();
     }
 
     public async Task<TestCodeAsyncResults> TestCodeAsyncForWSRoom(TestCodeRequest request, Guid roomId,
