@@ -5,7 +5,7 @@ using speedCode.Excise;
 using speedCode.rooms;
 using speedCode.services;
 
-namespace speedCode.Controllers;
+namespace speedCode.WsRoom.controller;
 
 [ApiController]
 [Route("ws")]

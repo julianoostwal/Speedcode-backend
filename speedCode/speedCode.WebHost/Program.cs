@@ -1,3 +1,4 @@
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using speedCode.Excise;
 using speedCode.Excise.service;
@@ -14,16 +15,25 @@ AuthManager.ConfigureJwt(builder);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    c.SwaggerDoc("v1", new() { Title = "SpeedCode API", Version = "v1" });
+
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+
     c.IncludeXmlComments(xmlPath);
+    c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "speedCode.WsRoom.xml"));
+    c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "speedCode.Profile.xml"));
+    c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "speedCode.Excise.xml"));
+    c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "speedCode.Room.xml"));
 });
+
 
 builder.Services.AddControllers()
     .AddApplicationPart(typeof(speedCode.Profile.ProfileModule).Assembly)
     .AddApplicationPart(typeof(speedCode.Excise.ExciseModule).Assembly)
     .AddApplicationPart(typeof(speedCode.Judge0.Judge0Module).Assembly)
     .AddApplicationPart(typeof(speedCode.Room.RoomsModule).Assembly)
+    .AddApplicationPart(typeof(speedCode.WsRoom.WsRoomModule).Assembly)
     .AddControllersAsServices()
     .AddJsonOptions(options =>
     {
@@ -44,7 +54,7 @@ if (app.Environment.IsDevelopment())
         var roomsDb = serviceProvider.GetRequiredService<RoomsDb>();
         var exciseDb = serviceProvider.GetRequiredService<ExciseDb>();
         var profileDb = serviceProvider.GetRequiredService<ProfileDb>();
- //seed database
+        //seed database
         SeederManager
             .CreateSupabaseAuthUsersAsync(builder.Configuration["Supabase:Url"],
                 builder.Configuration["Supabase:ServiceRoleKey"]).GetAwaiter().GetResult();
