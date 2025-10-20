@@ -1,6 +1,8 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
+using speedCode.Infrastructure;
 using speedCode.Model;
+using speedCode.Profile.service;
 
 namespace speedCode.Profile.controller;
 
@@ -9,10 +11,13 @@ namespace speedCode.Profile.controller;
 public class ProfilesController : ControllerBase
 {
     private readonly ProfileDb _context;
+    private readonly WebHelper _webHelper;
+    private readonly ProfileService _profileService;
 
-    public ProfilesController(ProfileDb context)
+    public ProfilesController(ProfileDb context, ProfileService profileService)
     {
         _context = context;
+        _profileService = profileService;
     }
 
     // GET all
@@ -149,13 +154,24 @@ public class ProfilesController : ControllerBase
         if (achievements.Any())
             _context.ProfileAchievement.RemoveRange(achievements);
 
-        var roomUsers = _context.RoomUser.Where(ru => ru.profileId == id);
-        if (roomUsers.Any())
-            _context.RoomUser.RemoveRange(roomUsers);
-
         if (profile != null)
             _context.Profiles.Remove(profile);
         _context.SaveChanges();
         return NoContent();
+    }
+
+    [HttpGet("GetAllExercises")]
+    public IActionResult GetAll()
+    {
+        try
+        {
+            Guid profielId = _webHelper.GetClientIdByTokenInHeader();
+            return Ok(_profileService.GetAllExcisesByProfileId(profielId));
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return Unauthorized();
+        }
     }
 }

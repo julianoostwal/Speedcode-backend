@@ -1,5 +1,3 @@
-using speedCode.dto.room;
-
 namespace speedCode.rooms;
 
 public static class PlayerManager

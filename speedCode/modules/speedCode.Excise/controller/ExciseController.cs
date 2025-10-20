@@ -24,19 +24,4 @@ public class ExciseController : ControllerBase
     {
         return await _exciseService.TestCodeAsync(request);
     }
-
-    [HttpGet("GetAll")]
-    public IActionResult GetAll()
-    {
-        try
-        {
-            Guid profielId = _webHelper.GetClientIdByTokenInHeader();
-            return Ok(_exciseService.GetAllExcisesByProfileId(profielId));
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            return Unauthorized();
-        }
-    }
 }

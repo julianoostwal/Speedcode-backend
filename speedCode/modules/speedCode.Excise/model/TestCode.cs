@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using speedCode.Core.judge0.dto;
-using speedCode.Model;
 
 namespace speedCode.Excise.model
 {
@@ -10,8 +9,9 @@ namespace speedCode.Excise.model
     {
         [Key] public Guid id { get; set; } = Guid.NewGuid();
 
-        [Required] public Guid authorId { get; set; }
-        [ForeignKey("authorId")] public virtual Profiles author { get; set; }
+        [Required]
+        [Column("authorId")]
+        public Guid AuthorId { get; set; }
 
         [Column("type")] [Required] public TestType Type { get; set; }
 

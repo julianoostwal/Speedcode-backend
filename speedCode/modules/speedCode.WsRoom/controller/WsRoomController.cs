@@ -67,7 +67,7 @@ public class WsRoomController : ControllerBase
 
         try
         {
-            var result = await _exciseService.TestCodeAsyncForWSRoom(request, roomId, clientId);
+            var result = await _wsHandler.TestCodeAsyncForWSRoom(request, roomId, clientId);
             return Ok(result);
         }
         catch (Exception ex)

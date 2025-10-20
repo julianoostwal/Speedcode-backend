@@ -12,9 +12,7 @@ public class ExciseModule : IModule
     {
         services.AddDbContext<ExciseDb>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
-
-        services.AddScoped<RoomWebSocketHandler>();
+        
         services.AddScoped<ExciseService>();
-        services.AddScoped<RoomValidator>();
     }
 }

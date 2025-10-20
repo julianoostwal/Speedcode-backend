@@ -13,10 +13,8 @@
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
 
         <ProjectReference Include="../speedCode.Core/speedCode.Core.csproj" />
-        <ProjectReference Include="../speedCode.Profile/speedCode.Profile.csproj" />
         <ProjectReference Include="../speedCode.Judge0/speedCode.Judge0.csproj" />
         <ProjectReference Include="../speedCode.Modularity/speedCode.Modularity.csproj" />
-        <ProjectReference Include="..\speedCode.Room\speedCode.Room.csproj" />
         <ProjectReference Include="..\speedCode.Infrastructure\speedCode.Infrastructure.csproj" />
     </ItemGroup>
 

@@ -166,7 +166,7 @@ namespace speedCode.Seeder
 
                     var testCode = new TestCode
                     {
-                        authorId = author.id,
+                        AuthorId = author.id,
                         createdAt = DateTime.UtcNow,
                         Type = TestType.Exactly
                     };
@@ -215,7 +215,7 @@ namespace speedCode.Seeder
 
             // Seed ProfileExercise
 
-            if (!exciseDb.ProfileExercise.Any() && exciseDb.Exercise.Any() && profileDb.Profiles.Any())
+            if (!profileDb.ProfileExercise.Any() && exciseDb.Exercise.Any() && profileDb.Profiles.Any())
             {
                 var profileExercises = new List<ProfileExercise>();
                 int countExercise = exciseDb.Exercise.Count();
@@ -230,14 +230,14 @@ namespace speedCode.Seeder
                     });
                 }
 
-                exciseDb.ProfileExercise.AddRange(profileExercises);
+                profileDb.ProfileExercise.AddRange(profileExercises);
                 exciseDb.SaveChanges();
                 profileDb.SaveChanges();
             }
 
             // Seed RoomUser
 
-            if (!profileDb.RoomUser.Any() && roomsDb.rooms.Any() && profileDb.Profiles.Any())
+            if (!roomsDb.RoomUser.Any() && roomsDb.rooms.Any() && profileDb.Profiles.Any())
             {
                 var roomUsers = new List<RoomUser>();
                 int countRooms = roomsDb.rooms.Count();
@@ -259,14 +259,14 @@ namespace speedCode.Seeder
                     }
                 }
 
-                profileDb.RoomUser.AddRange(roomUsers);
+                roomsDb.RoomUser.AddRange(roomUsers);
                 roomsDb.SaveChanges();
                 profileDb.SaveChanges();
             }
 
             // Seed RoomExercise
 
-            if (!exciseDb.RoomExercise.Any() && roomsDb.rooms.Any() && exciseDb.Exercise.Any())
+            if (!roomsDb.RoomExercise.Any() && roomsDb.rooms.Any() && exciseDb.Exercise.Any())
             {
                 var roomExercises = new List<RoomExercise>();
                 int countRooms = roomsDb.rooms.Count();
@@ -287,7 +287,7 @@ namespace speedCode.Seeder
                     }
                 }
 
-                exciseDb.RoomExercise.AddRange(roomExercises);
+                roomsDb.RoomExercise.AddRange(roomExercises);
                 exciseDb.SaveChanges();
                 roomsDb.SaveChanges();
             }
