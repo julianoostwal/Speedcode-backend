@@ -19,10 +19,31 @@ namespace speedCode.Profile
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Ignore<Exercise>();
-            modelBuilder.Ignore<TestCode>();
-            modelBuilder.Ignore<TestExpectIO>();
-            modelBuilder.Ignore<ExerciseTest>();
+            modelBuilder.Entity<TestCode>(entity =>
+            {
+                entity.Property(p => p.Type)
+                    .HasConversion<string>();
+
+                entity.Property(p => p.createdAt)
+                    .HasDefaultValueSql("NOW()");
+            });
+
+            modelBuilder.Entity<ProfileExercise>(entity =>
+            {
+                entity.ToTable("profile_exercises");
+
+                entity.HasKey(pe => pe.id);
+
+                entity.HasOne(pe => pe.profile)
+                    .WithMany(p => p.ProfileExercises)
+                    .HasForeignKey(pe => pe.profileId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(pe => pe.exercise)
+                    .WithMany()
+                    .HasForeignKey(pe => pe.exerciseId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
 
             modelBuilder.Entity<Profiles>(entity =>
             {

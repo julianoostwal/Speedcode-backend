@@ -52,7 +52,7 @@ public class WsRoomController : ControllerBase
     /// <response code="200">Code tested successfully, returns the test results.</response>
     /// <response code="404">Room or client not found.</response>
     /// <response code="400">Invalid or missing request data.</response>
-    [HttpPost("{roomId:guid}/test")]
+    [HttpPost("/test/{roomId:guid}")]
     public async Task<ActionResult<TestCodeAsyncResults>> TestCodeAsync(
         Guid roomId, [FromBody] TestCodeRequest request)
     {

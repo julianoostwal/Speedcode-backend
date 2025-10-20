@@ -17,7 +17,15 @@ public class ExciseService
         _judge0Client = judge0Client;
         _dbContext = dbContext;
     }
-    
+
+    public List<Exercise> gerRandomExercises(int count)
+    {
+        return _dbContext.Exercise
+            .OrderBy(e => EF.Functions.Random())
+            .Take(count)
+            .ToList();
+    }
+
     public async Task<TestCodeAsyncResults> TestCodeAsync(TestCodeRequest request)
     {
         TestCodeAsyncResults results = new TestCodeAsyncResults();

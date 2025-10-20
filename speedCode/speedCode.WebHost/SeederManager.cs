@@ -81,10 +81,6 @@ namespace speedCode.Seeder
         public static void SeedDatabase(RoomsDb roomsDb, ExciseDb exciseDb, ProfileDb profileDb)
         {
             Console.WriteLine("Seeding database...");
-            roomsDb.Database.Migrate();
-            exciseDb.Database.Migrate();
-            profileDb.Database.Migrate();
-
             // Seed Exercises
 
             if (!exciseDb.Exercise.Any())
@@ -166,7 +162,7 @@ namespace speedCode.Seeder
 
                     var testCode = new TestCode
                     {
-                        AuthorId = author.id,
+                        // AuthorId = author.id,
                         createdAt = DateTime.UtcNow,
                         Type = TestType.Exactly
                     };

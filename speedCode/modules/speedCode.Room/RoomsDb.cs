@@ -20,12 +20,13 @@ public class RoomsDb : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Ignore<Exercise>();
-        modelBuilder.Ignore<TestCode>();
-        modelBuilder.Ignore<TestExpectIO>();
-        modelBuilder.Ignore<ExerciseTest>();
-        modelBuilder.Ignore<Profiles>();
-        
+        modelBuilder.Entity<TestCode>().ToTable("testCode", t => t.ExcludeFromMigrations());
+        modelBuilder.Entity<Exercise>().ToTable("exercises", t => t.ExcludeFromMigrations());
+        modelBuilder.Entity<Profiles>().ToTable("profiles", t => t.ExcludeFromMigrations());
+        modelBuilder.Entity<ProfileExercise>().ToTable("profile_exercises", t => t.ExcludeFromMigrations());
+        modelBuilder.Entity<TestExpectIO>().ToTable("testExpectIO", t => t.ExcludeFromMigrations());
+        modelBuilder.Entity<ExerciseTest>().ToTable("exercise_tests", t => t.ExcludeFromMigrations());
+
         modelBuilder.Entity<Rooms>(entity =>
         {
             entity.Property(p => p.roomLevel)
