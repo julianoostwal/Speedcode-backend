@@ -1,6 +1,4 @@
 using speedCode.Excise.model;
-using speedCode.Model;
-using speedCode.Room.Model;
 
 
 namespace speedCode.Excise;
@@ -14,9 +12,7 @@ public class ExciseDb : DbContext
     public DbSet<Exercise> Exercise { get; set; }
 
     public DbSet<TestExpectIO> TestExpectIos { get; set; }
-
-    public DbSet<RoomExercise> RoomExercise { get; set; }
-    public DbSet<ProfileExercise> ProfileExercise { get; set; }
+    
 
     public ExciseDb(DbContextOptions<ExciseDb> options)
         : base(options)
@@ -25,9 +21,7 @@ public class ExciseDb : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Ignore<Profiles>();
-        modelBuilder.Ignore<Rooms>();
-
+        
         modelBuilder.Entity<ExerciseTest>()
             .HasKey(et => new { et.exerciseId, et.testId });
 

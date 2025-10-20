@@ -1,7 +1,10 @@
 using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
+using speedCode.Core.judge0.dto;
 using speedCode.Core.utils;
+using speedCode.Excise.model;
+using speedCode.Excise.service;
 using speedCode.Profile;
 using speedCode.rooms;
 using speedCode.services;
@@ -12,12 +15,19 @@ public class RoomWebSocketHandler
 {
     private readonly RoomValidator _validator;
     private readonly RoomUserService _roomUserService;
-    private readonly ExciseService _exciseService;
     private readonly JwtService _jwtService;
+    private readonly RoomService _roomService;
+    private readonly ProfileDb _profileDb;
+    private readonly ExciseDb _dbContext;
+    private readonly ExciseService _exciseService;
 
     public RoomWebSocketHandler(RoomValidator validator, RoomUserService roomUserService, ExciseService exciseService,
+        ProfileDb profileDb,
+        RoomService roomService,
         JwtService jwtService)
     {
+        _profileDb = profileDb;
+        _roomService = roomService;
         _exciseService = exciseService;
         _validator = validator;
         _roomUserService = roomUserService;
@@ -42,7 +52,7 @@ public class RoomWebSocketHandler
             ClientId = clientId,
             Socket = socket,
             ConnectedAt = DateTime.UtcNow,
-            FinishedExcise = _exciseService.GetAllFinishedExcisesByRoomAndUserId(roomId, clientId)
+            FinishedExcise = _roomService.GetAllFinishedExcisesByRoomAndUserId(roomId, clientId)
         };
 
 
@@ -146,5 +156,29 @@ public class RoomWebSocketHandler
         {
             PlayerManager.RemovePlayer(room, player.ClientId);
         }
+    }
+
+    public async Task<TestCodeAsyncResults> TestCodeAsyncForWSRoom(TestCodeRequest request, Guid roomId,
+        Guid clientId)
+    {
+        TestCodeAsyncResults result = await _exciseService.TestCodeAsync(request);
+
+        if (result.IsPassed)
+        {
+            if (WSRoomsService.Rooms.TryGetValue(roomId, out var roomValue))
+            {
+                PlayerManager.CompletedAExercise(roomValue, clientId, request.ExerciseId);
+            }
+
+            ProfileExercise profileExercise = new ProfileExercise()
+            {
+                profileId = clientId,
+                exerciseId = request.ExerciseId
+            };
+            _profileDb.ProfileExercise.Add(profileExercise);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        return result;
     }
 }

@@ -5,7 +5,6 @@ using speedCode.Judge0;
 using speedCode.Modularity;
 using speedCode.Profile;
 using speedCode.Room;
-using speedCode.rooms;
 using speedCode.security;
 using speedCode.Seeder;
 
@@ -35,8 +34,10 @@ builder.WebHost.ConfigureKestrel(options => { options.ListenAnyIP(8080); });
 ModuleLoader.RegisterModules(builder.Services, builder.Configuration);
 
 var app = builder.Build();
+
 if (app.Environment.IsDevelopment())
 {
+    Console.WriteLine("Seeding database");
     using (var scope = app.Services.CreateScope())
     {
         var serviceProvider = scope.ServiceProvider;

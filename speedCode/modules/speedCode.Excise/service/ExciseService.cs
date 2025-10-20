@@ -4,7 +4,6 @@ using speedCode.Core.judge0.dto;
 using speedCode.Excise;
 using speedCode.Excise.model;
 using speedCode.Judge0;
-using speedCode.rooms;
 
 namespace speedCode.services;
 
@@ -18,50 +17,7 @@ public class ExciseService
         _judge0Client = judge0Client;
         _dbContext = dbContext;
     }
-
-    public List<Guid> GetAllFinishedExcisesByRoomAndUserId(Guid roomId, Guid profileId)
-    {
-        return (from pe in _dbContext.ProfileExercise
-                join re in _dbContext.RoomExercise
-                    on pe.exerciseId equals re.exerciseId
-                where pe.profileId == profileId && re.roomId == roomId
-                select pe.exerciseId)
-            .ToList();
-    }
-    public List<Exercise> GetAllExcisesByProfileId(Guid profileId)
-    {
-        return (from e in _dbContext.Exercise
-                join pe in _dbContext.ProfileExercise
-                    on e.id equals pe.exerciseId into peGroup
-                from pe in peGroup.DefaultIfEmpty()
-                where pe.profileId == profileId
-                select e).ToList();
-    }
-
-    public async Task<TestCodeAsyncResults> TestCodeAsyncForWSRoom(TestCodeRequest request, Guid roomId,
-        Guid clientId)
-    {
-        TestCodeAsyncResults result = await TestCodeAsync(request);
-
-        if (result.IsPassed)
-        {
-            if (WSRoomsService.Rooms.TryGetValue(roomId, out var roomValue))
-            {
-                PlayerManager.CompletedAExercise(roomValue, clientId, request.ExerciseId);
-            }
-
-            ProfileExercise profileExercise = new ProfileExercise()
-            {
-                profileId = clientId,
-                exerciseId = request.ExerciseId
-            };
-            _dbContext.ProfileExercise.Add(profileExercise);
-            await _dbContext.SaveChangesAsync();
-        }
-
-        return result;
-    }
-
+    
     public async Task<TestCodeAsyncResults> TestCodeAsync(TestCodeRequest request)
     {
         TestCodeAsyncResults results = new TestCodeAsyncResults();
