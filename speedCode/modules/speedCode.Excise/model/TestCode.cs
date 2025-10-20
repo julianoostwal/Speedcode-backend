@@ -8,11 +8,7 @@ namespace speedCode.Excise.model
     public class TestCode
     {
         [Key] public Guid id { get; set; } = Guid.NewGuid();
-
-        [Required]
-        [Column("authorId")]
-        public Guid AuthorId { get; set; }
-
+        
         [Column("type")] [Required] public TestType Type { get; set; }
 
 
