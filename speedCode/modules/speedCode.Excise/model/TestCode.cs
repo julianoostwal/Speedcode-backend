@@ -8,9 +8,11 @@ namespace speedCode.Excise.model
     public class TestCode
     {
         [Key] public Guid id { get; set; } = Guid.NewGuid();
-        
+
         [Column("type")] [Required] public TestType Type { get; set; }
 
+        // anti cheat regex 
+        [Column("AC_regex")] public string? ACRegex { get; set; }
 
         public virtual ICollection<ExerciseTest> ExerciseTests { get; set; } = new List<ExerciseTest>();
         public virtual ICollection<TestExpectIO> TestExpectIOs { get; set; } = new List<TestExpectIO>();

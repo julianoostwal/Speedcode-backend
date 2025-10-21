@@ -10,19 +10,18 @@ namespace speedCode.codeTesting;
 public class RegexJudgeCode : JudgeCode
 {
     public override required string ExpectedResult { get; set; }
-    public override required string OutPut { get; set; }
+    public override required SubmissionResult SubmissionResult { get; set; }
 
-    public override string Input { get; set; }
 
     public override JudgeCodeTestResults TestOutput()
     {
         JudgeCodeTestResults results = new JudgeCodeTestResults();
 
-        Match match = Regex.Match(OutPut, ExpectedResult);
+        Match match = Regex.Match(SubmissionResult.Result.Stdout, ExpectedResult);
         results.Logs.Add(new JudgeCodeTestLog
         {
-            input = Input,
-            outPut = OutPut,
+            input = SubmissionResult.Stdin,
+            outPut = SubmissionResult.Result.Stdout,
             Regex = ExpectedResult,
             TestType = TestType.Regex,
             Accepted = match.Success

@@ -1,15 +1,10 @@
 using System.Text.Json.Serialization;
 using speedCode.Core.judge0.dto;
+using speedCode.Judge0;
 
 namespace speedCode.dto;
 
 public record SubmissionResult(
-    [property: JsonPropertyName("stdout")] string Stdout,
-    [property: JsonPropertyName("stderr")] string Stderr,
-    [property: JsonPropertyName("compile_output")] string CompileOutput,
-    [property: JsonPropertyName("message")] string Message,
-    [property: JsonPropertyName("token")] string Token,
-    [property: JsonPropertyName("time")] string Time,
-    [property: JsonPropertyName("memory")] int Memory,
-    [property: JsonPropertyName("status")] StatusInfo Status
+    Judge0Response Result,
+    string Stdin
 );
