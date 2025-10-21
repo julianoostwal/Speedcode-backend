@@ -18,7 +18,6 @@ public class Judge0Client
 
     public async Task<SubmissionResult> SubmitCodeAsync(SubmissionRequest submissionRequest)
     {
-        submissionRequest.SourceCode = convertSourceCode(submissionRequest.SourceCode);
         var jsonOptions = new JsonSerializerOptions
         {
             PropertyNamingPolicy = null,
@@ -31,18 +30,7 @@ public class Judge0Client
             "/submissions?base64_encoded=false&wait=true", content);
         var body = await response.Content.ReadAsStringAsync();
         response.EnsureSuccessStatusCode();
-        return await response.Content.ReadFromJsonAsync<SubmissionResult>();
-    }
-
-    public string convertSourceCode(string sourceCode)
-    {
-        sourceCode = sourceCode.Trim();
-        if (sourceCode.StartsWith("'") && sourceCode.EndsWith("'"))
-        {
-            sourceCode = sourceCode[1..^1];
-        }
-
-        sourceCode = sourceCode.Replace("\"", "\\\"");
-        return sourceCode;
+        Judge0Response responseObj = await response.Content.ReadFromJsonAsync<Judge0Response>();
+        return new SubmissionResult(responseObj, submissionRequest.Stdin);
     }
 }

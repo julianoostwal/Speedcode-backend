@@ -9,12 +9,12 @@ namespace speedCode.services;
 
 public class ExciseService
 {
-    private readonly Judge0Client _judge0Client;
+    private readonly Judge0Handler _judge0Handler;
     private readonly ExciseDb _dbContext;
 
-    public ExciseService(Judge0Client judge0Client, ExciseDb dbContext)
+    public ExciseService(Judge0Handler judge0Handler, ExciseDb dbContext)
     {
-        _judge0Client = judge0Client;
+        _judge0Handler = judge0Handler;
         _dbContext = dbContext;
     }
 
@@ -44,10 +44,9 @@ public class ExciseService
             {
                 JudgeCode judgeCodeFactoryResults = JudgeCodeFactory.CreateJudgeCode(testCode.Type);
                 judgeCodeFactoryResults.ExpectedResult = testExpectIO.output;
-                judgeCodeFactoryResults.Input = testExpectIO.input;
-                judgeCodeFactoryResults.OutPut = _judge0Client
-                    .SubmitCodeAsync(new SubmissionRequest(request.Code, request.LanguageId, testExpectIO.input)).Result
-                    .Stdout;
+                judgeCodeFactoryResults.SubmissionResult = _judge0Handler
+                    .HandleSubmitCodeAsync(new SubmissionRequest(request.Code, request.LanguageId, testExpectIO.input),
+                        testCode.ACRegex).Result;
                 JudgeCodeTestResults output = judgeCodeFactoryResults.TestOutput();
                 results.TestProcess.Add(output);
             }

@@ -10,9 +10,7 @@ public class ContainJudgeCode : JudgeCode
 {
     public override required string ExpectedResult { get; set; }
 
-    public override required string OutPut { get; set; }
-
-    public override string Input { get; set; }
+    public override required SubmissionResult SubmissionResult { get; set; }
 
     public override JudgeCodeTestResults TestOutput()
     {
@@ -22,13 +20,14 @@ public class ContainJudgeCode : JudgeCode
         };
 
 
-        bool contains = OutPut?.Contains(ExpectedResult, StringComparison.OrdinalIgnoreCase) ?? false;
+        bool contains = SubmissionResult.Result.Stdout?.Contains(ExpectedResult, StringComparison.OrdinalIgnoreCase) ??
+                        false;
 
 
         results.Logs.Add(new JudgeCodeTestLog
         {
-            input = Input,
-            outPut = OutPut,
+            input = SubmissionResult.Stdin,
+            outPut = SubmissionResult.Result.Stdout,
             TestType = TestType.Contains,
             Regex = ExpectedResult,
             Accepted = contains
