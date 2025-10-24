@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>speedCode.WsRoom</name>
+    </assembly>
+    <members>
+        <member name="M:speedCode.WsRoom.controller.WsRoomController.Get(System.Guid,speedCode.Excise.ExciseDb)">
+            <summary>
+            Connect to a room via WebSocket.
+            <para>After connecting, the client must send an authentication token in the format:</para>
+            <code>{ "type": "auth", "token": "YOUR_JWT" }</code>
+            </summary>
+            <param name="roomId">The ID of an existing room in the database.</param>
+        </member>
+        <member name="M:speedCode.WsRoom.controller.WsRoomController.TestCodeAsync(System.Guid,speedCode.Core.judge0.dto.TestCodeRequest)">
+            <summary>
+            Test a player's code submission within a room.
+            </summary>
+            <remarks>
+            This endpoint evaluates the code submitted by a player in a specific room.
+            After evaluation, it broadcasts the updated room state to all participants.
+            </remarks>
+            <param name="roomId">The ID of the room where the code is being tested.</param>
+            <param name="request">The code submission request containing the code and language information.</param>
+            <returns>Returns the results of the code test, including pass/fail status and logs.</returns>
+            <response code="200">Code tested successfully, returns the test results.</response>
+            <response code="404">Room or client not found.</response>
+            <response code="400">Invalid or missing request data.</response>
+        </member>
+    </members>
+</doc>

@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using speedCode.Core.judge0.dto;
 
-namespace speedCode.Judge0;
+namespace speedCode.Core.judge0.dto;
 
 public record Judge0Response(
     [property: JsonPropertyName("stdout")] string Stdout,

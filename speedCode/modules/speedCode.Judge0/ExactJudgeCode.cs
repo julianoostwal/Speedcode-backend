@@ -23,7 +23,7 @@ public class ExactJudgeCode : JudgeCode
         results.Logs.Add(new JudgeCodeTestLog
         {
             input = SubmissionResult.Stdin,
-            outPut = SubmissionResult.Result.Stdout,
+            result = SubmissionResult.Result,
             Regex = ExpectedResult,
             TestType = TestType.Exactly,
             Accepted = match

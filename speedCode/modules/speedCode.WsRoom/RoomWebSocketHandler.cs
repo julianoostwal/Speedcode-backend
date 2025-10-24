@@ -170,10 +170,27 @@ public class RoomWebSocketHandler
                 PlayerManager.CompletedAExercise(roomValue, clientId, request.ExerciseId);
             }
 
+            Double averageMemory = result.TestProcess
+                .Where(x => x.Logs != null && x.Logs.Any())
+                .SelectMany(x => x.Logs)
+                .Select(log => log.result.Memory)
+                .ToList().Average();
+
+
+            Double averageTime = result.TestProcess
+                .Where(x => x.Logs != null && x.Logs.Any())
+                .SelectMany(x => x.Logs)
+                .Select(log => log.result.Time)
+                .Select(t => double.Parse(t))
+                .Average();
+
+
             ProfileExercise profileExercise = new ProfileExercise()
             {
                 profileId = clientId,
-                exerciseId = request.ExerciseId
+                exerciseId = request.ExerciseId,
+                memory = averageMemory,
+                time = TimeSpan.FromMilliseconds(averageTime),
             };
             _profileDb.ProfileExercise.Add(profileExercise);
             await _dbContext.SaveChangesAsync();
