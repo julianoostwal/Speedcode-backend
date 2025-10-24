@@ -1,7 +1,7 @@
-version: "3.9"
-
 services:
   speedcode:
+    ports:
+      - "8080:8080"
     build:
       context: .
       dockerfile: Dockerfile
@@ -12,6 +12,6 @@ services:
       supabaseAuth__jwtSecret: "4ll8g3Zi7taW7ZbCvegdN7dMF1ArKbjs"
       SupabaseAuth__Authority: "https://supabase.speedcode.tech/auth/v1"
       SupabaseAuth__MetadataAddress: "https://supabase.speedcode.tech/auth/v1/.well-known/openid-configuration"
-      ASPNETCORE_ENVIRONMENT: "Development"
+      ASPNETCORE_ENVIRONMENT: "Production"
       ConnectionStrings__DefaultConnection: "Host=5.253.247.243;Port=5544;Database=postgres;Username=postgres;Password=FKEx9syyu705Ml4jZyMjvZeMaC33ACRu"
     restart: unless-stopped
