@@ -8,6 +8,7 @@ using speedCode.Excise.service;
 using speedCode.Profile;
 using speedCode.rooms;
 using speedCode.services;
+using speedCode.WsRoom.DTO;
 
 namespace speedCode.Excise;
 
@@ -165,11 +166,6 @@ public class RoomWebSocketHandler
 
         if (result.IsPassed)
         {
-            if (WSRoomsService.Rooms.TryGetValue(roomId, out var roomValue))
-            {
-                PlayerManager.CompletedAExercise(roomValue, clientId, request.ExerciseId);
-            }
-
             Double averageMemory = result.TestProcess
                 .Where(x => x.Logs != null && x.Logs.Any())
                 .SelectMany(x => x.Logs)
@@ -193,6 +189,19 @@ public class RoomWebSocketHandler
                 time = TimeSpan.FromMilliseconds(averageTime),
             };
             _profileDb.ProfileExercise.Add(profileExercise);
+
+            if (WSRoomsService.Rooms.TryGetValue(roomId, out var roomValue))
+            {
+                PlayerManager.CompletedAExercise(new FinishARoomExerciseDto()
+                {
+                    clientId = clientId,
+                    ExerciseId = request.ExerciseId,
+                    Room = roomValue,
+                    memory = averageMemory,
+                    time = TimeSpan.FromMilliseconds(averageTime),
+                });
+            }
+
             await _dbContext.SaveChangesAsync();
         }
 
