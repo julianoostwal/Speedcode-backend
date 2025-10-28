@@ -4,7 +4,7 @@ using speedCode.Modularity;
 
 namespace speedCode.Judge0;
 
-public class Judge0Module :IModule
+public class Judge0Module : IModule
 {
     public void RegisterModule(IServiceCollection services, IConfiguration configuration)
     {
@@ -20,6 +20,7 @@ public class Judge0Module :IModule
             };
             return new Judge0Client(httpClient);
         });
-    }
 
+        services.AddSingleton<Judge0Handler>();
+    }
 }

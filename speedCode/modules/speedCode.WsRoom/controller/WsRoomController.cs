@@ -5,7 +5,7 @@ using speedCode.Excise;
 using speedCode.rooms;
 using speedCode.services;
 
-namespace speedCode.Controllers;
+namespace speedCode.WsRoom.controller;
 
 [ApiController]
 [Route("ws")]
@@ -52,7 +52,7 @@ public class WsRoomController : ControllerBase
     /// <response code="200">Code tested successfully, returns the test results.</response>
     /// <response code="404">Room or client not found.</response>
     /// <response code="400">Invalid or missing request data.</response>
-    [HttpPost("{roomId:guid}/test")]
+    [HttpPost("/test/{roomId:guid}")]
     public async Task<ActionResult<TestCodeAsyncResults>> TestCodeAsync(
         Guid roomId, [FromBody] TestCodeRequest request)
     {
@@ -67,7 +67,7 @@ public class WsRoomController : ControllerBase
 
         try
         {
-            var result = await _exciseService.TestCodeAsyncForWSRoom(request, roomId, clientId);
+            var result = await _wsHandler.TestCodeAsyncForWSRoom(request, roomId, clientId);
             return Ok(result);
         }
         catch (Exception ex)

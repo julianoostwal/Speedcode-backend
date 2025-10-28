@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using speedCode.Core.judge0.dto;
-using speedCode.Model;
 
 namespace speedCode.Excise.model
 {
@@ -10,11 +9,10 @@ namespace speedCode.Excise.model
     {
         [Key] public Guid id { get; set; } = Guid.NewGuid();
 
-        [Required] public Guid authorId { get; set; }
-        [ForeignKey("authorId")] public virtual Profiles author { get; set; }
-
         [Column("type")] [Required] public TestType Type { get; set; }
 
+        // anti cheat regex 
+        [Column("AC_regex")] public string? ACRegex { get; set; }
 
         public virtual ICollection<ExerciseTest> ExerciseTests { get; set; } = new List<ExerciseTest>();
         public virtual ICollection<TestExpectIO> TestExpectIOs { get; set; } = new List<TestExpectIO>();

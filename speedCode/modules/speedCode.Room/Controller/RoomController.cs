@@ -25,4 +25,16 @@ public class RoomController : ControllerBase
         Rooms room = await _RoomService.CreateRoom(request);
         return room;
     }
+
+    
+    /// <summary>
+    /// generate room with random exercises, for now it is hardcoded to 5 exercises
+    /// </summary>
+    [HttpPost]
+    [Route("/generateroomwithrandomexcises")]
+    public ActionResult<Rooms> GenerateRoomWithRandomExercises(CreateRoomDTO request)
+    {
+        Rooms room = _RoomService.GenerateRoomWithRandomExcises(request, 5);
+        return Ok(room);
+    }
 }

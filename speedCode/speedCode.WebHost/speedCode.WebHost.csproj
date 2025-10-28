@@ -14,6 +14,8 @@
         <ProjectReference Include="../modules/speedCode.Judge0/speedCode.Judge0.csproj"/>
         <ProjectReference Include="../modules/speedCode.Profile/speedCode.Profile.csproj"/>
         <ProjectReference Include="../modules/speedCode.Room/speedCode.Room.csproj"/>
+        <ProjectReference Include="../modules/speedCode.Infrastructure/speedCode.Infrastructure.csproj"/>
+        <ProjectReference Include="../modules/speedCode.WsRoom/speedCode.WsRoom.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

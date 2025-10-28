@@ -9,9 +9,8 @@ namespace speedCode.codeTesting;
 public class ExactJudgeCode : JudgeCode
 {
     public override string ExpectedResult { get; set; }
-    public override string OutPut { get; set; }
-    
-    public override string Input { get; set; }
+    public override required SubmissionResult SubmissionResult { get; set; }
+
     public override JudgeCodeTestResults TestOutput()
     {
         var results = new JudgeCodeTestResults()
@@ -19,12 +18,12 @@ public class ExactJudgeCode : JudgeCode
             Status = JudgeCodeTestStatus.Passed
         };
 
-        bool match = string.Equals(OutPut, ExpectedResult, StringComparison.Ordinal);
+        bool match = string.Equals(SubmissionResult.Result.Stdout, ExpectedResult, StringComparison.Ordinal);
 
         results.Logs.Add(new JudgeCodeTestLog
         {
-            input = Input,
-            outPut = OutPut,
+            input = SubmissionResult.Stdin,
+            result = SubmissionResult.Result,
             Regex = ExpectedResult,
             TestType = TestType.Exactly,
             Accepted = match

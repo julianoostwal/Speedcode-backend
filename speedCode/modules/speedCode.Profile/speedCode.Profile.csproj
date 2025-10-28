@@ -4,6 +4,9 @@
         <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <DocumentationFile>$(OutputPath)speedCode.Profile.xml</DocumentationFile>
+        <NoWarn>$(NoWarn);1591</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
@@ -16,7 +19,8 @@
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
         <ProjectReference Include="..\speedCode.Core\speedCode.Core.csproj" />
         <ProjectReference Include="..\speedCode.Modularity\speedCode.Modularity.csproj" />
-        <ProjectReference Include="..\speedCode.Room\speedCode.Room.csproj" />
+        <ProjectReference Include="..\speedCode.Infrastructure\speedCode.Infrastructure.csproj" />
+        <ProjectReference Include="..\speedCode.Excise\speedCode.Excise.csproj" />
     </ItemGroup>
 
 

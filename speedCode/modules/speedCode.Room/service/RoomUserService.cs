@@ -1,10 +1,11 @@
 using speedCode.Profile.model;
+using speedCode.Room;
 
 namespace speedCode.Profile;
 
 public class RoomUserService
 {
-    private readonly ProfileDb _profileDb;
+    private readonly RoomsDb _roomDb;
 
     public async Task<RoomUser> JoinRoom(Guid profielId, Guid roomId)
     {
@@ -13,8 +14,8 @@ public class RoomUserService
             roomId = roomId,
             profileId = profielId
         };
-        _profileDb.RoomUser.Add(roomUser);
-        await _profileDb.SaveChangesAsync();
+        _roomDb.RoomUser.Add(roomUser);
+        await _roomDb.SaveChangesAsync();
 
         return roomUser;
     }

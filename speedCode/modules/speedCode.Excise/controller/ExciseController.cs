@@ -1,21 +1,22 @@
-
 using Microsoft.AspNetCore.Mvc;
 using speedCode.Core.judge0.dto;
+using speedCode.Excise.model;
 using speedCode.services;
+using speedCode.Infrastructure;
 
-namespace speedCode.Excise;
-/// <summary>
-/// Controller die doet het gedeelte van de code testen of hij op het verwachting is
-/// </summary>
+namespace speedCode.Excise.controller;
+
 [ApiController]
 [Route("[controller]")]
 public class ExciseController : ControllerBase
 {
     private readonly ExciseService _exciseService;
+    private readonly WebHelper _webHelper;
 
-    public ExciseController(ExciseService exciseService)
+    public ExciseController(ExciseService exciseService, WebHelper webHelper)
     {
         _exciseService = exciseService;
+        _webHelper = webHelper;
     }
 
     [HttpPost("judgecode")]

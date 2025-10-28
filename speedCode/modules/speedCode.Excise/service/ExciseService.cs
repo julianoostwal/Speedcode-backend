@@ -4,60 +4,41 @@ using speedCode.Core.judge0.dto;
 using speedCode.Excise;
 using speedCode.Excise.model;
 using speedCode.Judge0;
+<<<<<<< HEAD
 using speedCode.Model;
 using speedCode.rooms;
 using speedCode.Room;
 using speedCode.Profile;
+=======
+>>>>>>> main
 
 namespace speedCode.services;
 
 public class ExciseService
 {
-    private readonly Judge0Client _judge0Client;
+    private readonly Judge0Handler _judge0Handler;
     private readonly ExciseDb _dbContext;
     private readonly RoomsDb _roomsDb;
     private readonly ProfileDb _roomProfilesDb;
 
+<<<<<<< HEAD
     public ExciseService(Judge0Client judge0Client, ExciseDb dbContext, RoomsDb roomsDb, ProfileDb roomProfilesDb)
+=======
+    public ExciseService(Judge0Handler judge0Handler, ExciseDb dbContext)
+>>>>>>> main
     {
-        _judge0Client = judge0Client;
+        _judge0Handler = judge0Handler;
         _dbContext = dbContext;
         _roomsDb = roomsDb;
         _roomProfilesDb = roomProfilesDb;
     }
 
-    public List<Guid> GetAllFinishedExcisesByRoomAndUserId(Guid roomId, Guid profileId)
+    public List<Exercise> gerRandomExercises(int count)
     {
-        return (from pe in _dbContext.ProfileExercise
-                join re in _dbContext.RoomExercise
-                    on pe.exerciseId equals re.exerciseId
-                where pe.profileId == profileId && re.roomId == roomId
-                select pe.exerciseId)
+        return _dbContext.Exercise
+            .OrderBy(e => EF.Functions.Random())
+            .Take(count)
             .ToList();
-    }
-
-    public async Task<TestCodeAsyncResults> TestCodeAsyncForWSRoom(TestCodeRequest request, Guid roomId,
-        Guid clientId)
-    {
-        TestCodeAsyncResults result = await TestCodeAsync(request);
-
-        if (result.IsPassed)
-        {
-            if (WSRoomsService.Rooms.TryGetValue(roomId, out var roomValue))
-            {
-                PlayerManager.CompletedAExercise(roomValue, clientId, request.ExerciseId);
-            }
-
-            ProfileExercise profileExercise = new ProfileExercise()
-            {
-                profileId = clientId,
-                exerciseId = request.ExerciseId
-            };
-            _dbContext.ProfileExercise.Add(profileExercise);
-            await _dbContext.SaveChangesAsync();
-        }
-
-        return result;
     }
 
     public async Task<TestCodeAsyncResults> TestCodeAsync(TestCodeRequest request)
@@ -78,10 +59,9 @@ public class ExciseService
             {
                 JudgeCode judgeCodeFactoryResults = JudgeCodeFactory.CreateJudgeCode(testCode.Type);
                 judgeCodeFactoryResults.ExpectedResult = testExpectIO.output;
-                judgeCodeFactoryResults.Input = testExpectIO.input;
-                judgeCodeFactoryResults.OutPut = _judge0Client
-                    .SubmitCodeAsync(new SubmissionRequest(request.Code, request.LanguageId, testExpectIO.input)).Result
-                    .Stdout;
+                judgeCodeFactoryResults.SubmissionResult = _judge0Handler
+                    .HandleSubmitCodeAsync(new SubmissionRequest(request.Code, request.LanguageId, testExpectIO.input),
+                        testCode.ACRegex).Result;
                 JudgeCodeTestResults output = judgeCodeFactoryResults.TestOutput();
                 results.TestProcess.Add(output);
             }

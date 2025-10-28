@@ -21,8 +21,8 @@ namespace speedCode.Excise.model
         public virtual Profiles profile { get; set; }
         
         [Required]
-        public int memory { get; set; }
+        public Double memory { get; set; }
         [Required]
-        public DateTime time{get;set;}
+        public TimeSpan time{get;set;}
     }
 }

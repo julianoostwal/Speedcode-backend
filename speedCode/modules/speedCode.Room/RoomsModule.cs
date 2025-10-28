@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using speedCode.Excise.service;
 using speedCode.Modularity;
+using speedCode.Profile;
 
 namespace speedCode.Room;
 
@@ -14,5 +15,6 @@ public class RoomsModule : IModule
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
         services.AddScoped<RoomService>();
+        services.AddScoped<RoomUserService>();
     }
 }
