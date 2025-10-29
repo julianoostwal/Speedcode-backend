@@ -175,7 +175,7 @@ public class ProfilesController : ControllerBase
         }
     }
 
-    [HttpGet("GetAllCreatedAndPublicExercises")]
+    [HttpGet("GetAllExercises")]
     public IActionResult GetAllCreatedAndPublicExercises()
     {
         try

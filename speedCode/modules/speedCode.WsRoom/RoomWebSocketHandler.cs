@@ -38,7 +38,8 @@ public class RoomWebSocketHandler
     public async Task HandleAsync(Guid roomId, WebSocket socket)
     {
         Guid clientId = await AuthenticateAsync(socket);
-        if (!await _validator.RoomExistsAsync(roomId) || !await _validator.ClientExistsAsync(clientId))
+        if (!await _validator.RoomExistsAsync(roomId) || !await _validator.ClientExistsAsync(clientId) ||
+            !await _validator.ClientAllowToJoin(roomId, clientId))
         {
             var msg = Encoding.UTF8.GetBytes("Room or client not found");
             await socket.SendAsync(new ArraySegment<byte>(msg), WebSocketMessageType.Text, true,
