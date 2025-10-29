@@ -181,14 +181,14 @@ public class RoomWebSocketHandler
                 .Average();
 
 
-            ProfileExercise profileExercise = new ProfileExercise()
+            CompletedProfileExercise completedProfileExercise = new CompletedProfileExercise()
             {
                 profileId = clientId,
                 exerciseId = request.ExerciseId,
                 memory = averageMemory,
                 time = TimeSpan.FromMilliseconds(averageTime),
             };
-            _profileDb.ProfileExercise.Add(profileExercise);
+            _profileDb.CompletedProfileExercise.Add(completedProfileExercise);
 
             if (WSRoomsService.Rooms.TryGetValue(roomId, out var roomValue))
             {

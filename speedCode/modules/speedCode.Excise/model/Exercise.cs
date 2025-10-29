@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using speedCode.Core.rooms.enums;
 
 namespace speedCode.Excise.model
 {
@@ -18,9 +19,15 @@ namespace speedCode.Excise.model
 
         [Required]
         public bool isRoomExcise { get; set; }
+        
+        [Required]
+        public bool isPrivate { get; set; }
 
         [Required]
         public int points { get; set; }
+        
+        [Required]
+        public Level Level { get; set; }
         
         public virtual ICollection<ExerciseTest> ExerciseTests { get; set; } = new List<ExerciseTest>();
 

@@ -53,7 +53,6 @@ public class ExciseService
                 results.TestProcess.Add(output);
             }
         }
-
         return await Task.FromResult(results);
     }
 }

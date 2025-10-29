@@ -160,13 +160,28 @@ public class ProfilesController : ControllerBase
         return NoContent();
     }
 
-    [HttpGet("GetAllExercises")]
-    public IActionResult GetAll()
+    [HttpGet("GetAllCompletedExercises")]
+    public IActionResult GetAllCompletedExercises()
     {
         try
         {
             Guid profielId = _webHelper.GetClientIdByTokenInHeader();
-            return Ok(_profileService.GetAllExcisesByProfileId(profielId));
+            return Ok(_profileService.GetAllCompletedExcisesByProfileId(profielId));
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return Unauthorized();
+        }
+    }
+
+    [HttpGet("GetAllCreatedAndPublicExercises")]
+    public IActionResult GetAllCreatedAndPublicExercises()
+    {
+        try
+        {
+            Guid profielId = _webHelper.GetClientIdByTokenInHeader();
+            return Ok(_profileService.GetAllCreatedAndPublicExercisesByProfileId(profielId));
         }
         catch (Exception e)
         {
