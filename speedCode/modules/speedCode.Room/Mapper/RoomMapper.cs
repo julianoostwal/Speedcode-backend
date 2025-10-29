@@ -1,4 +1,3 @@
-
 using speedCode.Core.rooms.dto;
 using speedCode.Room.Model;
 
@@ -11,6 +10,7 @@ public class RoomMapper
     {
         return new Rooms
         {
+            CreatedById = request.profileId,
             roomName = request.RoomName,
             roomLevel = request.RoomLevel,
             isPrivate = request.IsPrivate
