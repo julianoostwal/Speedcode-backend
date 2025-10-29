@@ -9,6 +9,4 @@ public class CreateRoomDTO
     public Level RoomLevel { get; set; }
 
     public bool IsPrivate { get; set; }
-
-    public required List<Guid> AllowedUsers { get; set; }
 }
