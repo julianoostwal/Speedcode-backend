@@ -16,6 +16,31 @@ public class RoomController : ControllerBase
         _RoomService = roomService;
     }
 
+
+    /// <summary>
+    /// get all rooms with exercises and profiles
+    /// </summary>
+    [HttpGet]
+    public async Task<ActionResult> GetAllRooms()
+    {
+        var rooms = await _RoomService.GetAllRooms();
+        return Ok(rooms);
+    }
+
+    /// <summary>
+    /// get room with exercises and profiles by id
+    /// </summary>
+    [HttpGet("id/{id}")]
+    public async Task<IActionResult> GetRoom(Guid id)
+    {
+        var room = await _RoomService.GetRoomById(id);
+        if (room == null)
+        {
+            return NotFound();
+        }
+        return Ok(room);
+    }
+
     /// <summary>
     /// create room
     /// </summary>
