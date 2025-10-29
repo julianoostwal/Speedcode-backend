@@ -51,6 +51,22 @@ public class RoomService
             .ToList();
     }
 
+    public Rooms UpdateRoom(UpdateRoomDTO dto)
+    {
+        UpdateRoomExercises(new updateRoomExercisesDTO()
+        {
+            roomId = dto.roomId,
+            exerciseId = dto.exerciseId
+        });
+        UpdateRoomUsers(new updateRoomUsersDTO()
+        {
+            RoomId = dto.roomId,
+            Profilesid = dto.profileId
+        });
+        return _RoomDb.rooms
+            .Where(re => re.id == dto.roomId).FirstOrDefault();
+    }
+
     public List<RoomUser> UpdateRoomUsers(updateRoomUsersDTO dto)
     {
         Rooms? room = _RoomDb.rooms
