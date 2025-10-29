@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using speedCode.codeTesting;
 using speedCode.Core.judge0.dto;
 using speedCode.Excise;
 using speedCode.Excise.model;
@@ -45,13 +44,15 @@ public class ExciseService
                 JudgeCode judgeCodeFactoryResults = JudgeCodeFactory.CreateJudgeCode(testCode.Type);
                 judgeCodeFactoryResults.ExpectedResult = testExpectIO.output;
                 judgeCodeFactoryResults.SubmissionResult = _judge0Handler
-                    .HandleSubmitCodeAsync(new SubmissionRequest(request.Code, request.LanguageId, testExpectIO.input),
+                    .HandleSubmitCodeAsync(new SubmissionRequest()
+                        {
+                            SourceCode = request.Code, LanguageId = request.LanguageId, Stdin = testExpectIO.input
+                        },
                         testCode.ACRegex).Result;
                 JudgeCodeTestResults output = judgeCodeFactoryResults.TestOutput();
                 results.TestProcess.Add(output);
             }
         }
-
         return await Task.FromResult(results);
     }
 }

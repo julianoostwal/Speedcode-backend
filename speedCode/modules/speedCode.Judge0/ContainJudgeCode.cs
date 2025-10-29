@@ -1,9 +1,9 @@
 using speedCode.Core.judge0.dto;
 using speedCode.Core.judge0.enums;
-using speedCode.dto;
+
 using speedCode.Judge0.attributes;
 
-namespace speedCode.codeTesting;
+namespace speedCode.Judge0;
 
 [JudgeTypesAttributes(TestType.Contains)]
 public class ContainJudgeCode : JudgeCode
