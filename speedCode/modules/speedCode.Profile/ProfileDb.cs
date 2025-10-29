@@ -10,7 +10,8 @@ namespace speedCode.Profile
         public DbSet<Achievement> Achievement { get; set; }
         public DbSet<Profiles> Profiles { get; set; }
         public DbSet<ProfileAchivement> ProfileAchievement { get; set; }
-        public DbSet<ProfileExercise> ProfileExercise { get; set; }
+        public DbSet<CompletedProfileExercise> CompletedProfileExercise { get; set; }
+        public DbSet<CreatedProfileExercises> CreatedProfileExercise { get; set; }
 
         public ProfileDb(DbContextOptions<ProfileDb> options)
             : base(options)
@@ -28,9 +29,9 @@ namespace speedCode.Profile
                     .HasDefaultValueSql("NOW()");
             });
 
-            modelBuilder.Entity<ProfileExercise>(entity =>
+            modelBuilder.Entity<CompletedProfileExercise>(entity =>
             {
-                entity.ToTable("profile_exercises");
+                entity.ToTable("completed_profile_exercises");
 
                 entity.HasKey(pe => pe.id);
 

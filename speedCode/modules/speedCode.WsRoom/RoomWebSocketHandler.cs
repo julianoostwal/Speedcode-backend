@@ -8,6 +8,7 @@ using speedCode.Excise.service;
 using speedCode.Profile;
 using speedCode.rooms;
 using speedCode.services;
+using speedCode.WsRoom.DTO;
 
 namespace speedCode.Excise;
 
@@ -37,7 +38,8 @@ public class RoomWebSocketHandler
     public async Task HandleAsync(Guid roomId, WebSocket socket)
     {
         Guid clientId = await AuthenticateAsync(socket);
-        if (!await _validator.RoomExistsAsync(roomId) || !await _validator.ClientExistsAsync(clientId))
+        if (!await _validator.RoomExistsAsync(roomId) || !await _validator.ClientExistsAsync(clientId) ||
+            !await _validator.ClientAllowToJoin(roomId, clientId))
         {
             var msg = Encoding.UTF8.GetBytes("Room or client not found");
             await socket.SendAsync(new ArraySegment<byte>(msg), WebSocketMessageType.Text, true,
@@ -165,11 +167,6 @@ public class RoomWebSocketHandler
 
         if (result.IsPassed)
         {
-            if (WSRoomsService.Rooms.TryGetValue(roomId, out var roomValue))
-            {
-                PlayerManager.CompletedAExercise(roomValue, clientId, request.ExerciseId);
-            }
-
             Double averageMemory = result.TestProcess
                 .Where(x => x.Logs != null && x.Logs.Any())
                 .SelectMany(x => x.Logs)
@@ -185,14 +182,27 @@ public class RoomWebSocketHandler
                 .Average();
 
 
-            ProfileExercise profileExercise = new ProfileExercise()
+            CompletedProfileExercise completedProfileExercise = new CompletedProfileExercise()
             {
                 profileId = clientId,
                 exerciseId = request.ExerciseId,
                 memory = averageMemory,
                 time = TimeSpan.FromMilliseconds(averageTime),
             };
-            _profileDb.ProfileExercise.Add(profileExercise);
+            _profileDb.CompletedProfileExercise.Add(completedProfileExercise);
+
+            if (WSRoomsService.Rooms.TryGetValue(roomId, out var roomValue))
+            {
+                PlayerManager.CompletedAExercise(new FinishARoomExerciseDto()
+                {
+                    clientId = clientId,
+                    ExerciseId = request.ExerciseId,
+                    Room = roomValue,
+                    memory = averageMemory,
+                    time = TimeSpan.FromMilliseconds(averageTime),
+                });
+            }
+
             await _dbContext.SaveChangesAsync();
         }
 

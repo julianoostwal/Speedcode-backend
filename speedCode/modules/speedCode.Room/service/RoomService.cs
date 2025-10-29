@@ -34,7 +34,7 @@ public class RoomService
 
     public List<Guid> GetAllFinishedExcisesByRoomAndUserId(Guid roomId, Guid profileId)
     {
-        return (from pe in _profileDb.ProfileExercise
+        return (from pe in _profileDb.CompletedProfileExercise
                 join re in _RoomDb.RoomExercise
                     on pe.exerciseId equals re.exerciseId
                 where pe.profileId == profileId && re.roomId == roomId

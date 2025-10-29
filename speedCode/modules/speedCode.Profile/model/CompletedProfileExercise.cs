@@ -4,8 +4,8 @@ using speedCode.Model;
 
 namespace speedCode.Excise.model
 {
-    [Table("profile_exercises")]
-    public class ProfileExercise
+    [Table("completed_profile_exercises")]
+    public class CompletedProfileExercise
     {
         [Key]
         public Guid id { get; set; } = Guid.NewGuid();

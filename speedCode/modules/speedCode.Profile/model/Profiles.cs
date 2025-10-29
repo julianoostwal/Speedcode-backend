@@ -20,7 +20,7 @@ namespace speedCode.Model
         public string? nickName { get; set; }
         public Rol role { get; set; }
         
-        public virtual ICollection<ProfileExercise> ProfileExercises { get; set; } = new List<ProfileExercise>();
+        public virtual ICollection<CompletedProfileExercise> ProfileExercises { get; set; } = new List<CompletedProfileExercise>();
         
         public virtual ICollection<TestCode> TestCodes { get; set; } = new List<TestCode>();
     }
