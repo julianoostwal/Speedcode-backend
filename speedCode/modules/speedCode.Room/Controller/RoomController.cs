@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using speedCode.Core.rooms.dto;
+using speedCode.Core.utils;
 using speedCode.Excise.model;
 using speedCode.Room.dtos;
 using speedCode.Room.Model;
@@ -12,6 +13,7 @@ namespace speedCode.Room.controller;
 public class RoomController : ControllerBase
 {
     private readonly RoomService _RoomService;
+    private readonly JwtService _jwtService;
 
     public RoomController(RoomService roomService)
     {
@@ -66,10 +68,22 @@ public class RoomController : ControllerBase
     /// create room
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<Rooms>> Post(CreateRoomDTO request)
+    public async Task<ActionResult<Rooms>> Post([FromBody] CreateRoomDTO request)
     {
-        Rooms room = await _RoomService.CreateRoom(request);
-        return room;
+        var authHeader = HttpContext.Request.Headers["Authorization"].ToString();
+
+        if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
+            return Unauthorized("Missing or invalid Authorization header");
+
+        var token = authHeader.Substring("Bearer ".Length).Trim();
+
+        var clientId = _jwtService.GetClientIdFromToken(token);
+
+        request.profileId = Guid.Parse(clientId);
+
+        var room = await _RoomService.CreateRoom(request);
+
+        return Ok(room);
     }
 
 
