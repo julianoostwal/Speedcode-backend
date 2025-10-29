@@ -24,4 +24,11 @@ public class RoomValidator
     {
         return await _profileDb.Profiles.AnyAsync(p => p.id == clientId);
     }
+
+    public async Task<bool> ClientAllowToJoin(Guid roomId, Guid clientId)
+    {
+        return await _db.RoomUser.AnyAsync(ru =>
+            ru.roomId == roomId && (!ru.room.isPrivate || ru.profileId == clientId)
+        );
+    }
 }

@@ -3,6 +3,7 @@ using speedCode.Core.rooms.dto;
 using speedCode.Core.rooms.Mapper;
 using speedCode.Excise.model;
 using speedCode.Profile;
+using speedCode.Profile.model;
 using speedCode.Room;
 using speedCode.Room.Model;
 using speedCode.services;
@@ -29,8 +30,20 @@ public class RoomService
         Rooms room = RoomMapper.FromCreateRoomDto(roomRequest);
         _RoomDb.rooms.Add(room);
         await _RoomDb.SaveChangesAsync();
+
+        foreach (var allowedUserId in roomRequest.AllowedUsers)
+        {
+            _RoomDb.RoomUser.Add(new RoomUser
+            {
+                roomId = room.id,
+                profileId = allowedUserId,
+            });
+        }
+
+        await _RoomDb.SaveChangesAsync();
         return room;
     }
+
 
     public List<Guid> GetAllFinishedExcisesByRoomAndUserId(Guid roomId, Guid profileId)
     {
