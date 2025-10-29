@@ -15,8 +15,9 @@ public class RoomController : ControllerBase
     private readonly RoomService _RoomService;
     private readonly JwtService _jwtService;
 
-    public RoomController(RoomService roomService)
+    public RoomController(RoomService roomService,JwtService jwtService)
     {
+        _jwtService = jwtService;
         _RoomService = roomService;
     }
 
