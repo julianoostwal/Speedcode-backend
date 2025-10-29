@@ -50,6 +50,12 @@ public class RoomController : ControllerBase
         return Ok(_RoomService.UpdateRoomExercises(dto));
     }
 
+    [HttpPut("/updateRoom")]
+    public IActionResult UpdateRoomDTO(UpdateRoomDTO dto)
+    {
+        return Ok(_RoomService.UpdateRoom(dto));
+    }
+
     [HttpPut("/updateRoomUsers")]
     public IActionResult UpdateRoomUsers(updateRoomUsersDTO dto)
     {
