@@ -1,7 +1,6 @@
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using speedCode.Excise;
-using speedCode.Excise.service;
 using speedCode.Judge0;
 using speedCode.Modularity;
 using speedCode.Profile;
