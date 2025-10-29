@@ -3,14 +3,15 @@ using System.Text;
 using System.Text.Json;
 using speedCode.Core.judge0.dto;
 using speedCode.Core.utils;
+using speedCode.Excise;
 using speedCode.Excise.model;
-using speedCode.Excise.service;
 using speedCode.Profile;
+using speedCode.Room.service;
 using speedCode.rooms;
 using speedCode.services;
 using speedCode.WsRoom.DTO;
 
-namespace speedCode.Excise;
+namespace speedCode.WsRoom;
 
 public class RoomWebSocketHandler
 {
