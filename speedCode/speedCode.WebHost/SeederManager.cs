@@ -133,19 +133,23 @@ namespace speedCode.Seeder
 
             if (!roomsDb.rooms.Any())
             {
+                var profile = profileDb.Profiles.AsNoTracking().First();
                 var rooms = new List<Rooms>
                 {
                     new Rooms
                     {
+                        CreatedById = profile.id,
                         roomName = "Room1", roomLevel = Level.Easy, isPrivate = false, createdAt = DateTime.UtcNow
                     },
                     new Rooms
                     {
+                        CreatedById = profile.id,
                         roomName = "Room2", roomLevel = Level.Medium, isPrivate = false,
                         createdAt = DateTime.UtcNow
                     },
                     new Rooms
                     {
+                        CreatedById = profile.id,
                         roomName = "Room3", roomLevel = Level.Hard, isPrivate = false, createdAt = DateTime.UtcNow
                     }
                 };

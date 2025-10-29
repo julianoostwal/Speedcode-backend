@@ -8,5 +8,7 @@ public class CreateRoomDTO
 
     public Level RoomLevel { get; set; }
 
+    public Guid profileId { get; set; }
+
     public bool IsPrivate { get; set; }
 }
