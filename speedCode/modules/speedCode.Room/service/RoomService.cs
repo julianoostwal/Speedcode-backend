@@ -1,13 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using speedCode.Core.rooms.dto;
 using speedCode.Core.rooms.Mapper;
+using speedCode.Excise;
 using speedCode.Excise.model;
 using speedCode.Profile;
-using speedCode.Room;
+using speedCode.Profile.model;
+using speedCode.Room.dtos;
 using speedCode.Room.Model;
 using speedCode.services;
 
-namespace speedCode.Excise.service;
+namespace speedCode.Room.service;
 
 public class RoomService
 {
@@ -23,6 +25,57 @@ public class RoomService
         _exciseDb = exciseDb;
         _profileDb = profileDb;
     }
+
+    public List<RoomExercise> UpdateRoomExercises(updateRoomExercisesDTO dto)
+    {
+        var room = _RoomDb.rooms
+            .Include(r => r.RoomExercises)
+            .FirstOrDefault(r => r.id == dto.roomId);
+
+        if (room == null) throw new Exception("Room not found");
+
+        _RoomDb.RoomExercise.RemoveRange(room.RoomExercises);
+
+        foreach (var exId in dto.exerciseId)
+        {
+            room.RoomExercises.Add(new RoomExercise
+            {
+                roomId = dto.roomId,
+                exerciseId = exId
+            });
+        }
+
+        _RoomDb.SaveChanges();
+        return _RoomDb.RoomExercise
+            .Where(re => re.roomId == dto.roomId)
+            .ToList();
+    }
+
+    public List<RoomUser> UpdateRoomUsers(updateRoomUsersDTO dto)
+    {
+        Rooms? room = _RoomDb.rooms
+            .Include(r => r.RoomUsers)
+            .FirstOrDefault(r => r.id == dto.RoomId);
+
+        if (room == null) throw new Exception("Room not found");
+
+        _RoomDb.RoomUser.RemoveRange(room.RoomUsers);
+
+        foreach (var exId in dto.Profilesid)
+        {
+            room.RoomExercises.Add(new RoomExercise
+            {
+                roomId = dto.RoomId,
+                exerciseId = exId
+            });
+        }
+
+        _RoomDb.SaveChanges();
+        return _RoomDb.RoomUser
+            .Where(re => re.roomId == dto.RoomId)
+            .ToList();
+    }
+
 
     public async Task<Rooms> CreateRoom(CreateRoomDTO roomRequest)
     {
@@ -110,6 +163,7 @@ public class RoomService
                 })
             });
         }
+
         return result;
     }
 

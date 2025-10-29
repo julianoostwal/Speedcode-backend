@@ -1,9 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using speedCode.Core.rooms.enums;
+using speedCode.Excise.model;
+using speedCode.Profile.model;
 
 
 namespace speedCode.Room.Model;
+
 [Table("rooms")]
 public class Rooms
 {
@@ -20,4 +23,7 @@ public class Rooms
     [Required] public DateTime createdAt { get; set; }
 
     public Guid chatId { get; set; } = Guid.Empty;
+
+    public virtual ICollection<RoomExercise> RoomExercises { get; set; } = new List<RoomExercise>();
+    public virtual ICollection<RoomUser> RoomUsers { get; set; } = new List<RoomUser>();
 }

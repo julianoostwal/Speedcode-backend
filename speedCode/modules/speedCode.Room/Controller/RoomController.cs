@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using speedCode.Core.rooms.dto;
-using speedCode.Excise.service;
+using speedCode.Excise.model;
+using speedCode.Room.dtos;
 using speedCode.Room.Model;
+using speedCode.Room.service;
 
-namespace speedCode.Excise.controller;
+namespace speedCode.Room.controller;
 
 [ApiController]
 [Route("rooms")]
@@ -38,7 +40,20 @@ public class RoomController : ControllerBase
         {
             return NotFound();
         }
+
         return Ok(room);
+    }
+
+    [HttpPut("/updateRoomExercise")]
+    public IActionResult UpdateRoomExercise(updateRoomExercisesDTO dto)
+    {
+        return Ok(_RoomService.UpdateRoomExercises(dto));
+    }
+
+    [HttpPut("/updateRoomUsers")]
+    public IActionResult UpdateRoomUsers(updateRoomUsersDTO dto)
+    {
+        return Ok(_RoomService.UpdateRoomUsers(dto));
     }
 
     /// <summary>

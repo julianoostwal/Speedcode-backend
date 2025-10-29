@@ -4,25 +4,37 @@
         <name>speedCode.Room</name>
     </assembly>
     <members>
-        <member name="M:speedCode.Excise.controller.RoomController.GetAllRooms">
+        <member name="M:speedCode.Room.controller.RoomController.GetAllRooms">
             <summary>
             get all rooms with exercises and profiles
             </summary>
         </member>
-        <member name="M:speedCode.Excise.controller.RoomController.GetRoom(System.Guid)">
+        <member name="M:speedCode.Room.controller.RoomController.GetRoom(System.Guid)">
             <summary>
             get room with exercises and profiles by id
             </summary>
         </member>
-        <member name="M:speedCode.Excise.controller.RoomController.Post(speedCode.Core.rooms.dto.CreateRoomDTO)">
+        <member name="M:speedCode.Room.controller.RoomController.Post(speedCode.Core.rooms.dto.CreateRoomDTO)">
             <summary>
             create room
             </summary>
         </member>
-        <member name="M:speedCode.Excise.controller.RoomController.GenerateRoomWithRandomExercises(speedCode.Core.rooms.dto.CreateRoomDTO)">
+        <member name="M:speedCode.Room.controller.RoomController.GenerateRoomWithRandomExercises(speedCode.Core.rooms.dto.CreateRoomDTO)">
             <summary>
             generate room with random exercises, for now it is hardcoded to 5 exercises
             </summary>
+        </member>
+        <member name="T:speedCode.Room.Migrations.InitialRoomsDbMigration">
+            <inheritdoc />
+        </member>
+        <member name="M:speedCode.Room.Migrations.InitialRoomsDbMigration.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:speedCode.Room.Migrations.InitialRoomsDbMigration.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:speedCode.Room.Migrations.InitialRoomsDbMigration.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
         </member>
     </members>
 </doc>
