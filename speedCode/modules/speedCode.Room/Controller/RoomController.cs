@@ -51,7 +51,6 @@ public class RoomController : ControllerBase
         return room;
     }
 
-    
     /// <summary>
     /// generate room with random exercises, for now it is hardcoded to 5 exercises
     /// </summary>
