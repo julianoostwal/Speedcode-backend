@@ -12,9 +12,9 @@
 
 
     <ItemGroup>
-        <ProjectReference Include="../speedCode/modules/speedCode.Judge0/speedCode.Judge0.csproj" />
-        <ProjectReference Include="../speedCode/modules/speedCode.Core/speedCode.Core.csproj" />
-        <ProjectReference Include="../speedCode/modules/speedCode.Modularity/speedCode.Modularity.csproj" />
+        <ProjectReference Include="../../speedCode/modules/speedCode.Judge0/speedCode.Judge0.csproj" />
+        <ProjectReference Include="../../speedCode/modules/speedCode.Core/speedCode.Core.csproj" />
+        <ProjectReference Include="../../speedCode/modules/speedCode.Modularity/speedCode.Modularity.csproj" />
     </ItemGroup>
 
 
