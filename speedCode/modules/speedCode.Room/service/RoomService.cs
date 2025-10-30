@@ -53,18 +53,29 @@ public class RoomService
 
     public Rooms UpdateRoom(UpdateRoomDTO dto)
     {
-        UpdateRoomExercises(new updateRoomExercisesDTO()
-        {
-            roomId = dto.roomId,
-            exerciseId = dto.exerciseId
-        });
-        UpdateRoomUsers(new updateRoomUsersDTO()
-        {
-            RoomId = dto.roomId,
-            Profilesid = dto.profileId
-        });
-        return _RoomDb.rooms
-            .Where(re => re.id == dto.roomId).FirstOrDefault();
+        var room = _RoomDb.rooms
+                       .Include(r => r.RoomExercises)
+                       .Include(r => r.RoomUsers)
+                       .FirstOrDefault(r => r.id == dto.roomId)
+                   ?? throw new KeyNotFoundException($"Room {dto.roomId} not found");
+
+        room.roomName = dto.RoomName;
+        room.isPrivate = dto.IsPrivate;
+        room.roomLevel = dto.RoomLevel;
+
+        room.RoomExercises.Clear();
+        room.RoomExercises = dto.exerciseId
+            .Select(id => new RoomExercise { roomId = room.id, exerciseId = id })
+            .ToList();
+
+        room.RoomUsers.Clear();
+        room.RoomUsers = dto.profileId
+            .Select(id => new RoomUser { roomId = room.id, profileId = id })
+            .ToList();
+
+        _RoomDb.SaveChanges();
+
+        return room;
     }
 
     public List<RoomUser> UpdateRoomUsers(updateRoomUsersDTO dto)
