@@ -51,6 +51,16 @@ public class RoomWebSocketHandler
             return;
         }
 
+        if (!await _validator.onlyAdminAllowToStartARoom(roomId, clientId))
+        {
+            var msg = Encoding.UTF8.GetBytes("only room admin can start a room");
+            await socket.SendAsync(new ArraySegment<byte>(msg), WebSocketMessageType.Text, true,
+                CancellationToken.None);
+            await socket.CloseAsync(WebSocketCloseStatus.PolicyViolation, "only room admin can start a room",
+                CancellationToken.None);
+            return;
+        }
+
         var player = new Player
         {
             ClientId = clientId,

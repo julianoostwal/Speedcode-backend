@@ -34,12 +34,18 @@ public class RoomValidator
         );
     }
 
-    // public async Task<bool> onlyAdminAllowToStartARoom(Guid roomId, Guid clientId)
-    // {
-    //     WSRoomsService.Rooms.TryGetValue(roomId, out var room);
-    //     if (room)
-    //     {
-    //         
-    //     }
-    // }
+    public async Task<bool> onlyAdminAllowToStartARoom(Guid roomId, Guid clientId)
+    {
+        WSRoomsService.Rooms.TryGetValue(roomId, out var room);
+        if (room != null)
+        {
+            return true;
+        }
+
+        var dbRoom = await _db.rooms
+            .AsNoTracking()
+            .FirstOrDefaultAsync(r => r.id == roomId);
+
+        return dbRoom.CreatedById == clientId;
+    }
 }
