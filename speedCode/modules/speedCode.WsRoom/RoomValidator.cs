@@ -31,4 +31,6 @@ public class RoomValidator
             ru.roomId == roomId && (!ru.room.isPrivate || ru.profileId == clientId)
         );
     }
+    //
+    // public async Task<bool> ClientAllowToLeave(Guid roomId, Guid clientId)
 }
