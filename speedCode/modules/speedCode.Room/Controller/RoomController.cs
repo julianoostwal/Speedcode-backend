@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using speedCode.Core.attribute;
+using speedCode.Core.interfaces;
 using speedCode.Core.rooms.dto;
 using speedCode.Core.utils;
 using speedCode.Excise.model;
@@ -13,9 +15,9 @@ namespace speedCode.Room.controller;
 public class RoomController : ControllerBase
 {
     private readonly RoomService _RoomService;
-    private readonly JwtService _jwtService;
+    private readonly IJwtService _jwtService;
 
-    public RoomController(RoomService roomService,JwtService jwtService)
+    public RoomController(RoomService roomService, IJwtService jwtService)
     {
         _jwtService = jwtService;
         _RoomService = roomService;
@@ -69,21 +71,10 @@ public class RoomController : ControllerBase
     /// create room
     /// </summary>
     [HttpPost]
+    [InjectUserId]
     public async Task<ActionResult<Rooms>> Post([FromBody] CreateRoomDTO request)
     {
-        var authHeader = HttpContext.Request.Headers["Authorization"].ToString();
-
-        if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
-            return Unauthorized("Missing or invalid Authorization header");
-
-        var token = authHeader.Substring("Bearer ".Length).Trim();
-
-        var clientId = _jwtService.GetClientIdFromToken(token);
-
-        request.profileId = Guid.Parse(clientId);
-
         var room = await _RoomService.CreateRoom(request);
-
         return Ok(room);
     }
 
@@ -93,6 +84,7 @@ public class RoomController : ControllerBase
     /// </summary>
     [HttpPost]
     [Route("/generateroomwithrandomexcises")]
+    [InjectUserId]
     public ActionResult<Rooms> GenerateRoomWithRandomExercises(CreateRoomDTO request)
     {
         Rooms room = _RoomService.GenerateRoomWithRandomExcises(request, 5);
