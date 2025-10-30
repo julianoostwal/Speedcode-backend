@@ -184,6 +184,7 @@ public class RoomService
                 roomLevel = room.roomLevel,
                 isPrivate = room.isPrivate,
                 chatId = room.chatId,
+                createdById = room.CreatedById,
                 profiles = profilesForRoom.Select(pr => new
                 {
                     id = pr.id,
@@ -243,6 +244,7 @@ public class RoomService
             roomLevel = room.roomLevel,
             isPrivate = room.isPrivate,
             chatId = room.chatId,
+            createdById = room.CreatedById,
             profiles = profilesForRoom.Select(pr => new
             {
                 id = pr.id,
