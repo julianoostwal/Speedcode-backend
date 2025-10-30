@@ -119,13 +119,17 @@ public class RoomService
 
     public List<Guid> GetAllFinishedExcisesByRoomAndUserId(Guid roomId, Guid profileId)
     {
-        return (from pe in _profileDb.CompletedProfileExercise
-                join re in _RoomDb.RoomExercise
-                    on pe.exerciseId equals re.exerciseId
-                where pe.profileId == profileId && re.roomId == roomId
-                select pe.exerciseId)
+        var roomExerciseIds = _RoomDb.RoomExercise
+            .Where(re => re.roomId == roomId)
+            .Select(re => re.exerciseId)
+            .ToList();
+
+        return _profileDb.CompletedProfileExercise
+            .Where(pe => pe.profileId == profileId && roomExerciseIds.Contains(pe.exerciseId))
+            .Select(pe => pe.exerciseId)
             .ToList();
     }
+
 
     public Rooms GenerateRoomWithRandomExcises(CreateRoomDTO roomRequest, int count)
     {
