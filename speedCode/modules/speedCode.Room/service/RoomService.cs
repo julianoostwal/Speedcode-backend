@@ -103,7 +103,6 @@ public class RoomService
             .ToList();
     }
 
-
     public async Task<Rooms> CreateRoom(CreateRoomDTO roomRequest)
     {
         Rooms room = RoomMapper.FromCreateRoomDto(roomRequest);
@@ -262,5 +261,30 @@ public class RoomService
                 isRoomExcise = e.isRoomExcise
             })
         };
+    }
+
+    public async Task<bool> DeleteRoom(Guid id)
+    {
+        var room = await _RoomDb.rooms.FindAsync(id);
+        var roomExercises = _RoomDb.RoomExercise.Where(re => re.roomId == id);
+        var roomUsers = _RoomDb.RoomUser.Where(ru => ru.roomId == id);
+
+        if (roomExercises.Any())
+        {
+            _RoomDb.RoomExercise.RemoveRange(roomExercises);
+        }
+
+        if (roomUsers.Any())
+        {
+            _RoomDb.RoomUser.RemoveRange(roomUsers);
+        }
+
+        if (room != null)
+        {
+            _RoomDb.rooms.Remove(room);
+        }
+
+        await _RoomDb.SaveChangesAsync();
+        return true;
     }
 }

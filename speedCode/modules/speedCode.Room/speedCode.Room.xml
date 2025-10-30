@@ -24,17 +24,10 @@
             generate room with random exercises, for now it is hardcoded to 5 exercises
             </summary>
         </member>
-        <member name="T:speedCode.Room.Migrations.InitialRoomsDbMigration">
-            <inheritdoc />
-        </member>
-        <member name="M:speedCode.Room.Migrations.InitialRoomsDbMigration.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:speedCode.Room.Migrations.InitialRoomsDbMigration.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:speedCode.Room.Migrations.InitialRoomsDbMigration.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
+        <member name="M:speedCode.Room.controller.RoomController.DeleteRoom(System.Guid)">
+            <summary>
+            delete room by id
+            </summary>
         </member>
     </members>
 </doc>
