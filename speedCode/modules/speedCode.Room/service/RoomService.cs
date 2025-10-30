@@ -108,6 +108,11 @@ public class RoomService
     {
         Rooms room = RoomMapper.FromCreateRoomDto(roomRequest);
         _RoomDb.rooms.Add(room);
+        _RoomDb.RoomUser.Add(new RoomUser
+        {
+            roomId = room.id,
+            profileId = roomRequest.profileId
+        });
         await _RoomDb.SaveChangesAsync();
         return room;
     }
@@ -139,6 +144,11 @@ public class RoomService
             _RoomDb.RoomExercise.Add(roomExercise);
         }
 
+        _RoomDb.RoomUser.Add(new RoomUser
+        {
+            roomId = room.id,
+            profileId = roomRequest.profileId
+        });
         _RoomDb.SaveChanges();
 
         return room;
