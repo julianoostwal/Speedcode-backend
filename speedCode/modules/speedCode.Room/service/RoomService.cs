@@ -26,32 +26,7 @@ public class RoomService
         _profileDb = profileDb;
     }
 
-    public List<RoomExercise> UpdateRoomExercises(updateRoomExercisesDTO dto)
-    {
-        var room = _RoomDb.rooms
-            .Include(r => r.RoomExercises)
-            .FirstOrDefault(r => r.id == dto.roomId);
-
-        if (room == null) throw new Exception("Room not found");
-
-        _RoomDb.RoomExercise.RemoveRange(room.RoomExercises);
-
-        foreach (var exId in dto.exerciseId)
-        {
-            room.RoomExercises.Add(new RoomExercise
-            {
-                roomId = dto.roomId,
-                exerciseId = exId
-            });
-        }
-
-        _RoomDb.SaveChanges();
-        return _RoomDb.RoomExercise
-            .Where(re => re.roomId == dto.roomId)
-            .ToList();
-    }
-
-    public Rooms UpdateRoom(Guid id, UpdateRoomDTO dto)
+    public async Task<Rooms> UpdateRoom(Guid id, UpdateRoomDTO dto)
     {
         var room = _RoomDb.rooms
                        .Include(r => r.RoomExercises)
@@ -76,31 +51,6 @@ public class RoomService
         _RoomDb.SaveChanges();
 
         return room;
-    }
-
-    public List<RoomUser> UpdateRoomUsers(updateRoomUsersDTO dto)
-    {
-        Rooms? room = _RoomDb.rooms
-            .Include(r => r.RoomUsers)
-            .FirstOrDefault(r => r.id == dto.RoomId);
-
-        if (room == null) throw new Exception("Room not found");
-
-        _RoomDb.RoomUser.RemoveRange(room.RoomUsers);
-
-        foreach (var exId in dto.Profilesid)
-        {
-            room.RoomExercises.Add(new RoomExercise
-            {
-                roomId = dto.RoomId,
-                exerciseId = exId
-            });
-        }
-
-        _RoomDb.SaveChanges();
-        return _RoomDb.RoomUser
-            .Where(re => re.roomId == dto.RoomId)
-            .ToList();
     }
 
     public async Task<Rooms> CreateRoom(CreateRoomDTO roomRequest)
