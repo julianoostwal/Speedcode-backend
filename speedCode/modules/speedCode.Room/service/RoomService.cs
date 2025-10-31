@@ -208,7 +208,12 @@ public class RoomService
         return result;
     }
 
-    public async Task<object> GetRoomById(Guid id)
+    public async Task<Rooms?> GetRoomById(Guid id)
+    {
+        return await _RoomDb.rooms.FindAsync(id);
+    }
+
+    public async Task<object> GetRoomAndKoppelById(Guid id)
     {
         var room = await _RoomDb.rooms.FindAsync(id);
         if (room == null)

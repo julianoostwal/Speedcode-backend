@@ -9,7 +9,4 @@ public class Player
     public DateTime ConnectedAt { get; set; } = DateTime.UtcNow;
 
     public List<Guid> FinishedExcise { get; set; } = new List<Guid>();
-
-    public Double memory { get; set; }
-    public TimeSpan time { get; set; }
 }

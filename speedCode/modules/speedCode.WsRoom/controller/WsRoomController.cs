@@ -4,6 +4,7 @@ using speedCode.Core.judge0.dto;
 using speedCode.Excise;
 using speedCode.rooms;
 using speedCode.services;
+using speedCode.WsRoom.handlers;
 
 namespace speedCode.WsRoom.controller;
 
@@ -21,12 +22,14 @@ public class WsRoomController : ControllerBase
 
     /// <summary>
     /// Connect to a room via WebSocket.
-    /// <para>After connecting, the client must send an authentication token in the format:</para>
-    /// <code>{ "type": "auth", "token": "YOUR_JWT" }</code>
+    /// <para>there is 3 types to using. onli the host can start and create the WS rooms</para>
+    /// <code>{ "type": "start", "token": "YOUR_JWT" }</code>
+    /// /// <code>{ "type": "create", "token": "YOUR_JWT" }</code>
+    /// /// <code>{ "type": "join", "token": "YOUR_JWT" }</code>
     /// </summary>
     /// <param name="roomId">The ID of an existing room in the database.</param>
     [HttpGet("{roomId}")]
-    public async Task Get(Guid roomId, [FromServices] ExciseDb db)
+    public async Task Get(Guid roomId)
     {
         if (!HttpContext.WebSockets.IsWebSocketRequest)
         {
