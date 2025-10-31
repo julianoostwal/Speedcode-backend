@@ -28,7 +28,7 @@ public class RoomController : ControllerBase
     /// get all rooms with exercises and profiles
     /// </summary>
     [HttpGet]
-    public async Task<ActionResult> GetAllRooms()
+    public async Task<ActionResult<List<RoomFullDto>>> GetAllRooms()
     {
         var rooms = await _RoomService.GetAllRooms();
         return Ok(rooms);
