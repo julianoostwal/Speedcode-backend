@@ -48,16 +48,7 @@ public class RoomWebSocketHandler
         if (!await _validator.RoomExistsAsync(roomId) || !await _validator.ClientExistsAsync(clientId) ||
             !await _validator.ClientAllowToJoin(roomId, clientId))
         {
-            var msg = Encoding.UTF8.GetBytes("Room or client not found");
             await socket.CloseAsync(WebSocketCloseStatus.PolicyViolation, "Room or client not found",
-                CancellationToken.None);
-            return;
-        }
-
-        if (!await _validator.onlyAdminAllowToStartARoom(roomId, clientId))
-        {
-            var msg = Encoding.UTF8.GetBytes("only room admin can start a room");
-            await socket.CloseAsync(WebSocketCloseStatus.PolicyViolation, "only room admin can start a room",
                 CancellationToken.None);
             return;
         }
@@ -82,7 +73,7 @@ public class RoomWebSocketHandler
         // hier bepaald of er een join of create of wat anders is.
         await handler.HandleAsync(socket, json);
     }
-    
+
     public async Task<TestCodeAsyncResults> TestCodeAsyncForWSRoom(TestCodeRequest request, Guid roomId,
         Guid clientId)
     {

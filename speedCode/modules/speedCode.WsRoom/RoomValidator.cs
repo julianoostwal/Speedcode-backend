@@ -33,7 +33,7 @@ public class RoomValidator
         );
     }
 
-    public async Task<bool> onlyAdminAllowToStartARoom(Guid roomId, Guid clientId)
+    public async Task<bool> isRoomAdmin(Guid roomId, Guid clientId)
     {
         WSRoomsService.Rooms.TryGetValue(roomId, out var room);
         if (room != null)
