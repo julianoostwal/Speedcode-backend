@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using speedCode.Excise;
 using speedCode.Profile;
 using speedCode.Room;
 using speedCode.rooms;
@@ -34,7 +33,7 @@ public class RoomValidator
         );
     }
 
-    public async Task<bool> onlyAdminAllowToStartARoom(Guid roomId, Guid clientId)
+    public async Task<bool> isRoomAdmin(Guid roomId, Guid clientId)
     {
         WSRoomsService.Rooms.TryGetValue(roomId, out var room);
         if (room != null)
@@ -47,5 +46,16 @@ public class RoomValidator
             .FirstOrDefaultAsync(r => r.id == roomId);
 
         return dbRoom.CreatedById == clientId;
+    }
+
+    public async Task<bool> IsRoomStarted(Guid roomId)
+    {
+        WSRoomsService.Rooms.TryGetValue(roomId, out var room);
+        if (room != null && !room.IsStarted)
+        {
+            return false;
+        }
+
+        return true;
     }
 }

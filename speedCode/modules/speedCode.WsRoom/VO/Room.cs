@@ -11,6 +11,9 @@ public class Room
 {
     public Guid RoomId { get; set; }
 
+    public required Guid CreatedBy { get; set; }
+    public bool IsStarted { get; set; } = false;
+
     public ConcurrentDictionary<Guid, Player> Players { get; set; } = new();
 
 

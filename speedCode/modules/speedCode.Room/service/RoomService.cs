@@ -26,81 +26,29 @@ public class RoomService
         _profileDb = profileDb;
     }
 
-    public List<RoomExercise> UpdateRoomExercises(updateRoomExercisesDTO dto)
-    {
-        var room = _RoomDb.rooms
-            .Include(r => r.RoomExercises)
-            .FirstOrDefault(r => r.id == dto.roomId);
-
-        if (room == null) throw new Exception("Room not found");
-
-        _RoomDb.RoomExercise.RemoveRange(room.RoomExercises);
-
-        foreach (var exId in dto.exerciseId)
-        {
-            room.RoomExercises.Add(new RoomExercise
-            {
-                roomId = dto.roomId,
-                exerciseId = exId
-            });
-        }
-
-        _RoomDb.SaveChanges();
-        return _RoomDb.RoomExercise
-            .Where(re => re.roomId == dto.roomId)
-            .ToList();
-    }
-
-    public Rooms UpdateRoom(UpdateRoomDTO dto)
+    public async Task<Rooms> UpdateRoom(Guid id, UpdateRoomDTO dto)
     {
         var room = _RoomDb.rooms
                        .Include(r => r.RoomExercises)
                        .Include(r => r.RoomUsers)
-                       .FirstOrDefault(r => r.id == dto.roomId)
-                   ?? throw new KeyNotFoundException($"Room {dto.roomId} not found");
+                       .FirstOrDefault(r => r.id == id)
+                   ?? throw new KeyNotFoundException($"Room {id} not found");
 
         room.roomName = dto.RoomName;
         room.isPrivate = dto.IsPrivate;
         room.roomLevel = dto.RoomLevel;
 
-        room.RoomExercises.Clear();
-        room.RoomExercises = dto.exerciseId
-            .Select(id => new RoomExercise { roomId = room.id, exerciseId = id })
-            .ToList();
-
-        room.RoomUsers.Clear();
-        room.RoomUsers = dto.profileId
-            .Select(id => new RoomUser { roomId = room.id, profileId = id })
-            .ToList();
-
-        _RoomDb.SaveChanges();
-
-        return room;
-    }
-
-    public List<RoomUser> UpdateRoomUsers(updateRoomUsersDTO dto)
-    {
-        Rooms? room = _RoomDb.rooms
-            .Include(r => r.RoomUsers)
-            .FirstOrDefault(r => r.id == dto.RoomId);
-
-        if (room == null) throw new Exception("Room not found");
+        _RoomDb.RoomExercise.RemoveRange(room.RoomExercises);
+        _RoomDb.RoomExercise.AddRange(dto.exerciseId
+            .Select(exerciseId => new RoomExercise { roomId = room.id, exerciseId = exerciseId }));
 
         _RoomDb.RoomUser.RemoveRange(room.RoomUsers);
+        _RoomDb.RoomUser.AddRange(dto.profileId
+            .Select(profileId => new RoomUser { roomId = room.id, profileId = profileId }));
 
-        foreach (var exId in dto.Profilesid)
-        {
-            room.RoomExercises.Add(new RoomExercise
-            {
-                roomId = dto.RoomId,
-                exerciseId = exId
-            });
-        }
+        await _RoomDb.SaveChangesAsync();
 
-        _RoomDb.SaveChanges();
-        return _RoomDb.RoomUser
-            .Where(re => re.roomId == dto.RoomId)
-            .ToList();
+        return room;
     }
 
     public async Task<Rooms> CreateRoom(CreateRoomDTO roomRequest)
@@ -234,7 +182,12 @@ public class RoomService
         return roomDtos;
     }
 
-    public async Task<RoomFullDto?> GetRoomById(Guid id)
+    public async Task<Rooms?> GetRoomById(Guid id)
+    {
+        return await _RoomDb.rooms.FindAsync(id);
+    }
+
+    public async Task<object> GetRoomAndKoppelById(Guid id)
     {
         var room = await _RoomDb.rooms
             .Include(r => r.RoomExercises).ThenInclude(re => re.exercise)

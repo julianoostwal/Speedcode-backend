@@ -40,7 +40,7 @@ public class RoomController : ControllerBase
     [HttpGet("id/{id}")]
     public async Task<IActionResult> GetRoom(Guid id)
     {
-        var room = await _RoomService.GetRoomById(id);
+        var room = await _RoomService.GetRoomAndKoppelById(id);
         if (room == null)
         {
             return NotFound();
@@ -49,22 +49,10 @@ public class RoomController : ControllerBase
         return Ok(room);
     }
 
-    [HttpPut("/updateRoomExercise")]
-    public IActionResult UpdateRoomExercise(updateRoomExercisesDTO dto)
+    [HttpPut("id/{id}")]
+    public async Task<IActionResult> UpdateRoomDTO(Guid id, [FromBody] UpdateRoomDTO dto)
     {
-        return Ok(_RoomService.UpdateRoomExercises(dto));
-    }
-
-    [HttpPut("/updateRoom")]
-    public IActionResult UpdateRoomDTO(UpdateRoomDTO dto)
-    {
-        return Ok(_RoomService.UpdateRoom(dto));
-    }
-
-    [HttpPut("/updateRoomUsers")]
-    public IActionResult UpdateRoomUsers(updateRoomUsersDTO dto)
-    {
-        return Ok(_RoomService.UpdateRoomUsers(dto));
+        return Ok(await _RoomService.UpdateRoom(id, dto));
     }
 
     /// <summary>
