@@ -78,7 +78,6 @@ public class RoomController : ControllerBase
         return Ok(room);
     }
 
-
     /// <summary>
     /// generate room with random exercises, for now it is hardcoded to 5 exercises
     /// </summary>
@@ -89,5 +88,21 @@ public class RoomController : ControllerBase
     {
         Rooms room = _RoomService.GenerateRoomWithRandomExcises(request, 5);
         return Ok(room);
+    }
+
+    /// <summary>
+    /// delete room by id
+    /// </summary>
+    [HttpDelete("id/{id}")]
+    public async Task<IActionResult> DeleteRoom(Guid id)
+    {
+        var result = await _RoomService.DeleteRoom(id);
+
+        if (!result)
+        {
+            return NotFound();
+        }
+
+        return NoContent();
     }
 }
