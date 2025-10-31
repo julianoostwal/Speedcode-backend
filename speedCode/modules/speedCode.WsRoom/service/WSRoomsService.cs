@@ -19,6 +19,13 @@ public static class WSRoomsService
         return room;
     }
 
+    public static List<Room> GetOnlineRoomsById(Guid profileId)
+    {
+        return Rooms.Values
+            .Where(r => r.CreatedBy.Equals(profileId))
+            .ToList();
+    }
+
     public static Room StartRoom(Guid roomId, Guid profileId)
     {
         var room = GetRoom(roomId);

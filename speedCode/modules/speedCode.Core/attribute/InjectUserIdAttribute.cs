@@ -54,7 +54,7 @@ public class InjectUserIdAttribute : Attribute, IAsyncActionFilter
             context.Result = new UnauthorizedObjectResult("Unable to extract clientId from token");
             return;
         }
-        
+
         foreach (var arg in context.ActionArguments.Values)
         {
             var prop = arg?.GetType().GetProperty(_propertyName);
