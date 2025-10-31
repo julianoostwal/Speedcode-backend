@@ -40,7 +40,7 @@ public class RoomController : ControllerBase
     [HttpGet("id/{id}")]
     public async Task<IActionResult> GetRoom(Guid id)
     {
-        var room = await _RoomService.GetRoomById(id);
+        var room = await _RoomService.GetRoomAndKoppelById(id);
         if (room == null)
         {
             return NotFound();
