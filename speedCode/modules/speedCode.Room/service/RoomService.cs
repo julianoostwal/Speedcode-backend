@@ -179,29 +179,9 @@ public class RoomService
 
             result.Add(new
             {
-                id = room.id,
-                roomName = room.roomName,
-                roomLevel = room.roomLevel,
-                isPrivate = room.isPrivate,
-                chatId = room.chatId,
-                createdById = room.CreatedById,
-                profiles = profilesForRoom.Select(pr => new
-                {
-                    id = pr.id,
-                    nickName = pr.nickName,
-                    role = pr.role,
-                    avatarUrl = pr.avatarUrl,
-                    createdAt = pr.createdAt
-                }),
-                exercises = excisesForRoom.Select(e => new
-                {
-                    id = e.id,
-                    title = e.title,
-                    description = e.description,
-                    createdAt = e.createdAt,
-                    points = e.points,
-                    isRoomExcise = e.isRoomExcise
-                })
+                room,
+                profilesForRoom,
+                excisesForRoom
             });
         }
 
@@ -234,29 +214,9 @@ public class RoomService
 
         return new
         {
-            id = room.id,
-            roomName = room.roomName,
-            roomLevel = room.roomLevel,
-            isPrivate = room.isPrivate,
-            chatId = room.chatId,
-            createdById = room.CreatedById,
-            profiles = profilesForRoom.Select(pr => new
-            {
-                id = pr.id,
-                nickName = pr.nickName,
-                role = pr.role,
-                avatarUrl = pr.avatarUrl,
-                createdAt = pr.createdAt
-            }),
-            exercises = excisesForRoom.Select(e => new
-            {
-                id = e.id,
-                title = e.title,
-                description = e.description,
-                createdAt = e.createdAt,
-                points = e.points,
-                isRoomExcise = e.isRoomExcise
-            })
+            room,
+            profilesForRoom,
+            excisesForRoom
         };
     }
 
