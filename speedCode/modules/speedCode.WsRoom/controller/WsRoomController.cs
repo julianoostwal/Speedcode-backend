@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using speedCode.Core.attribute;
+using speedCode.Core.interfaces;
 using speedCode.Core.judge0.dto;
-using speedCode.Excise;
 using speedCode.rooms;
 using speedCode.services;
 using speedCode.WsRoom.handlers;
@@ -12,11 +14,12 @@ namespace speedCode.WsRoom.controller;
 [Route("ws")]
 public class WsRoomController : ControllerBase
 {
-    private readonly ExciseService _exciseService;
     private readonly RoomWebSocketHandler _wsHandler;
+    private readonly IJwtService _jwtService;
 
-    public WsRoomController(ExciseService exciseService, RoomWebSocketHandler wsHandler)
+    public WsRoomController(ExciseService exciseService, RoomWebSocketHandler wsHandler, IJwtService jwtService)
     {
+        _jwtService = jwtService;
         _wsHandler = wsHandler;
     }
 
@@ -41,6 +44,35 @@ public class WsRoomController : ControllerBase
         var socket = await HttpContext.WebSockets.AcceptWebSocketAsync();
         await _wsHandler.HandleAsync(roomId, socket);
     }
+
+
+    /// <summary>
+    /// Get all rooms where is online
+    /// </summary>
+    /// <returns>Returns a list of rooms where the user is connected</returns>
+    /// <response code="200">Returns a list of rooms where the user is connected</response>
+    /// <response code="401">Missing or invalid Authorization header</response>
+    /// <response code="403">Invalid or expired token</response>
+    [HttpGet("online")]
+    public ActionResult GetOnlineRooms()
+    {
+        var authHeader = HttpContext.Request.Headers["Authorization"].ToString();
+        if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
+        {
+            return Unauthorized("Missing or invalid Authorization header");
+        }
+
+        var token = authHeader.Substring("Bearer ".Length).Trim();
+
+        var clientId = _jwtService.GetClientIdFromToken(token);
+        if (string.IsNullOrEmpty(clientId))
+        {
+            return Unauthorized("Invalid or expired token");
+        }
+
+        return Ok(WSRoomsService.GetOnlineRoomsById(Guid.Parse(clientId)));
+    }
+
 
     /// <summary>
     /// Test a player's code submission within a room.
