@@ -38,17 +38,15 @@ public class RoomService
         room.isPrivate = dto.IsPrivate;
         room.roomLevel = dto.RoomLevel;
 
-        room.RoomExercises.Clear();
-        room.RoomExercises = dto.exerciseId
-            .Select(id => new RoomExercise { roomId = room.id, exerciseId = id })
-            .ToList();
+        _RoomDb.RoomExercise.RemoveRange(room.RoomExercises);
+        _RoomDb.RoomExercise.AddRange(dto.exerciseId
+            .Select(exerciseId => new RoomExercise { roomId = room.id, exerciseId = exerciseId }));
 
-        room.RoomUsers.Clear();
-        room.RoomUsers = dto.profileId
-            .Select(id => new RoomUser { roomId = room.id, profileId = id })
-            .ToList();
+        _RoomDb.RoomUser.RemoveRange(room.RoomUsers);
+        _RoomDb.RoomUser.AddRange(dto.profileId
+            .Select(profileId => new RoomUser { roomId = room.id, profileId = profileId }));
 
-        _RoomDb.SaveChanges();
+        await _RoomDb.SaveChangesAsync();
 
         return room;
     }
