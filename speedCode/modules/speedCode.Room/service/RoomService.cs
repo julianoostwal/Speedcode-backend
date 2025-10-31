@@ -53,18 +53,29 @@ public class RoomService
 
     public Rooms UpdateRoom(UpdateRoomDTO dto)
     {
-        UpdateRoomExercises(new updateRoomExercisesDTO()
-        {
-            roomId = dto.roomId,
-            exerciseId = dto.exerciseId
-        });
-        UpdateRoomUsers(new updateRoomUsersDTO()
-        {
-            RoomId = dto.roomId,
-            Profilesid = dto.profileId
-        });
-        return _RoomDb.rooms
-            .Where(re => re.id == dto.roomId).FirstOrDefault();
+        var room = _RoomDb.rooms
+                       .Include(r => r.RoomExercises)
+                       .Include(r => r.RoomUsers)
+                       .FirstOrDefault(r => r.id == dto.roomId)
+                   ?? throw new KeyNotFoundException($"Room {dto.roomId} not found");
+
+        room.roomName = dto.RoomName;
+        room.isPrivate = dto.IsPrivate;
+        room.roomLevel = dto.RoomLevel;
+
+        room.RoomExercises.Clear();
+        room.RoomExercises = dto.exerciseId
+            .Select(id => new RoomExercise { roomId = room.id, exerciseId = id })
+            .ToList();
+
+        room.RoomUsers.Clear();
+        room.RoomUsers = dto.profileId
+            .Select(id => new RoomUser { roomId = room.id, profileId = id })
+            .ToList();
+
+        _RoomDb.SaveChanges();
+
+        return room;
     }
 
     public List<RoomUser> UpdateRoomUsers(updateRoomUsersDTO dto)
@@ -96,19 +107,28 @@ public class RoomService
     {
         Rooms room = RoomMapper.FromCreateRoomDto(roomRequest);
         _RoomDb.rooms.Add(room);
+        _RoomDb.RoomUser.Add(new RoomUser
+        {
+            roomId = room.id,
+            profileId = roomRequest.profileId
+        });
         await _RoomDb.SaveChangesAsync();
         return room;
     }
 
     public List<Guid> GetAllFinishedExcisesByRoomAndUserId(Guid roomId, Guid profileId)
     {
-        return (from pe in _profileDb.CompletedProfileExercise
-                join re in _RoomDb.RoomExercise
-                    on pe.exerciseId equals re.exerciseId
-                where pe.profileId == profileId && re.roomId == roomId
-                select pe.exerciseId)
+        var roomExerciseIds = _RoomDb.RoomExercise
+            .Where(re => re.roomId == roomId)
+            .Select(re => re.exerciseId)
+            .ToList();
+
+        return _profileDb.CompletedProfileExercise
+            .Where(pe => pe.profileId == profileId && roomExerciseIds.Contains(pe.exerciseId))
+            .Select(pe => pe.exerciseId)
             .ToList();
     }
+
 
     public Rooms GenerateRoomWithRandomExcises(CreateRoomDTO roomRequest, int count)
     {
@@ -127,6 +147,11 @@ public class RoomService
             _RoomDb.RoomExercise.Add(roomExercise);
         }
 
+        _RoomDb.RoomUser.Add(new RoomUser
+        {
+            roomId = room.id,
+            profileId = roomRequest.profileId
+        });
         _RoomDb.SaveChanges();
 
         return room;

@@ -1,6 +1,7 @@
 using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
+using speedCode.Core.interfaces;
 using speedCode.Core.judge0.dto;
 using speedCode.Core.utils;
 using speedCode.Excise;
@@ -17,7 +18,7 @@ public class RoomWebSocketHandler
 {
     private readonly RoomValidator _validator;
     private readonly RoomUserService _roomUserService;
-    private readonly JwtService _jwtService;
+    private readonly IJwtService _IjwtService;
     private readonly RoomService _roomService;
     private readonly ProfileDb _profileDb;
     private readonly ExciseDb _dbContext;
@@ -26,14 +27,14 @@ public class RoomWebSocketHandler
     public RoomWebSocketHandler(RoomValidator validator, RoomUserService roomUserService, ExciseService exciseService,
         ProfileDb profileDb,
         RoomService roomService,
-        JwtService jwtService)
+        IJwtService jwtService)
     {
         _profileDb = profileDb;
         _roomService = roomService;
         _exciseService = exciseService;
         _validator = validator;
         _roomUserService = roomUserService;
-        _jwtService = jwtService;
+        _IjwtService = jwtService;
     }
 
     public async Task HandleAsync(Guid roomId, WebSocket socket)
@@ -46,6 +47,16 @@ public class RoomWebSocketHandler
             await socket.SendAsync(new ArraySegment<byte>(msg), WebSocketMessageType.Text, true,
                 CancellationToken.None);
             await socket.CloseAsync(WebSocketCloseStatus.PolicyViolation, "Room or client not found",
+                CancellationToken.None);
+            return;
+        }
+
+        if (!await _validator.onlyAdminAllowToStartARoom(roomId, clientId))
+        {
+            var msg = Encoding.UTF8.GetBytes("only room admin can start a room");
+            await socket.SendAsync(new ArraySegment<byte>(msg), WebSocketMessageType.Text, true,
+                CancellationToken.None);
+            await socket.CloseAsync(WebSocketCloseStatus.PolicyViolation, "only room admin can start a room",
                 CancellationToken.None);
             return;
         }
@@ -112,7 +123,7 @@ public class RoomWebSocketHandler
             throw new InvalidOperationException("Token is missing or empty");
         }
 
-        var clientId = _jwtService.GetClientIdFromToken(token);
+        var clientId = _IjwtService.GetClientIdFromToken(token);
         if (string.IsNullOrEmpty(clientId))
         {
             await CloseWithMessageAsync(socket, "Unauthorized", "Invalid or expired token");
