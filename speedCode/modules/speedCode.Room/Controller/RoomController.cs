@@ -49,22 +49,10 @@ public class RoomController : ControllerBase
         return Ok(room);
     }
 
-    [HttpPut("/updateRoomExercise")]
-    public IActionResult UpdateRoomExercise(updateRoomExercisesDTO dto)
-    {
-        return Ok(_RoomService.UpdateRoomExercises(dto));
-    }
-
     [HttpPut("id/{id}")]
     public async Task<IActionResult> UpdateRoomDTO(Guid id, [FromBody] UpdateRoomDTO dto)
     {
         return Ok(await _RoomService.UpdateRoom(id, dto));
-    }
-
-    [HttpPut("/updateRoomUsers")]
-    public IActionResult UpdateRoomUsers(updateRoomUsersDTO dto)
-    {
-        return Ok(_RoomService.UpdateRoomUsers(dto));
     }
 
     /// <summary>
