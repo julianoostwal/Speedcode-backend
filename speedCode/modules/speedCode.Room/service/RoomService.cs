@@ -157,66 +157,154 @@ public class RoomService
         return room;
     }
 
-    public async Task<List<object>> GetAllRooms()
+    public async Task<List<RoomFullDto>> GetAllRooms()
     {
-        var rooms = await _RoomDb.rooms.ToListAsync();
-        var exercises = await _exciseDb.Exercise.ToListAsync();
-        var roomExcises = await _RoomDb.RoomExercise.ToListAsync();
-        var roomProfiles = await _RoomDb.RoomUser.ToListAsync();
-        var profiles = await _profileDb.Profiles.ToListAsync();
-
-        var result = new List<object>();
-
-        foreach (var room in rooms)
+        var rooms = await _RoomDb.rooms
+            .Include(r => r.RoomExercises)
+                .ThenInclude(re => re.exercise)
+            .Include(r => r.RoomUsers)
+            .ToListAsync();
+    
+        var allProfileIds = rooms
+            .Select(r => r.CreatedById)
+            .Concat(rooms.SelectMany(r => r.RoomUsers.Select(ru => ru.profileId)))
+            .Distinct()
+            .ToList();
+    
+        var profiles = await _profileDb.Profiles
+            .Where(p => allProfileIds.Contains(p.id))
+            .ToListAsync();
+    
+        var roomDtos = rooms.Select(room => new RoomFullDto
         {
-            var excisesForRoom = roomExcises
-                .Where(re => re.roomId == room.id)
-                .Select(re => exercises.FirstOrDefault(e => e.id == re.exerciseId));
-
-            var profilesForRoom = roomProfiles
-                .Where(rp => rp.roomId == room.id)
-                .Select(rp => profiles.FirstOrDefault(p => p.id == rp.profileId));
-
-            result.Add(new
+            id = room.id,
+            roomName = room.roomName,
+            roomLevel = room.roomLevel.ToString(),
+            isPrivate = room.isPrivate,
+            createdAt = room.createdAt,
+            CreatedById = room.CreatedById,
+            CreatedBy = profiles
+                .Where(p => p.id == room.CreatedById)
+                .Select(p => new RoomFullDto.ProfileDto
+                {
+                    id = p.id,
+                    avatarUrl = p.avatarUrl,
+                    createdAt = p.createdAt,
+                    nickName = p.nickName,
+                    role = p.role.ToString()
+                })
+                .FirstOrDefault(),
+            RoomUsers = room.RoomUsers.Select(ru => new RoomFullDto.RoomUserDto
             {
-                room,
-                profilesForRoom,
-                excisesForRoom
-            });
-        }
-
-        return result;
+                id = ru.id,
+                roomId = ru.roomId,
+                profileId = ru.profileId,
+                createdAt = ru.createdAt,
+                profile = profiles
+                    .Where(p => p.id == ru.profileId)
+                    .Select(p => new RoomFullDto.ProfileDto
+                    {
+                        id = p.id,
+                        avatarUrl = p.avatarUrl,
+                        createdAt = p.createdAt,
+                        nickName = p.nickName,
+                        role = p.role.ToString()
+                    })
+                    .FirstOrDefault()
+            }).ToList(),
+            RoomExercises = room.RoomExercises.Select(re => new RoomFullDto.RoomExerciseDto
+            {
+                id = re.id,
+                roomId = re.roomId,
+                exerciseId = re.exerciseId,
+                exercise = re.exercise == null ? null : new RoomFullDto.ExerciseDto
+                {
+                    id = re.exercise.id,
+                    title = re.exercise.title,
+                    description = re.exercise.description,
+                    createdAt = re.exercise.createdAt,
+                    isRoomExcise = re.exercise.isRoomExcise,
+                    isPrivate = re.exercise.isPrivate,
+                    points = re.exercise.points,
+                    Level = re.exercise.Level.ToString()
+                }
+            }).ToList()
+        }).ToList();
+    
+        return roomDtos;
     }
 
-    public async Task<object> GetRoomById(Guid id)
+    public async Task<RoomFullDto?> GetRoomById(Guid id)
     {
-        var room = await _RoomDb.rooms.FindAsync(id);
-        if (room == null)
-        {
-            return null;
-        }
-
-        var exercises = await _exciseDb.Exercise.ToListAsync();
-        var roomExcises = await _RoomDb.RoomExercise
-            .Where(re => re.roomId == room.id)
+        var room = await _RoomDb.rooms
+            .Include(r => r.RoomExercises).ThenInclude(re => re.exercise)
+            .Include(r => r.RoomUsers)
+            .FirstOrDefaultAsync(r => r.id == id);
+    
+        if (room == null) return null;
+    
+        var allProfileIds = new List<Guid> { room.CreatedById };
+        allProfileIds.AddRange(room.RoomUsers.Select(ru => ru.profileId));
+        allProfileIds = allProfileIds.Distinct().ToList();
+    
+        var profiles = await _profileDb.Profiles
+            .Where(p => allProfileIds.Contains(p.id))
             .ToListAsync();
-
-        var excisesForRoom = roomExcises
-            .Select(re => exercises.FirstOrDefault(e => e.id == re.exerciseId));
-
-        var roomProfiles = await _RoomDb.RoomUser
-            .Where(rp => rp.roomId == room.id)
-            .ToListAsync();
-
-        var profiles = await _profileDb.Profiles.ToListAsync();
-        var profilesForRoom = roomProfiles
-            .Select(rp => profiles.FirstOrDefault(p => p.id == rp.profileId));
-
-        return new
+    
+        return new RoomFullDto
         {
-            room,
-            profilesForRoom,
-            excisesForRoom
+            id = room.id,
+            roomName = room.roomName,
+            roomLevel = room.roomLevel.ToString(),
+            isPrivate = room.isPrivate,
+            createdAt = room.createdAt,
+            CreatedById = room.CreatedById,
+            CreatedBy = profiles
+                .Where(p => p.id == room.CreatedById)
+                .Select(p => new RoomFullDto.ProfileDto
+                {
+                    id = p.id,
+                    avatarUrl = p.avatarUrl,
+                    createdAt = p.createdAt,
+                    nickName = p.nickName,
+                    role = p.role.ToString()
+                })
+                .FirstOrDefault(),
+            RoomUsers = room.RoomUsers.Select(ru => new RoomFullDto.RoomUserDto
+            {
+                id = ru.id,
+                roomId = ru.roomId,
+                profileId = ru.profileId,
+                createdAt = ru.createdAt,
+                profile = profiles
+                    .Where(p => p.id == ru.profileId)
+                    .Select(p => new RoomFullDto.ProfileDto
+                    {
+                        id = p.id,
+                        avatarUrl = p.avatarUrl,
+                        createdAt = p.createdAt,
+                        nickName = p.nickName,
+                        role = p.role.ToString()
+                    })
+                    .FirstOrDefault()
+            }).ToList(),
+            RoomExercises = room.RoomExercises.Select(re => new RoomFullDto.RoomExerciseDto
+            {
+                id = re.id,
+                roomId = re.roomId,
+                exerciseId = re.exerciseId,
+                exercise = re.exercise == null ? null : new RoomFullDto.ExerciseDto
+                {
+                    id = re.exercise.id,
+                    title = re.exercise.title,
+                    description = re.exercise.description,
+                    createdAt = re.exercise.createdAt,
+                    isRoomExcise = re.exercise.isRoomExcise,
+                    isPrivate = re.exercise.isPrivate,
+                    points = re.exercise.points,
+                    Level = re.exercise.Level.ToString()
+                }
+            }).ToList()
         };
     }
 
