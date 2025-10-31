@@ -51,13 +51,13 @@ public class RoomService
             .ToList();
     }
 
-    public Rooms UpdateRoom(UpdateRoomDTO dto)
+    public Rooms UpdateRoom(Guid id, UpdateRoomDTO dto)
     {
         var room = _RoomDb.rooms
                        .Include(r => r.RoomExercises)
                        .Include(r => r.RoomUsers)
-                       .FirstOrDefault(r => r.id == dto.roomId)
-                   ?? throw new KeyNotFoundException($"Room {dto.roomId} not found");
+                       .FirstOrDefault(r => r.id == id)
+                   ?? throw new KeyNotFoundException($"Room {id} not found");
 
         room.roomName = dto.RoomName;
         room.isPrivate = dto.IsPrivate;
