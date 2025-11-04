@@ -9,9 +9,9 @@ namespace speedCode.services;
 public class exerciseService
 {
     private readonly Judge0Handler _judge0Handler;
-    private readonly exerciseDb _dbContext;
+    private readonly ExerciseDb _dbContext;
 
-    public exerciseService(Judge0Handler judge0Handler, exerciseDb dbContext)
+    public exerciseService(Judge0Handler judge0Handler, ExerciseDb dbContext)
     {
         _judge0Handler = judge0Handler;
         _dbContext = dbContext;

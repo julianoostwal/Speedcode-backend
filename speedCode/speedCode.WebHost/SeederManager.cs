@@ -78,7 +78,7 @@ namespace speedCode.Seeder
                 .Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
-        public static void SeedDatabase(RoomsDb roomsDb, exerciseDb exerciseDb, ProfileDb profileDb)
+        public static void SeedDatabase(RoomsDb roomsDb, ExerciseDb exerciseDb, ProfileDb profileDb)
         {
             Console.WriteLine("Seeding database...");
             // Seed Exercises

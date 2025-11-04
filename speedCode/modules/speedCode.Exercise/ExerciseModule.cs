@@ -10,7 +10,7 @@ public class exerciseModule : IModule
 {
     public void RegisterModule(IServiceCollection services, IConfiguration configuration)
     {
-        services.AddDbContext<exerciseDb>(options =>
+        services.AddDbContext<ExerciseDb>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
         
         services.AddScoped<exerciseService>();

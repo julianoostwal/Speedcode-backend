@@ -17,27 +17,21 @@ namespace speedCode.WsRoom.handlers;
 public class RoomWebSocketHandler
 {
     private readonly RoomValidator _validator;
-    private readonly RoomUserService _roomUserService;
-    private readonly RoomService _roomService;
     private readonly ProfileDb _profileDb;
-    private readonly exerciseDb _dbContext;
     private readonly exerciseService _exerciseService;
     private readonly WSService _wsService;
     private readonly WebSocketActionFactory _webSocketActionFactory;
 
-    public RoomWebSocketHandler(RoomValidator validator, RoomUserService roomUserService, exerciseService exerciseService,
+    public RoomWebSocketHandler(RoomValidator validator, exerciseService exerciseService,
         ProfileDb profileDb,
-        RoomService roomService,
         WebSocketActionFactory webSocketActionFactory,
         WSService wsService)
     {
         _webSocketActionFactory = webSocketActionFactory;
         _wsService = wsService;
         _profileDb = profileDb;
-        _roomService = roomService;
         _exerciseService = exerciseService;
         _validator = validator;
-        _roomUserService = roomUserService;
     }
 
     public async Task HandleAsync(WebSocket socket)
@@ -120,7 +114,7 @@ public class RoomWebSocketHandler
                 });
             }
 
-            await _dbContext.SaveChangesAsync();
+            await _profileDb.SaveChangesAsync();
         }
 
         return result;
