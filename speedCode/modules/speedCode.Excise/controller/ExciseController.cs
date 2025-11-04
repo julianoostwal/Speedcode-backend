@@ -30,7 +30,8 @@ public class ExciseController : ControllerBase
     {
         var exercises = _exciseService.GetAllExercises();
         return Ok(exercises);
-    }*/
+    }
+    */
 
     [HttpPost("judgecode")]
     public async Task<TestCodeAsyncResults> Post([FromBody] TestCodeRequest request)

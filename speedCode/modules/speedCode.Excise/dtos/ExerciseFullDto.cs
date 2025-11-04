@@ -30,11 +30,11 @@ public class ExerciseFullDto
         public string name { get; set; }
         public string type { get; set; }
         public string acRegex { get; set; }
-        public ProfileDto profilesId { get; set; }
+        public ProfilesDto profilesId { get; set; }
         public List<TestExpectIODto> TestExpectIOs { get; set; }
     }
 
-    public class ProfileDto
+    public class ProfilesDto
     {
         public Guid id { get; set; }
         public string? avatarUrl { get; set; }

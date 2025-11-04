@@ -66,8 +66,6 @@ public class ExciseService
 
         var exercises = _dbContext.Exercise
             .Include(e => e.ExerciseTests)
-                .ThenInclude(et => et.test)
-                    .ThenInclude(t => t.TestExpectIOs)
             .ToList();
 
         var exerciseDtos = exercises.Select(e => new ExerciseFullDto
