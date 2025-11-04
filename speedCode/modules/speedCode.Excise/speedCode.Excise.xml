@@ -4,5 +4,10 @@
         <name>speedCode.Excise</name>
     </assembly>
     <members>
+        <member name="M:speedCode.Excise.controller.ExciseController.GetAllExercises">
+            <summary>
+            Get all exercises
+            </summary>
+        </member>
     </members>
 </doc>

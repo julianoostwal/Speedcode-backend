@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using speedCode.Core.judge0.dto;
 using speedCode.Excise;
+using speedCode.Excise.dtos;
 using speedCode.Excise.model;
 using speedCode.Judge0;
 
@@ -45,9 +46,11 @@ public class ExciseService
                 judgeCodeFactoryResults.ExpectedResult = testExpectIO.output;
                 judgeCodeFactoryResults.SubmissionResult = _judge0Handler
                     .HandleSubmitCodeAsync(new SubmissionRequest()
-                        {
-                            SourceCode = request.Code, LanguageId = request.LanguageId, Stdin = testExpectIO.input
-                        },
+                    {
+                        SourceCode = request.Code,
+                        LanguageId = request.LanguageId,
+                        Stdin = testExpectIO.input
+                    },
                         testCode.ACRegex).Result;
                 JudgeCodeTestResults output = judgeCodeFactoryResults.TestOutput();
                 results.TestProcess.Add(output);
@@ -55,4 +58,31 @@ public class ExciseService
         }
         return await Task.FromResult(results);
     }
+    
+    //! moet nog verder uitgewerkt worden
+    /*
+    public async Task<List<ExerciseFullDto>> GetAllExercises()
+    {
+
+        var exercises = _dbContext.Exercise
+            .Include(e => e.ExerciseTests)
+                .ThenInclude(et => et.test)
+                    .ThenInclude(t => t.TestExpectIOs)
+            .ToList();
+
+        var exerciseDtos = exercises.Select(e => new ExerciseFullDto
+        {
+            id = e.id,
+            title = e.title,
+            description = e.description,
+            isRoomExcise = e.isRoomExcise,
+            isPrivate = e.isPrivate,
+            points = e.points,
+            level = e.Level.ToString(),
+            createdAt = e.createdAt
+        }).ToList();
+
+        return exerciseDtos;
+    }
+    */
 }
