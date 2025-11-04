@@ -58,5 +58,6 @@ public static class WSRoomsService
         room.RemovePlayer(clientId);
         if (room.Players.IsEmpty)
             Rooms.TryRemove(room.RoomId, out _);
+        room.BroadcastRoomUpdateAsync();
     }
 }
