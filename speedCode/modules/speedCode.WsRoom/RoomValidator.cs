@@ -51,11 +51,12 @@ public class RoomValidator
     public async Task<bool> IsRoomStarted(Guid roomId)
     {
         WSRoomsService.Rooms.TryGetValue(roomId, out var room);
-        if (room != null && !room.IsStarted)
+
+        if (room == null)
         {
-            return false;
+            throw new KeyNotFoundException($"Room {roomId} not found");
         }
 
-        return true;
+        return room.IsStarted;
     }
 }

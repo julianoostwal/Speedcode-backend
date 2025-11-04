@@ -4,5 +4,17 @@
         <name>speedCode.Excise</name>
     </assembly>
     <members>
+        <member name="T:speedCode.Excise.Migrations.InitialExciseDbMigration">
+            <inheritdoc />
+        </member>
+        <member name="M:speedCode.Excise.Migrations.InitialExciseDbMigration.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:speedCode.Excise.Migrations.InitialExciseDbMigration.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:speedCode.Excise.Migrations.InitialExciseDbMigration.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>
