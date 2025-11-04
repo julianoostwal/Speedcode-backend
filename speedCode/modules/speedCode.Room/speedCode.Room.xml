@@ -29,5 +29,17 @@
             delete room by id
             </summary>
         </member>
+        <member name="T:speedCode.Room.Migrations.InitialRoomsDbMigration">
+            <inheritdoc />
+        </member>
+        <member name="M:speedCode.Room.Migrations.InitialRoomsDbMigration.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:speedCode.Room.Migrations.InitialRoomsDbMigration.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:speedCode.Room.Migrations.InitialRoomsDbMigration.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>

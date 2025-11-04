@@ -16,8 +16,11 @@ public class ProfilesController : ControllerBase
     private readonly ProfileService _profileService;
     private readonly IConfiguration _configuration;
 
-    public ProfilesController(ProfileDb context, ProfileService profileService, IConfiguration configuration)
+
+    public ProfilesController(ProfileDb context, ProfileService profileService, WebHelper webHelper,
+        IConfiguration configuration)
     {
+        _webHelper = webHelper;
         _context = context;
         _profileService = profileService;
         _configuration = configuration;
