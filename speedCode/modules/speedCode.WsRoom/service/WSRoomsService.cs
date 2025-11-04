@@ -5,7 +5,7 @@ namespace speedCode.rooms;
 
 public static class WSRoomsService
 {
-    public static ConcurrentDictionary<Guid, Room> Rooms { get; private set; } = new();
+    public static ConcurrentDictionary<Guid, Room> Rooms { get; set; } = new();
 
     public static Room CreateRoom(Guid roomId, Guid profileId)
     {
