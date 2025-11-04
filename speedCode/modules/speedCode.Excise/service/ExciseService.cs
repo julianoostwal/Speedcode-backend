@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using speedCode.Core.judge0.dto;
 using speedCode.Excise;
-using speedCode.Excise.dtos;
 using speedCode.Excise.model;
 using speedCode.Judge0;
 
@@ -58,27 +57,4 @@ public class ExciseService
         }
         return await Task.FromResult(results);
     }
-    
-    //! moet nog verder uitgewerkt worden
-    /*
-    public async Task<List<ExerciseFullDto>> GetAllExercises()
-    {
-        var exercises = await _dbContext.Exercise
-            .ToListAsync();
-    
-        var exerciseDtos = exercises.Select(e => new ExerciseFullDto
-        {
-            id = e.id,
-            title = e.title,
-            description = e.description,
-            isRoomExcise = e.isRoomExcise,
-            isPrivate = e.isPrivate,
-            points = e.points,
-            level = e.Level.ToString(),
-            createdAt = e.createdAt
-        }).ToList();
-    
-        return exerciseDtos;
-    }
-    */
 }
