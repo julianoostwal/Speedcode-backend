@@ -14,8 +14,9 @@ public class ProfilesController : ControllerBase
     private readonly WebHelper _webHelper;
     private readonly ProfileService _profileService;
 
-    public ProfilesController(ProfileDb context, ProfileService profileService)
+    public ProfilesController(ProfileDb context, ProfileService profileService, WebHelper webHelper)
     {
+        _webHelper = webHelper;
         _context = context;
         _profileService = profileService;
     }
