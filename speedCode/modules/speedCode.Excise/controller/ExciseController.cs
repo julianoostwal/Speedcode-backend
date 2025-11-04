@@ -28,7 +28,7 @@ public class ExciseController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<ExerciseFullDto>>> GetAllExercises()
     {
-        var exercises = _exciseService.GetAllExercises();
+        var exercises = await _exciseService.GetAllExercises();
         return Ok(exercises);
     }
     */

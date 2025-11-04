@@ -63,11 +63,9 @@ public class ExciseService
     /*
     public async Task<List<ExerciseFullDto>> GetAllExercises()
     {
-
-        var exercises = _dbContext.Exercise
-            .Include(e => e.ExerciseTests)
-            .ToList();
-
+        var exercises = await _dbContext.Exercise
+            .ToListAsync();
+    
         var exerciseDtos = exercises.Select(e => new ExerciseFullDto
         {
             id = e.id,
@@ -79,7 +77,7 @@ public class ExciseService
             level = e.Level.ToString(),
             createdAt = e.createdAt
         }).ToList();
-
+    
         return exerciseDtos;
     }
     */
