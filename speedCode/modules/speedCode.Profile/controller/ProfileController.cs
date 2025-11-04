@@ -4,6 +4,7 @@ using speedCode.Infrastructure;
 using speedCode.Model;
 using speedCode.Profile.service;
 using Microsoft.Extensions.Configuration;
+using speedCode.exercise.model;
 
 namespace speedCode.Profile.controller;
 
@@ -180,7 +181,7 @@ public class ProfilesController : ControllerBase
     }
 
     [HttpGet("GetAllExercises")]
-    public IActionResult GetAllCreatedAndPublicExercises()
+    public ActionResult<List<Exercise>> GetAllCreatedAndPublicExercises()
     {
         try
         {
