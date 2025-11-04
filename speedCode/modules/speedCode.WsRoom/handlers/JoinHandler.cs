@@ -53,20 +53,15 @@ public class JoinHandler : IWebSocketActionHandler
                 if (result.MessageType == WebSocketMessageType.Close)
                 {
                     PlayerManager.RemovePlayer(room, player.ClientId);
-                    await player.Socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closed",
+                    await player.Socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closed by the player",
                         CancellationToken.None);
                     break;
                 }
-
-                if (result.MessageType == WebSocketMessageType.Text)
-                {
-                    var msg = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                    // TODO==: messages
-                }
             }
         }
-        catch
+        catch (Exception e)
         {
+            Console.WriteLine(e);
             PlayerManager.RemovePlayer(room, player.ClientId);
         }
     }
