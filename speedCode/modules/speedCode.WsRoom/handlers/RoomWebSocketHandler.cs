@@ -53,7 +53,8 @@ public class RoomWebSocketHandler
             return;
         }
 
-        if (await _validator.IsRoomStarted(roomId))
+        string handlerType = _wsService.ValidateAndReturnJsonProperty("type", json);
+        if (await _validator.IsRoomStarted(roomId) && handlerType != "create")
         {
             await socket.CloseAsync(WebSocketCloseStatus.PolicyViolation, "room is started no body can join",
                 CancellationToken.None);
