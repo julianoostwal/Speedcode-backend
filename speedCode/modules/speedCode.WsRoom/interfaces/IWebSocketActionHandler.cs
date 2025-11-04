@@ -6,5 +6,5 @@ namespace speedCode.WsRoom.interfaces;
 public interface IWebSocketActionHandler
 {
     string Action { get; }
-    Task HandleAsync(WebSocket socket, JsonElement payload);
+    Task HandleAsync(WebSocket socket, JsonElement payload, Guid roomId);
 }

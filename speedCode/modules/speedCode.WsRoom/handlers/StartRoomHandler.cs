@@ -17,11 +17,9 @@ public class StartRoomHandler : IWebSocketActionHandler
         _wsService = wsService;
     }
 
-    public async Task HandleAsync(WebSocket socket, JsonElement payload)
+    public async Task HandleAsync(WebSocket socket, JsonElement payload, Guid roomId)
     {
-        var json = await _wsService.ReceiveJsonAsync(socket);
-        var clientId = await _wsService.ValidateAndExtractClientIdAsync(socket, json);
-        Guid roomId = Guid.Parse(_wsService.ValidateAndReturnJsonProperty("roomId", payload));
+        var clientId = await _wsService.ValidateAndExtractClientIdAsync(socket, payload);
         WSRoomsService.StartRoom(roomId, clientId);
     }
 }

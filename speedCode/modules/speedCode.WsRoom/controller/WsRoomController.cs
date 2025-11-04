@@ -26,13 +26,13 @@ public class WsRoomController : ControllerBase
     /// <summary>
     /// Connect to a room via WebSocket.
     /// <para>there is 3 types to using. onli the host can start and create the WS rooms</para>
-    /// <code>{ "type": "start", "token": "YOUR_JWT" }</code>
-    /// /// <code>{ "type": "create", "token": "YOUR_JWT" }</code>
-    /// /// <code>{ "type": "join", "token": "YOUR_JWT" }</code>
+    /// <code>{ "type": "start", "token": "YOUR_JWT","roomId":"" }</code>
+    /// /// <code>{ "type": "create", "token": "YOUR_JWT","roomId":"" }</code>
+    /// /// <code>{ "type": "join", "token": "YOUR_JWT","roomId":"" }</code>
     /// </summary>
     /// <param name="roomId">The ID of an existing room in the database.</param>
-    [HttpGet("{roomId}")]
-    public async Task Get(Guid roomId)
+    [HttpGet]
+    public async Task Get()
     {
         if (!HttpContext.WebSockets.IsWebSocketRequest)
         {
@@ -42,7 +42,7 @@ public class WsRoomController : ControllerBase
         }
 
         var socket = await HttpContext.WebSockets.AcceptWebSocketAsync();
-        await _wsHandler.HandleAsync(roomId, socket);
+        await _wsHandler.HandleAsync(socket);
     }
 
 

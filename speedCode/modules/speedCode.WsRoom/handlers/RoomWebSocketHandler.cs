@@ -40,10 +40,11 @@ public class RoomWebSocketHandler
         _roomUserService = roomUserService;
     }
 
-    public async Task HandleAsync(Guid roomId, WebSocket socket)
+    public async Task HandleAsync(WebSocket socket)
     {
         var json = await _wsService.ReceiveJsonAsync(socket);
         Guid clientId = await _wsService.ValidateAndExtractClientIdAsync(socket, json);
+        Guid roomId = Guid.Parse(_wsService.ValidateAndReturnJsonProperty("roomId", json));
 
         if (!await _validator.RoomExistsAsync(roomId) || !await _validator.ClientExistsAsync(clientId) ||
             !await _validator.ClientAllowToJoin(roomId, clientId))
@@ -54,7 +55,8 @@ public class RoomWebSocketHandler
         }
 
         string handlerType = _wsService.ValidateAndReturnJsonProperty("type", json);
-        if (await _validator.IsRoomStarted(roomId) && handlerType != "create")
+
+        if (handlerType != "create" && await _validator.IsRoomStarted(roomId))
         {
             await socket.CloseAsync(WebSocketCloseStatus.PolicyViolation, "room is started no body can join",
                 CancellationToken.None);
@@ -72,7 +74,7 @@ public class RoomWebSocketHandler
         }
 
         // hier bepaald of er een join of create of wat anders is.
-        await handler.HandleAsync(socket, json);
+        await handler.HandleAsync(socket, json, roomId);
     }
 
     public async Task<TestCodeAsyncResults> TestCodeAsyncForWSRoom(TestCodeRequest request, Guid roomId,
