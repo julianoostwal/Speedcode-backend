@@ -4,17 +4,5 @@
         <name>speedCode.exercise</name>
     </assembly>
     <members>
-        <member name="T:speedCode.exercise.Migrations.InitialexerciseDbMigration">
-            <inheritdoc />
-        </member>
-        <member name="M:speedCode.exercise.Migrations.InitialexerciseDbMigration.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:speedCode.exercise.Migrations.InitialexerciseDbMigration.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:speedCode.exercise.Migrations.InitialexerciseDbMigration.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
     </members>
 </doc>
