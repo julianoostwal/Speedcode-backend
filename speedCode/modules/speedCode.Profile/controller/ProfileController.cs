@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using speedCode.Infrastructure;
 using speedCode.Model;
 using speedCode.Profile.service;
+using Microsoft.Extensions.Configuration;
 
 namespace speedCode.Profile.controller;
 
@@ -13,12 +14,16 @@ public class ProfilesController : ControllerBase
     private readonly ProfileDb _context;
     private readonly WebHelper _webHelper;
     private readonly ProfileService _profileService;
+    private readonly IConfiguration _configuration;
 
-    public ProfilesController(ProfileDb context, ProfileService profileService, WebHelper webHelper)
+
+    public ProfilesController(ProfileDb context, ProfileService profileService, WebHelper webHelper,
+        IConfiguration configuration)
     {
         _webHelper = webHelper;
         _context = context;
         _profileService = profileService;
+        _configuration = configuration;
     }
 
     // GET all
@@ -66,9 +71,8 @@ public class ProfilesController : ControllerBase
             return BadRequest(ModelState);
 
         using var httpClient = new HttpClient();
-        var supabaseUrl = "https://supabase.speedcode.tech";
-        var serviceRoleKey =
-            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc1NzU5MzgwMCwiZXhwIjo0OTEzMjY3NDAwLCJyb2xlIjoic2VydmljZV9yb2xlIn0.U5ovw3nz1VKJJCbKfzARWXuHTUr73U1LNtyBNyhT6pg";
+        var supabaseUrl = _configuration["Supabase:Url"];
+        var serviceRoleKey = _configuration["Supabase:ServiceRoleKey"];
         httpClient.BaseAddress = new Uri(supabaseUrl);
         httpClient.DefaultRequestHeaders.Authorization =
             new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", serviceRoleKey);
@@ -138,9 +142,8 @@ public class ProfilesController : ControllerBase
     {
         var profile = _context.Profiles.Find(id);
 
-        var supabaseUrl = "https://supabase.speedcode.tech";
-        var serviceRoleKey =
-            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc1NzU5MzgwMCwiZXhwIjo0OTEzMjY3NDAwLCJyb2xlIjoic2VydmljZV9yb2xlIn0.U5ovw3nz1VKJJCbKfzARWXuHTUr73U1LNtyBNyhT6pg";
+        var supabaseUrl = _configuration["Supabase:Url"];
+        var serviceRoleKey = _configuration["Supabase:ServiceRoleKey"];
         using (var httpClient = new HttpClient())
         {
             httpClient.BaseAddress = new Uri(supabaseUrl);

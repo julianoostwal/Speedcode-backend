@@ -182,7 +182,12 @@ public class RoomService
         return roomDtos;
     }
 
-    public async Task<RoomFullDto?> GetRoomById(Guid id)
+    public async Task<Rooms?> GetRoomById(Guid id)
+    {
+        return await _RoomDb.rooms.FindAsync(id);
+    }
+
+    public async Task<RoomFullDto> GetRoomAndKoppelById(Guid id)
     {
         var room = await _RoomDb.rooms
             .Include(r => r.RoomExercises).ThenInclude(re => re.exercise)
