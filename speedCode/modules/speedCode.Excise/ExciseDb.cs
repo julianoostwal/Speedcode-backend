@@ -1,11 +1,11 @@
-using speedCode.Excise.model;
+using speedCode.exercise.model;
 
 
-namespace speedCode.Excise;
+namespace speedCode.exercise;
 
 using Microsoft.EntityFrameworkCore;
 
-public class ExciseDb : DbContext
+public class exerciseDb : DbContext
 {
     public DbSet<TestCode> TestCode { get; set; }
     public DbSet<ExerciseTest> ExerciseTest { get; set; }
@@ -14,7 +14,7 @@ public class ExciseDb : DbContext
     public DbSet<TestExpectIO> TestExpectIos { get; set; }
     
 
-    public ExciseDb(DbContextOptions<ExciseDb> options)
+    public exerciseDb(DbContextOptions<exerciseDb> options)
         : base(options)
     {
     }

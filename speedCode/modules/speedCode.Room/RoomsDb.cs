@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using speedCode.Excise.model;
+using speedCode.exercise.model;
 using speedCode.Model;
 using speedCode.Profile.model;
 using speedCode.Room.Model;

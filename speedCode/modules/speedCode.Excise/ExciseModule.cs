@@ -4,15 +4,15 @@ using Microsoft.Extensions.DependencyInjection;
 using speedCode.Modularity;
 using speedCode.services;
 
-namespace speedCode.Excise;
+namespace speedCode.exercise;
 
-public class ExciseModule : IModule
+public class exerciseModule : IModule
 {
     public void RegisterModule(IServiceCollection services, IConfiguration configuration)
     {
-        services.AddDbContext<ExciseDb>(options =>
+        services.AddDbContext<exerciseDb>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
         
-        services.AddScoped<ExciseService>();
+        services.AddScoped<exerciseService>();
     }
 }

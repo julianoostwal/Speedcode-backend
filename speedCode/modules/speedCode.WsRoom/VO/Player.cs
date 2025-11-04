@@ -8,5 +8,5 @@ public class Player
     public WebSocket Socket { get; set; } = default!;
     public DateTime ConnectedAt { get; set; } = DateTime.UtcNow;
 
-    public List<Guid> FinishedExcise { get; set; } = new List<Guid>();
+    public List<Guid> Finishedexercise { get; set; } = new List<Guid>();
 }

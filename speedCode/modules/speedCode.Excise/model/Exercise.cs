@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using speedCode.Core.rooms.enums;
 
-namespace speedCode.Excise.model
+namespace speedCode.exercise.model
 {
     [Table("exercises")]
     public class Exercise
@@ -18,7 +18,7 @@ namespace speedCode.Excise.model
         public DateTime createdAt { get; set; }
 
         [Required]
-        public bool isRoomExcise { get; set; }
+        public bool isRoomexercise { get; set; }
         
         [Required]
         public bool isPrivate { get; set; }

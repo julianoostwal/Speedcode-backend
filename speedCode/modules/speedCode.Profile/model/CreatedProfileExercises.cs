@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using speedCode.Excise.model;
+using speedCode.exercise.model;
 using speedCode.Model;
 
 namespace speedCode.Profile.model;

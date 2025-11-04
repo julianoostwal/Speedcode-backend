@@ -9,6 +9,6 @@ namespace speedCode.dto.room
     public class PlayerStateDto
     {
         public Guid ClientId { get; set; }
-        public required List<Guid> FinishedExcise { get; set; }
+        public required List<Guid> Finishedexercise { get; set; }
     }
 }

@@ -10,7 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "modules", "modules", "{8C71
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "speedCode.Core", "speedCode\modules\speedCode.Core\speedCode.Core.csproj", "{7F028865-E19E-0C6A-D97F-7BEA3BB59091}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "speedCode.Excise", "speedCode\modules\speedCode.Excise\speedCode.Excise.csproj", "{FDF28A68-097E-2E6D-2976-E894D329009D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "speedCode.exercise", "speedCode\modules\speedCode.exercise\speedCode.exercise.csproj", "{FDF28A68-097E-2E6D-2976-E894D329009D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "speedCode.Judge0", "speedCode\modules\speedCode.Judge0\speedCode.Judge0.csproj", "{283B9332-D574-08A2-7463-C5E98101FEAF}"
 EndProject

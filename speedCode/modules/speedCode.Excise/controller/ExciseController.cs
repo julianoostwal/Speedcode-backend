@@ -1,27 +1,27 @@
 using Microsoft.AspNetCore.Mvc;
 using speedCode.Core.judge0.dto;
-using speedCode.Excise.model;
+using speedCode.exercise.model;
 using speedCode.services;
 using speedCode.Infrastructure;
 
-namespace speedCode.Excise.controller;
+namespace speedCode.exercise.controller;
 
 [ApiController]
 [Route("[controller]")]
-public class ExciseController : ControllerBase
+public class exerciseController : ControllerBase
 {
-    private readonly ExciseService _exciseService;
+    private readonly exerciseService _exerciseService;
     private readonly WebHelper _webHelper;
 
-    public ExciseController(ExciseService exciseService, WebHelper webHelper)
+    public exerciseController(exerciseService exerciseService, WebHelper webHelper)
     {
-        _exciseService = exciseService;
+        _exerciseService = exerciseService;
         _webHelper = webHelper;
     }
 
     [HttpPost("judgecode")]
     public async Task<TestCodeAsyncResults> Post([FromBody] TestCodeRequest request)
     {
-        return await _exciseService.TestCodeAsync(request);
+        return await _exerciseService.TestCodeAsync(request);
     }
 }

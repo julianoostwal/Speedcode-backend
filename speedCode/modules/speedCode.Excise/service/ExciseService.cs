@@ -1,17 +1,17 @@
 using Microsoft.EntityFrameworkCore;
 using speedCode.Core.judge0.dto;
-using speedCode.Excise;
-using speedCode.Excise.model;
+using speedCode.exercise;
+using speedCode.exercise.model;
 using speedCode.Judge0;
 
 namespace speedCode.services;
 
-public class ExciseService
+public class exerciseService
 {
     private readonly Judge0Handler _judge0Handler;
-    private readonly ExciseDb _dbContext;
+    private readonly exerciseDb _dbContext;
 
-    public ExciseService(Judge0Handler judge0Handler, ExciseDb dbContext)
+    public exerciseService(Judge0Handler judge0Handler, exerciseDb dbContext)
     {
         _judge0Handler = judge0Handler;
         _dbContext = dbContext;

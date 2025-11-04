@@ -17,7 +17,7 @@ public class WsRoomController : ControllerBase
     private readonly RoomWebSocketHandler _wsHandler;
     private readonly IJwtService _jwtService;
 
-    public WsRoomController(ExciseService exciseService, RoomWebSocketHandler wsHandler, IJwtService jwtService)
+    public WsRoomController(exerciseService exerciseService, RoomWebSocketHandler wsHandler, IJwtService jwtService)
     {
         _jwtService = jwtService;
         _wsHandler = wsHandler;

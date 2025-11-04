@@ -1,6 +1,6 @@
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
-using speedCode.Excise;
+using speedCode.exercise;
 using speedCode.Judge0;
 using speedCode.Modularity;
 using speedCode.Profile;
@@ -22,14 +22,14 @@ builder.Services.AddSwaggerGen(c =>
     c.IncludeXmlComments(xmlPath);
     c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "speedCode.WsRoom.xml"));
     c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "speedCode.Profile.xml"));
-    c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "speedCode.Excise.xml"));
+    c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "speedCode.exercise.xml"));
     c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "speedCode.Room.xml"));
 });
 
 
 builder.Services.AddControllers()
     .AddApplicationPart(typeof(speedCode.Profile.ProfileModule).Assembly)
-    .AddApplicationPart(typeof(speedCode.Excise.ExciseModule).Assembly)
+    .AddApplicationPart(typeof(speedCode.exercise.exerciseModule).Assembly)
     .AddApplicationPart(typeof(speedCode.Judge0.Judge0Module).Assembly)
     .AddApplicationPart(typeof(speedCode.Room.RoomsModule).Assembly)
     .AddApplicationPart(typeof(speedCode.WsRoom.WsRoomModule).Assembly)
@@ -53,13 +53,13 @@ if (app.Environment.IsDevelopment())
     {
         var serviceProvider = scope.ServiceProvider;
         var roomsDb = serviceProvider.GetRequiredService<RoomsDb>();
-        var exciseDb = serviceProvider.GetRequiredService<ExciseDb>();
+        var exerciseDb = serviceProvider.GetRequiredService<exerciseDb>();
         var profileDb = serviceProvider.GetRequiredService<ProfileDb>();
         //seed database
         SeederManager
             .CreateSupabaseAuthUsersAsync(builder.Configuration["Supabase:Url"],
                 builder.Configuration["Supabase:ServiceRoleKey"]).GetAwaiter().GetResult();
-        SeederManager.SeedDatabase(roomsDb, exciseDb, profileDb);
+        SeederManager.SeedDatabase(roomsDb, exerciseDb, profileDb);
     }
 }
 

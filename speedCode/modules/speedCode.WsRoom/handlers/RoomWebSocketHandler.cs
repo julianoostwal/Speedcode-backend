@@ -2,8 +2,8 @@ using System.Net.WebSockets;
 using System.Text;
 using speedCode.Core.interfaces;
 using speedCode.Core.judge0.dto;
-using speedCode.Excise;
-using speedCode.Excise.model;
+using speedCode.exercise;
+using speedCode.exercise.model;
 using speedCode.Profile;
 using speedCode.Room.service;
 using speedCode.rooms;
@@ -20,12 +20,12 @@ public class RoomWebSocketHandler
     private readonly RoomUserService _roomUserService;
     private readonly RoomService _roomService;
     private readonly ProfileDb _profileDb;
-    private readonly ExciseDb _dbContext;
-    private readonly ExciseService _exciseService;
+    private readonly exerciseDb _dbContext;
+    private readonly exerciseService _exerciseService;
     private readonly WSService _wsService;
     private readonly WebSocketActionFactory _webSocketActionFactory;
 
-    public RoomWebSocketHandler(RoomValidator validator, RoomUserService roomUserService, ExciseService exciseService,
+    public RoomWebSocketHandler(RoomValidator validator, RoomUserService roomUserService, exerciseService exerciseService,
         ProfileDb profileDb,
         RoomService roomService,
         WebSocketActionFactory webSocketActionFactory,
@@ -35,7 +35,7 @@ public class RoomWebSocketHandler
         _wsService = wsService;
         _profileDb = profileDb;
         _roomService = roomService;
-        _exciseService = exciseService;
+        _exerciseService = exerciseService;
         _validator = validator;
         _roomUserService = roomUserService;
     }
@@ -80,7 +80,7 @@ public class RoomWebSocketHandler
     public async Task<TestCodeAsyncResults> TestCodeAsyncForWSRoom(TestCodeRequest request, Guid roomId,
         Guid clientId)
     {
-        TestCodeAsyncResults result = await _exciseService.TestCodeAsync(request);
+        TestCodeAsyncResults result = await _exerciseService.TestCodeAsync(request);
 
         if (result.IsPassed)
         {

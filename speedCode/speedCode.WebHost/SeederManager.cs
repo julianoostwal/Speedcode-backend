@@ -4,8 +4,8 @@ using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using speedCode.Core.judge0.dto;
 using speedCode.Core.rooms.enums;
-using speedCode.Excise;
-using speedCode.Excise.model;
+using speedCode.exercise;
+using speedCode.exercise.model;
 using speedCode.Profile;
 using speedCode.Profile.model;
 using speedCode.Room;
@@ -78,54 +78,54 @@ namespace speedCode.Seeder
                 .Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
-        public static void SeedDatabase(RoomsDb roomsDb, ExciseDb exciseDb, ProfileDb profileDb)
+        public static void SeedDatabase(RoomsDb roomsDb, exerciseDb exerciseDb, ProfileDb profileDb)
         {
             Console.WriteLine("Seeding database...");
             // Seed Exercises
 
-            if (!exciseDb.Exercise.Any())
+            if (!exerciseDb.Exercise.Any())
             {
                 var exercises = new List<Exercise>
                 {
                     new Exercise
                     {
                         Level = Level.Easy,
-                        title = "Opdracht1", description = "Test1", isRoomExcise = false, createdAt = DateTime.UtcNow,
+                        title = "Opdracht1", description = "Test1", isRoomexercise = false, createdAt = DateTime.UtcNow,
                         points = 5
                     },
                     new Exercise
                     {
                         Level = Level.Easy,
-                        title = "Opdracht2", description = "Test2", isRoomExcise = false, createdAt = DateTime.UtcNow,
+                        title = "Opdracht2", description = "Test2", isRoomexercise = false, createdAt = DateTime.UtcNow,
                         points = 10
                     },
                     new Exercise
                     {
                         Level = Level.Easy,
-                        title = "Opdracht3", description = "Test3", isRoomExcise = false, createdAt = DateTime.UtcNow,
+                        title = "Opdracht3", description = "Test3", isRoomexercise = false, createdAt = DateTime.UtcNow,
                         points = 15
                     },
                     new Exercise
                     {
                         Level = Level.Easy,
-                        title = "Opdracht4", description = "Test4", isRoomExcise = false, createdAt = DateTime.UtcNow,
+                        title = "Opdracht4", description = "Test4", isRoomexercise = false, createdAt = DateTime.UtcNow,
                         points = 20
                     },
                     new Exercise
                     {
                         Level = Level.Easy,
-                        title = "Opdracht5", description = "Test5", isRoomExcise = false, createdAt = DateTime.UtcNow,
+                        title = "Opdracht5", description = "Test5", isRoomexercise = false, createdAt = DateTime.UtcNow,
                         points = 25
                     },
                     new Exercise
                     {
                         Level = Level.Easy,
-                        title = "Opdracht6", description = "Test6", isRoomExcise = false, createdAt = DateTime.UtcNow,
+                        title = "Opdracht6", description = "Test6", isRoomexercise = false, createdAt = DateTime.UtcNow,
                         points = 30
                     }
                 };
-                exciseDb.Exercise.AddRange(exercises);
-                exciseDb.SaveChanges();
+                exerciseDb.Exercise.AddRange(exercises);
+                exerciseDb.SaveChanges();
                 profileDb.SaveChanges();
             }
 
@@ -159,7 +159,7 @@ namespace speedCode.Seeder
 
 
             // Seed TestCode and testExpectIOs
-            if (!exciseDb.TestCode.Any() && profileDb.Profiles.Any())
+            if (!exerciseDb.TestCode.Any() && profileDb.Profiles.Any())
             {
                 var testCodes = new List<TestCode>();
                 int count = profileDb.Profiles.Count();
@@ -194,71 +194,71 @@ namespace speedCode.Seeder
                     testCodes.Add(testCode);
                 }
 
-                exciseDb.TestCode.AddRange(testCodes);
-                exciseDb.SaveChanges();
+                exerciseDb.TestCode.AddRange(testCodes);
+                exerciseDb.SaveChanges();
                 profileDb.SaveChanges();
             }
 
             // Seed ExerciseTest
 
-            if (!exciseDb.ExerciseTest.Any() && exciseDb.TestCode.Any() && exciseDb.Exercise.Any())
+            if (!exerciseDb.ExerciseTest.Any() && exerciseDb.TestCode.Any() && exerciseDb.Exercise.Any())
             {
                 var exerciseTests = new List<ExerciseTest>();
-                int countExercise = exciseDb.Exercise.Count();
-                int countTestCode = exciseDb.TestCode.Count();
+                int countExercise = exerciseDb.Exercise.Count();
+                int countTestCode = exerciseDb.TestCode.Count();
 
                 for (int i = 0; i < Math.Min(countExercise, countTestCode); i++)
                 {
                     exerciseTests.Add(new ExerciseTest
                     {
-                        testId = exciseDb.TestCode.Skip(i).First().id, exerciseId = exciseDb.Exercise.Skip(i).First().id
+                        testId = exerciseDb.TestCode.Skip(i).First().id, exerciseId = exerciseDb.Exercise.Skip(i).First().id
                     });
                 }
 
-                exciseDb.ExerciseTest.AddRange(exerciseTests);
-                exciseDb.SaveChanges();
+                exerciseDb.ExerciseTest.AddRange(exerciseTests);
+                exerciseDb.SaveChanges();
             }
 
             // Seed ProfileExercise
 
-            if (!profileDb.CompletedProfileExercise.Any() && exciseDb.Exercise.Any() && profileDb.Profiles.Any())
+            if (!profileDb.CompletedProfileExercise.Any() && exerciseDb.Exercise.Any() && profileDb.Profiles.Any())
             {
                 var profileExercises = new List<CompletedProfileExercise>();
-                int countExercise = exciseDb.Exercise.Count();
+                int countExercise = exerciseDb.Exercise.Count();
                 int countProfiles = profileDb.Profiles.Count();
 
                 for (int i = 0; i < Math.Min(countExercise, countProfiles); i++)
                 {
                     profileExercises.Add(new CompletedProfileExercise
                     {
-                        exerciseId = exciseDb.Exercise.Skip(i).First().id,
+                        exerciseId = exerciseDb.Exercise.Skip(i).First().id,
                         profileId = profileDb.Profiles.Skip(i).First().id
                     });
                 }
 
                 profileDb.CompletedProfileExercise.AddRange(profileExercises);
-                exciseDb.SaveChanges();
+                exerciseDb.SaveChanges();
                 profileDb.SaveChanges();
             }
 
             //Seed createdProfileExercises
-            if (!profileDb.CreatedProfileExercise.Any() && exciseDb.Exercise.Any() && profileDb.Profiles.Any())
+            if (!profileDb.CreatedProfileExercise.Any() && exerciseDb.Exercise.Any() && profileDb.Profiles.Any())
             {
                 var profileExercises = new List<CreatedProfileExercises>();
-                int countExercise = exciseDb.Exercise.Count();
+                int countExercise = exerciseDb.Exercise.Count();
                 int countProfiles = profileDb.Profiles.Count();
 
                 for (int i = 0; i < Math.Min(countExercise, countProfiles); i++)
                 {
                     profileExercises.Add(new CreatedProfileExercises()
                     {
-                        exerciseId = exciseDb.Exercise.Skip(i).First().id,
+                        exerciseId = exerciseDb.Exercise.Skip(i).First().id,
                         profileId = profileDb.Profiles.Skip(i).First().id
                     });
                 }
 
                 profileDb.CreatedProfileExercise.AddRange(profileExercises);
-                exciseDb.SaveChanges();
+                exerciseDb.SaveChanges();
                 profileDb.SaveChanges();
             }
 
@@ -294,11 +294,11 @@ namespace speedCode.Seeder
 
             // Seed RoomExercise
 
-            if (!roomsDb.RoomExercise.Any() && roomsDb.rooms.Any() && exciseDb.Exercise.Any())
+            if (!roomsDb.RoomExercise.Any() && roomsDb.rooms.Any() && exerciseDb.Exercise.Any())
             {
                 var roomExercises = new List<RoomExercise>();
                 int countRooms = roomsDb.rooms.Count();
-                int countExercises = exciseDb.Exercise.Count();
+                int countExercises = exerciseDb.Exercise.Count();
 
                 for (int roomIdx = 0; roomIdx < countRooms; roomIdx++)
                 {
@@ -310,13 +310,13 @@ namespace speedCode.Seeder
                         roomExercises.Add(new RoomExercise
                         {
                             roomId = roomsDb.rooms.Skip(roomIdx).First().id,
-                            exerciseId = exciseDb.Exercise.Skip(globalExerciseIdx).First().id
+                            exerciseId = exerciseDb.Exercise.Skip(globalExerciseIdx).First().id
                         });
                     }
                 }
 
                 roomsDb.RoomExercise.AddRange(roomExercises);
-                exciseDb.SaveChanges();
+                exerciseDb.SaveChanges();
                 roomsDb.SaveChanges();
             }
 
