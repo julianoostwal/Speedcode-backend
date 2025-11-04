@@ -21,11 +21,9 @@ public class CreateHandler : IWebSocketActionHandler
         _roomService = roomService;
     }
 
-    public async Task HandleAsync(WebSocket socket, JsonElement payload)
+    public async Task HandleAsync(WebSocket socket, JsonElement payload, Guid roomId)
     {
-        var json = await _wsService.ReceiveJsonAsync(socket);
-        var clientId = await _wsService.ValidateAndExtractClientIdAsync(socket, json);
-        Guid roomId = Guid.Parse(_wsService.ValidateAndReturnJsonProperty("roomId", payload));
+        var clientId = await _wsService.ValidateAndExtractClientIdAsync(socket, payload);
         Rooms room = await _roomService.GetRoomById(roomId);
 
         if (clientId == room.CreatedById)
@@ -34,6 +32,8 @@ public class CreateHandler : IWebSocketActionHandler
         }
         else
         {
+            socket.CloseAsync(WebSocketCloseStatus.InvalidMessageType, "You are not allowed to create a room",
+                CancellationToken.None);
             throw new UnauthorizedAccessException("You are not allowed to create a room");
         }
     }
