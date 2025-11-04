@@ -14,6 +14,15 @@
             </summary>
             <param name="roomId">The ID of an existing room in the database.</param>
         </member>
+        <member name="M:speedCode.WsRoom.controller.WsRoomController.GetOnlineRooms">
+            <summary>
+            Get all rooms where is online
+            </summary>
+            <returns>Returns a list of rooms where the user is connected</returns>
+            <response code="200">Returns a list of rooms where the user is connected</response>
+            <response code="401">Missing or invalid Authorization header</response>
+            <response code="403">Invalid or expired token</response>
+        </member>
         <member name="M:speedCode.WsRoom.controller.WsRoomController.TestCodeAsync(System.Guid,speedCode.Core.judge0.dto.TestCodeRequest)">
             <summary>
             Test a player's code submission within a room.
