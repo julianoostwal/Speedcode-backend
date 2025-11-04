@@ -28,7 +28,15 @@ public class CreateHandler : IWebSocketActionHandler
 
         if (clientId == room.CreatedById)
         {
-            WSRoomsService.CreateRoom(roomId, clientId);
+            try
+            {
+                WSRoomsService.CreateRoom(roomId, clientId);
+            }
+            catch (Exception e)
+            {
+                socket.CloseAsync(WebSocketCloseStatus.InternalServerError, e.Message, CancellationToken.None);
+                throw;
+            }
         }
         else
         {
