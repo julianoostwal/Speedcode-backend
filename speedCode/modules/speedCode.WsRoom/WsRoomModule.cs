@@ -1,8 +1,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using speedCode.exercise;
+using speedCode.Exercise;
 using speedCode.Modularity;
-using speedCode.rooms.service;
+using speedCode.Room.service;
 using speedCode.WsRoom.handlers;
 
 namespace speedCode.WsRoom;

@@ -1,6 +1,6 @@
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
-using speedCode.exercise;
+using speedCode.Exercise;
 using speedCode.Judge0;
 using speedCode.Modularity;
 using speedCode.Profile;

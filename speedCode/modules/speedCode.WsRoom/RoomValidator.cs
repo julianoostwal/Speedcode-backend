@@ -3,7 +3,7 @@ using speedCode.Profile;
 using speedCode.Room;
 using speedCode.rooms;
 
-namespace speedCode.exercise;
+namespace speedCode.Exercise;
 
 public class RoomValidator
 {

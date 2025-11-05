@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using speedCode.Model;
 
-namespace speedCode.exercise.model
+namespace speedCode.Exercise.model
 {
     [Table("completed_profile_exercises")]
     public class CompletedProfileExercise

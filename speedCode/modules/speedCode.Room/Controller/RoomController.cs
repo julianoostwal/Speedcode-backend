@@ -3,7 +3,7 @@ using speedCode.Core.attribute;
 using speedCode.Core.interfaces;
 using speedCode.Core.rooms.dto;
 using speedCode.Core.utils;
-using speedCode.exercise.model;
+using speedCode.Exercise.model;
 using speedCode.Room.dtos;
 using speedCode.Room.Model;
 using speedCode.Room.service;

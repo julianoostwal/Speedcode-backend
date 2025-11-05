@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using speedCode.Core.rooms.dto;
 using speedCode.Core.rooms.Mapper;
-using speedCode.exercise;
-using speedCode.exercise.model;
+using speedCode.Exercise;
+using speedCode.Exercise.model;
 using speedCode.Profile;
 using speedCode.Profile.model;
 using speedCode.Room.dtos;
@@ -171,7 +171,7 @@ public class RoomService
                     title = re.exercise.title,
                     description = re.exercise.description,
                     createdAt = re.exercise.createdAt,
-                    isRoomexercise = re.exercise.isRoomexercise,
+                    isRoomExercise = re.exercise.isRoomExercise,
                     isPrivate = re.exercise.isPrivate,
                     points = re.exercise.points,
                     Level = re.exercise.Level.ToString()
@@ -252,7 +252,7 @@ public class RoomService
                     title = re.exercise.title,
                     description = re.exercise.description,
                     createdAt = re.exercise.createdAt,
-                    isRoomexercise = re.exercise.isRoomexercise,
+                    isRoomExercise = re.exercise.isRoomExercise,
                     isPrivate = re.exercise.isPrivate,
                     points = re.exercise.points,
                     Level = re.exercise.Level.ToString()

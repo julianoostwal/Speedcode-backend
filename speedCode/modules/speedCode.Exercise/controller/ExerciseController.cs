@@ -1,19 +1,19 @@
 using Microsoft.AspNetCore.Mvc;
 using speedCode.Core.judge0.dto;
-using speedCode.exercise.model;
+using speedCode.Exercise.model;
 using speedCode.services;
 using speedCode.Infrastructure;
 
-namespace speedCode.exercise.controller;
+namespace speedCode.Exercise.controller;
 
 [ApiController]
 [Route("[controller]")]
-public class exerciseController : ControllerBase
+public class ExerciseController : ControllerBase
 {
-    private readonly exerciseService _exerciseService;
+    private readonly ExerciseService _exerciseService;
     private readonly WebHelper _webHelper;
 
-    public exerciseController(exerciseService exerciseService, WebHelper webHelper)
+    public ExerciseController(ExerciseService exerciseService, WebHelper webHelper)
     {
         _exerciseService = exerciseService;
         _webHelper = webHelper;

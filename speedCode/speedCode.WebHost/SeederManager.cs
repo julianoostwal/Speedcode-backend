@@ -4,8 +4,8 @@ using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using speedCode.Core.judge0.dto;
 using speedCode.Core.rooms.enums;
-using speedCode.exercise;
-using speedCode.exercise.model;
+using speedCode.Exercise;
+using speedCode.Exercise.model;
 using speedCode.Profile;
 using speedCode.Profile.model;
 using speedCode.Room;
@@ -90,37 +90,37 @@ namespace speedCode.Seeder
                     new Exercise
                     {
                         Level = Level.Easy,
-                        title = "Opdracht1", description = "Test1", isRoomexercise = false, createdAt = DateTime.UtcNow,
+                        title = "Opdracht1", description = "Test1", isRoomExercise = false, createdAt = DateTime.UtcNow,
                         points = 5
                     },
                     new Exercise
                     {
                         Level = Level.Easy,
-                        title = "Opdracht2", description = "Test2", isRoomexercise = false, createdAt = DateTime.UtcNow,
+                        title = "Opdracht2", description = "Test2", isRoomExercise = false, createdAt = DateTime.UtcNow,
                         points = 10
                     },
                     new Exercise
                     {
                         Level = Level.Easy,
-                        title = "Opdracht3", description = "Test3", isRoomexercise = false, createdAt = DateTime.UtcNow,
+                        title = "Opdracht3", description = "Test3", isRoomExercise = false, createdAt = DateTime.UtcNow,
                         points = 15
                     },
                     new Exercise
                     {
                         Level = Level.Easy,
-                        title = "Opdracht4", description = "Test4", isRoomexercise = false, createdAt = DateTime.UtcNow,
+                        title = "Opdracht4", description = "Test4", isRoomExercise = false, createdAt = DateTime.UtcNow,
                         points = 20
                     },
                     new Exercise
                     {
                         Level = Level.Easy,
-                        title = "Opdracht5", description = "Test5", isRoomexercise = false, createdAt = DateTime.UtcNow,
+                        title = "Opdracht5", description = "Test5", isRoomExercise = false, createdAt = DateTime.UtcNow,
                         points = 25
                     },
                     new Exercise
                     {
                         Level = Level.Easy,
-                        title = "Opdracht6", description = "Test6", isRoomexercise = false, createdAt = DateTime.UtcNow,
+                        title = "Opdracht6", description = "Test6", isRoomExercise = false, createdAt = DateTime.UtcNow,
                         points = 30
                     }
                 };

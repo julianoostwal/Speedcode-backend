@@ -1,4 +1,4 @@
-using speedCode.exercise;
+using speedCode.Exercise;
 using speedCode.exercise.model;
 
 namespace speedCode.Profile.service;

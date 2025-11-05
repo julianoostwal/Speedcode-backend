@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using speedCode.Core.judge0.dto;
 
-namespace speedCode.exercise.model
+namespace speedCode.Exercise.model
 {
     [Table("testCode")]
     public class TestCode
