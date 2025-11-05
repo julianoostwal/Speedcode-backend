@@ -11,6 +11,8 @@ namespace speedCode.Exercise.model
 
         [Column("type")] [Required] public TestType Type { get; set; }
 
+        [Column("languageId")] [Required] public int LanguageId { get; set; }
+
         // anti cheat regex 
         [Column("AC_regex")] public string? ACRegex { get; set; }
 

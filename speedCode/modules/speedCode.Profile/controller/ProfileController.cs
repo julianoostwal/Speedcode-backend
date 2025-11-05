@@ -189,7 +189,6 @@ public class ProfilesController : ControllerBase
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
             return Unauthorized();
         }
     }

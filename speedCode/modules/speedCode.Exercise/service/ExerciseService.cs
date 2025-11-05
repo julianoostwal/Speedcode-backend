@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using speedCode.Core.judge0.dto;
+using speedCode.Core.judge0.enums;
 using speedCode.exercise;
 using speedCode.Exercise.model;
 using speedCode.Judge0;
@@ -27,8 +28,9 @@ public class ExerciseService
 
     public async Task<TestCodeAsyncResults> TestCodeAsync(TestCodeRequest request)
     {
-        TestCodeAsyncResults results = new TestCodeAsyncResults();
-        List<TestCode> testCodes = await _dbContext.Exercise
+        var results = new TestCodeAsyncResults();
+
+        var testCodes = await _dbContext.Exercise
             .Include(e => e.ExerciseTests)
             .ThenInclude(et => et.test)
             .ThenInclude(t => t.TestExpectIOs)
@@ -36,24 +38,61 @@ public class ExerciseService
             .SelectMany(e => e.ExerciseTests.Select(et => et.test))
             .ToListAsync();
 
+        var outputs = await RunAllTestsAsync(request, testCodes);
 
-        foreach (var testCode in testCodes)
+        results.TestProcess.AddRange(outputs);
+        return results;
+    }
+
+    private async Task<List<JudgeCodeTestResults>> RunAllTestsAsync(
+        TestCodeRequest request,
+        List<TestCode> testCodes)
+    {
+        var testTasks = new List<Task<JudgeCodeTestResults>>();
+
+        foreach (var testCode in testCodes.Where(t => t.LanguageId == request.LanguageId))
         {
             foreach (var testExpectIO in testCode.TestExpectIOs)
             {
-                JudgeCode judgeCodeFactoryResults = JudgeCodeFactory.CreateJudgeCode(testCode.Type);
-                judgeCodeFactoryResults.ExpectedResult = testExpectIO.output;
-                judgeCodeFactoryResults.SubmissionResult = _judge0Handler
-                    .HandleSubmitCodeAsync(new SubmissionRequest()
-                        {
-                            SourceCode = request.Code, LanguageId = request.LanguageId, Stdin = testExpectIO.input
-                        },
-                        testCode.ACRegex).Result;
-                JudgeCodeTestResults output = judgeCodeFactoryResults.TestOutput();
-                results.TestProcess.Add(output);
+                testTasks.Add(RunSingleTestAsync(request, testCode, testExpectIO));
             }
         }
 
-        return await Task.FromResult(results);
+        var outputs = await Task.WhenAll(testTasks);
+        return outputs.ToList();
+    }
+
+
+    private async Task<JudgeCodeTestResults> RunSingleTestAsync(
+        TestCodeRequest request,
+        TestCode testCode,
+        TestExpectIO testExpectIO)
+    {
+        try
+        {
+            var judgeCode = JudgeCodeFactory.CreateJudgeCode(testCode.Type);
+            judgeCode.ExpectedResult = testExpectIO.output;
+
+            var submissionResult = await _judge0Handler.HandleSubmitCodeAsync(
+                new SubmissionRequest
+                {
+                    SourceCode = request.Code,
+                    LanguageId = request.LanguageId,
+                    Stdin = testExpectIO.input
+                },
+                testCode.ACRegex
+            );
+
+            judgeCode.SubmissionResult = submissionResult;
+
+            return judgeCode.TestOutput();
+        }
+        catch (Exception ex)
+        {
+            return new JudgeCodeTestResults
+            {
+                Status = JudgeCodeTestStatus.Error
+            };
+        }
     }
 }
