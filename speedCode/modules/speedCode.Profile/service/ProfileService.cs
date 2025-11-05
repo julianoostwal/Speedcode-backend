@@ -7,25 +7,34 @@ public class ProfileService
     private readonly ProfileDb _profileDb;
     private readonly ExerciseDb _dbContext;
 
-    public List<Exercise.model.Exercise> GetAllCompletedexercisesByProfileId(Guid profileId)
+    public ProfileService(ProfileDb profileDb, ExerciseDb dbContext)
     {
-        return (from e in _dbContext.Exercise
-            join pe in _profileDb.CompletedProfileExercise
-                on e.id equals pe.exerciseId into peGroup
-            from pe in peGroup.DefaultIfEmpty()
-            where pe.profileId == profileId
-            select e).ToList();
+        _profileDb = profileDb;
+        _dbContext = dbContext;
+    }
+
+
+    public List<Exercise.model.Exercise> GetAllCompletedExercisesByProfileId(Guid profileId)
+    {
+        var completedIds = _profileDb.CompletedProfileExercise
+            .Where(p => p.profileId == profileId)
+            .Select(p => p.exerciseId)
+            .ToList();
+
+        return _dbContext.Exercise
+            .Where(e => completedIds.Contains(e.id))
+            .ToList();
     }
 
     public List<Exercise.model.Exercise> GetAllCreatedAndPublicExercisesByProfileId(Guid profileId)
     {
-        return (
-            from e in _dbContext.Exercise
-            join pe in _profileDb.CreatedProfileExercise
-                on e.id equals pe.exerciseId into peGroup
-            from pe in peGroup.DefaultIfEmpty()
-            where (pe != null && pe.profileId == profileId) || e.isPrivate == false
-            select e
-        ).ToList();
+        var createdIds = _profileDb.CreatedProfileExercise
+            .Where(p => p.profileId == profileId)
+            .Select(p => p.exerciseId)
+            .ToList();
+
+        return _dbContext.Exercise
+            .Where(e => !e.isPrivate || createdIds.Contains(e.id))
+            .ToList();
     }
 }
