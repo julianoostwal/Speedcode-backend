@@ -174,6 +174,7 @@ namespace speedCode.Seeder
                     var testCode = new TestCode
                     {
                         // AuthorId = author.id,
+                        LanguageId = 71,
                         createdAt = DateTime.UtcNow,
                         Type = TestType.Exactly
                     };
@@ -212,7 +213,8 @@ namespace speedCode.Seeder
                 {
                     exerciseTests.Add(new ExerciseTest
                     {
-                        testId = exerciseDb.TestCode.Skip(i).First().id, exerciseId = exerciseDb.Exercise.Skip(i).First().id
+                        testId = exerciseDb.TestCode.Skip(i).First().id,
+                        exerciseId = exerciseDb.Exercise.Skip(i).First().id
                     });
                 }
 
