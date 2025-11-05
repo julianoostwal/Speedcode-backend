@@ -16,6 +16,16 @@ public static class WSRoomsService
         if (!Rooms.TryAdd(roomId, room))
             throw new InvalidOperationException($"Failed to create room {roomId} (possibly a race condition).");
 
+        Task.Run(async () =>
+        {
+            await Task.Delay(TimeSpan.FromSeconds(10));
+
+            if (room.Players.IsEmpty && Rooms.ContainsKey(roomId))
+            {
+                Rooms.TryRemove(roomId, out _);
+                Console.WriteLine($"Room {roomId} deleted automatically because no one joined within 10 seconds.");
+            }
+        });
         return room;
     }
 
@@ -58,5 +68,6 @@ public static class WSRoomsService
         room.RemovePlayer(clientId);
         if (room.Players.IsEmpty)
             Rooms.TryRemove(room.RoomId, out _);
+        room.BroadcastRoomUpdateAsync();
     }
 }

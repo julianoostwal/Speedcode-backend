@@ -3,7 +3,7 @@ using speedCode.Core.attribute;
 using speedCode.Core.interfaces;
 using speedCode.Core.rooms.dto;
 using speedCode.Core.utils;
-using speedCode.Excise.model;
+using speedCode.Exercise.model;
 using speedCode.Room.dtos;
 using speedCode.Room.Model;
 using speedCode.Room.service;
@@ -70,11 +70,11 @@ public class RoomController : ControllerBase
     /// generate room with random exercises, for now it is hardcoded to 5 exercises
     /// </summary>
     [HttpPost]
-    [Route("/generateroomwithrandomexcises")]
+    [Route("/generateroomwithrandomexercises")]
     [InjectUserId]
     public ActionResult<Rooms> GenerateRoomWithRandomExercises(CreateRoomDTO request)
     {
-        Rooms room = _RoomService.GenerateRoomWithRandomExcises(request, 5);
+        Rooms room = _RoomService.GenerateRoomWithRandomexercises(request, 5);
         return Ok(room);
     }
 

@@ -170,7 +170,7 @@ public class ProfilesController : ControllerBase
         try
         {
             Guid profielId = _webHelper.GetClientIdByTokenInHeader();
-            return Ok(_profileService.GetAllCompletedExcisesByProfileId(profielId));
+            return Ok(_profileService.GetAllCompletedExercisesByProfileId(profielId));
         }
         catch (Exception e)
         {
@@ -180,7 +180,7 @@ public class ProfilesController : ControllerBase
     }
 
     [HttpGet("GetAllExercises")]
-    public IActionResult GetAllCreatedAndPublicExercises()
+    public ActionResult<List<Exercise.model.Exercise>> GetAllCreatedAndPublicExercises()
     {
         try
         {
@@ -189,7 +189,6 @@ public class ProfilesController : ControllerBase
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
             return Unauthorized();
         }
     }

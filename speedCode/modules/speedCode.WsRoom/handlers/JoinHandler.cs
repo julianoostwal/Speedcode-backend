@@ -32,7 +32,7 @@ public class JoinHandler : IWebSocketActionHandler
             ClientId = clientId,
             Socket = socket,
             ConnectedAt = DateTime.UtcNow,
-            FinishedExcise = _roomService.GetAllFinishedExcisesByRoomAndUserId(roomId, clientId)
+            Finishedexercise = _roomService.GetAllFinishedexercisesByRoomAndUserId(roomId, clientId)
         };
         PlayerManager.AddPlayer(room, player);
         await ReceiveLoopAsync(room, player);

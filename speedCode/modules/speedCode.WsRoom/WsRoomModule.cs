@@ -1,7 +1,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using speedCode.Excise;
+using speedCode.Exercise;
 using speedCode.Modularity;
+using speedCode.Room.service;
 using speedCode.rooms.service;
 using speedCode.WsRoom.handlers;
 
@@ -18,6 +19,5 @@ public class WsRoomModule : IModule
         services.AddScoped<WebSocketActionFactory>();
         services.AddScoped<StartRoomHandler>();
         services.AddScoped<CreateHandler>();
-        
     }
 }

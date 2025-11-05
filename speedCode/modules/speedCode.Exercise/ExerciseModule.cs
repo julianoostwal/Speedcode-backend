@@ -1,18 +1,19 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using speedCode.exercise;
+using speedCode.Exercise.service;
 using speedCode.Modularity;
-using speedCode.services;
 
-namespace speedCode.Excise;
+namespace speedCode.Exercise;
 
-public class ExciseModule : IModule
+public class ExerciseModule : IModule
 {
     public void RegisterModule(IServiceCollection services, IConfiguration configuration)
     {
-        services.AddDbContext<ExciseDb>(options =>
+        services.AddDbContext<ExerciseDb>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
         
-        services.AddScoped<ExciseService>();
+        services.AddScoped<ExerciseService>();
     }
 }

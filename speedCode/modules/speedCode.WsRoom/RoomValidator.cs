@@ -3,7 +3,7 @@ using speedCode.Profile;
 using speedCode.Room;
 using speedCode.rooms;
 
-namespace speedCode.Excise;
+namespace speedCode.Exercise;
 
 public class RoomValidator
 {
@@ -28,10 +28,21 @@ public class RoomValidator
 
     public async Task<bool> ClientAllowToJoin(Guid roomId, Guid clientId)
     {
+        var room = await _db.rooms
+            .AsNoTracking()
+            .FirstOrDefaultAsync(r => r.id == roomId);
+
+        if (room == null)
+            return false;
+
+        if (!room.isPrivate)
+            return true;
+
         return await _db.RoomUser.AnyAsync(ru =>
-            ru.roomId == roomId && (!ru.room.isPrivate || ru.profileId == clientId)
+            ru.roomId == roomId && ru.profileId == clientId
         );
     }
+
 
     public async Task<bool> isRoomAdmin(Guid roomId, Guid clientId)
     {

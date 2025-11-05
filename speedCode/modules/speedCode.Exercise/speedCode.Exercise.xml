@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>speedCode.Exercise</name>
+    </assembly>
+    <members>
+        <member name="T:speedCode.Exercise.Migrations.InitialexerciseDbMigration">
+            <inheritdoc />
+        </member>
+        <member name="M:speedCode.Exercise.Migrations.InitialexerciseDbMigration.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:speedCode.Exercise.Migrations.InitialexerciseDbMigration.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:speedCode.Exercise.Migrations.InitialexerciseDbMigration.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

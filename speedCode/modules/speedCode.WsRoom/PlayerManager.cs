@@ -9,7 +9,7 @@ public static class PlayerManager
 
     public static void CompletedAExercise(FinishARoomExerciseDto dto)
     {
-        dto.Room.Players[dto.clientId].FinishedExcise.Add(dto.ExerciseId);
+        dto.Room.Players[dto.clientId].Finishedexercise.Add(dto.ExerciseId);
         dto.Room.BroadcastRoomUpdateAsync();
     }
 }

@@ -29,7 +29,7 @@ public class Room
             Players = Players.Values.Select(p => new PlayerStateDto
             {
                 ClientId = p.ClientId,
-                FinishedExcise = p.FinishedExcise
+                Finishedexercise = p.Finishedexercise
             }).ToList()
         };
 

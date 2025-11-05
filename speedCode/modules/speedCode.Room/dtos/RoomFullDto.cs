@@ -47,7 +47,7 @@ public class RoomFullDto
         public string title { get; set; }
         public string description { get; set; }
         public DateTime createdAt { get; set; }
-        public bool isRoomExcise { get; set; }
+        public bool isRoomExercise { get; set; }
         public bool isPrivate { get; set; }
         public int points { get; set; }
         public string Level { get; set; }

@@ -12,7 +12,7 @@
     <ItemGroup>
 
         <ProjectReference Include="..\speedCode.Modularity\speedCode.Modularity.csproj"/>
-        <ProjectReference Include="..\speedCode.Excise\speedCode.Excise.csproj"/>
+        <ProjectReference Include="..\speedCode.Exercise\speedCode.Exercise.csproj"/>
         <ProjectReference Include="..\speedCode.Profile\speedCode.Profile.csproj"/>
         <ProjectReference Include="..\speedCode.Room\speedCode.Room.csproj"/>
     </ItemGroup>

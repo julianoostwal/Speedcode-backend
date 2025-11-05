@@ -1,13 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using speedCode.Core.rooms.dto;
 using speedCode.Core.rooms.Mapper;
-using speedCode.Excise;
-using speedCode.Excise.model;
+using speedCode.exercise;
+using speedCode.Exercise;
+using speedCode.Exercise.model;
+using speedCode.Exercise.service;
 using speedCode.Profile;
 using speedCode.Profile.model;
 using speedCode.Room.dtos;
 using speedCode.Room.Model;
-using speedCode.services;
 
 namespace speedCode.Room.service;
 
@@ -15,14 +16,14 @@ public class RoomService
 {
     private readonly RoomsDb _RoomDb;
     private readonly ProfileDb _profileDb;
-    private readonly ExciseService _exciseService;
-    private readonly ExciseDb _exciseDb;
+    private readonly ExerciseService _exerciseService;
+    private readonly ExerciseDb _exerciseDb;
 
-    public RoomService(RoomsDb db, ProfileDb profileDb, ExciseService exerciseService, ExciseDb exciseDb)
+    public RoomService(RoomsDb db, ProfileDb profileDb, ExerciseService exerciseService, ExerciseDb exerciseDb)
     {
-        _exciseService = exerciseService;
+        _exerciseService = exerciseService;
         _RoomDb = db;
-        _exciseDb = exciseDb;
+        _exerciseDb = exerciseDb;
         _profileDb = profileDb;
     }
 
@@ -64,7 +65,7 @@ public class RoomService
         return room;
     }
 
-    public List<Guid> GetAllFinishedExcisesByRoomAndUserId(Guid roomId, Guid profileId)
+    public List<Guid> GetAllFinishedexercisesByRoomAndUserId(Guid roomId, Guid profileId)
     {
         var roomExerciseIds = _RoomDb.RoomExercise
             .Where(re => re.roomId == roomId)
@@ -78,12 +79,12 @@ public class RoomService
     }
 
 
-    public Rooms GenerateRoomWithRandomExcises(CreateRoomDTO roomRequest, int count)
+    public Rooms GenerateRoomWithRandomexercises(CreateRoomDTO roomRequest, int count)
     {
         Rooms room = RoomMapper.FromCreateRoomDto(roomRequest);
         _RoomDb.rooms.Add(room);
 
-        var exercises = _exciseService.gerRandomExercises(count);
+        var exercises = _exerciseService.gerRandomExercises(count);
 
         foreach (var ex in exercises)
         {
@@ -171,7 +172,7 @@ public class RoomService
                     title = re.exercise.title,
                     description = re.exercise.description,
                     createdAt = re.exercise.createdAt,
-                    isRoomExcise = re.exercise.isRoomExcise,
+                    isRoomExercise = re.exercise.isRoomExercise,
                     isPrivate = re.exercise.isPrivate,
                     points = re.exercise.points,
                     Level = re.exercise.Level.ToString()
@@ -252,7 +253,7 @@ public class RoomService
                     title = re.exercise.title,
                     description = re.exercise.description,
                     createdAt = re.exercise.createdAt,
-                    isRoomExcise = re.exercise.isRoomExcise,
+                    isRoomExercise = re.exercise.isRoomExercise,
                     isPrivate = re.exercise.isPrivate,
                     points = re.exercise.points,
                     Level = re.exercise.Level.ToString()

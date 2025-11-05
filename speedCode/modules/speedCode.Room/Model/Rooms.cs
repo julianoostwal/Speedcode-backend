@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using speedCode.Core.rooms.enums;
-using speedCode.Excise.model;
+using speedCode.Exercise.model;
 using speedCode.Model;
 using speedCode.Profile.model;
 

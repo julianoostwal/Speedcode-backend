@@ -10,10 +10,10 @@ dotnet ef migrations add InitialRoomsDbMigration \
 --context RoomsDb \
 --output-dir Migrations
 
-dotnet ef migrations add InitialExciseDbMigration \
---project modules/speedCode.Excise \
+dotnet ef migrations add InitialexerciseDbMigration \
+--project modules/speedCode.exercise \
 --startup-project speedCode.WebHost \
---context ExciseDb \
+--context exerciseDb \
 --output-dir Migrations
 
 dotnet ef database update \
@@ -28,7 +28,7 @@ dotnet ef database update \
 
 
 dotnet ef database update \
---project modules/speedCode.Excise \
+--project modules/speedCode.exercise \
 --startup-project speedCode.WebHost \
---context ExciseDb
+--context exerciseDb
 

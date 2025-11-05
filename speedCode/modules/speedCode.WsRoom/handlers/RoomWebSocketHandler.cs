@@ -1,14 +1,11 @@
 using System.Net.WebSockets;
-using System.Text;
-using speedCode.Core.interfaces;
 using speedCode.Core.judge0.dto;
-using speedCode.Excise;
-using speedCode.Excise.model;
+using speedCode.Exercise;
+using speedCode.Exercise.model;
+using speedCode.Exercise.service;
 using speedCode.Profile;
-using speedCode.Room.service;
 using speedCode.rooms;
 using speedCode.rooms.service;
-using speedCode.services;
 using speedCode.WsRoom.DTO;
 using speedCode.WsRoom.interfaces;
 
@@ -17,27 +14,21 @@ namespace speedCode.WsRoom.handlers;
 public class RoomWebSocketHandler
 {
     private readonly RoomValidator _validator;
-    private readonly RoomUserService _roomUserService;
-    private readonly RoomService _roomService;
     private readonly ProfileDb _profileDb;
-    private readonly ExciseDb _dbContext;
-    private readonly ExciseService _exciseService;
+    private readonly ExerciseService _exerciseService;
     private readonly WSService _wsService;
     private readonly WebSocketActionFactory _webSocketActionFactory;
 
-    public RoomWebSocketHandler(RoomValidator validator, RoomUserService roomUserService, ExciseService exciseService,
+    public RoomWebSocketHandler(RoomValidator validator, ExerciseService exerciseService,
         ProfileDb profileDb,
-        RoomService roomService,
         WebSocketActionFactory webSocketActionFactory,
         WSService wsService)
     {
         _webSocketActionFactory = webSocketActionFactory;
         _wsService = wsService;
         _profileDb = profileDb;
-        _roomService = roomService;
-        _exciseService = exciseService;
+        _exerciseService = exerciseService;
         _validator = validator;
-        _roomUserService = roomUserService;
     }
 
     public async Task HandleAsync(WebSocket socket)
@@ -80,7 +71,7 @@ public class RoomWebSocketHandler
     public async Task<TestCodeAsyncResults> TestCodeAsyncForWSRoom(TestCodeRequest request, Guid roomId,
         Guid clientId)
     {
-        TestCodeAsyncResults result = await _exciseService.TestCodeAsync(request);
+        TestCodeAsyncResults result = await _exerciseService.TestCodeAsync(request);
 
         if (result.IsPassed)
         {
@@ -120,7 +111,7 @@ public class RoomWebSocketHandler
                 });
             }
 
-            await _dbContext.SaveChangesAsync();
+            await _profileDb.SaveChangesAsync();
         }
 
         return result;

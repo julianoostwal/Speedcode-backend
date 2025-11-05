@@ -1,27 +1,26 @@
-using speedCode.Excise.model;
+using speedCode.Exercise.model;
 
 
-namespace speedCode.Excise;
+namespace speedCode.exercise;
 
 using Microsoft.EntityFrameworkCore;
 
-public class ExciseDb : DbContext
+public class ExerciseDb : DbContext
 {
     public DbSet<TestCode> TestCode { get; set; }
     public DbSet<ExerciseTest> ExerciseTest { get; set; }
-    public DbSet<Exercise> Exercise { get; set; }
+    public DbSet<Exercise.model.Exercise> Exercise { get; set; }
 
     public DbSet<TestExpectIO> TestExpectIos { get; set; }
-    
 
-    public ExciseDb(DbContextOptions<ExciseDb> options)
+
+    public ExerciseDb(DbContextOptions<ExerciseDb> options)
         : base(options)
     {
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        
         modelBuilder.Entity<ExerciseTest>()
             .HasKey(et => new { et.exerciseId, et.testId });
 
