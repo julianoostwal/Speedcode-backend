@@ -12,7 +12,6 @@
             /// <code>{ "type": "create", "token": "YOUR_JWT","roomId":"" }</code>
             /// <code>{ "type": "join", "token": "YOUR_JWT","roomId":"" }</code>
             </summary>
-            <param name="roomId">The ID of an existing room in the database.</param>
         </member>
         <member name="M:speedCode.WsRoom.controller.WsRoomController.GetOnlineRooms">
             <summary>

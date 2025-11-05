@@ -19,9 +19,8 @@
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4"/>
         <ProjectReference Include="..\speedCode.Core\speedCode.Core.csproj"/>
         <ProjectReference Include="..\speedCode.Modularity\speedCode.Modularity.csproj"/>
-        <ProjectReference Include="..\speedCode.exercise\speedCode.exercise.csproj"/>
+        <ProjectReference Include="..\speedCode.Exercise\speedCode.Exercise.csproj"/>
         <ProjectReference Include="..\speedCode.Profile\speedCode.Profile.csproj"/>
-
     </ItemGroup>
 </Project>
 

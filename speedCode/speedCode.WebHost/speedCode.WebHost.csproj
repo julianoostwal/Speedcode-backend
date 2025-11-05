@@ -10,7 +10,7 @@
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="../modules/speedCode.Core/speedCode.Core.csproj"/>
-        <ProjectReference Include="../modules/speedCode.exercise/speedCode.exercise.csproj"/>
+        <ProjectReference Include="../modules/speedCode.Exercise/speedCode.Exercise.csproj"/>
         <ProjectReference Include="../modules/speedCode.Judge0/speedCode.Judge0.csproj"/>
         <ProjectReference Include="../modules/speedCode.Profile/speedCode.Profile.csproj"/>
         <ProjectReference Include="../modules/speedCode.Room/speedCode.Room.csproj"/>
