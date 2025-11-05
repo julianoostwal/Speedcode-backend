@@ -22,7 +22,7 @@ builder.Services.AddSwaggerGen(c =>
     c.IncludeXmlComments(xmlPath);
     c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "speedCode.WsRoom.xml"));
     c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "speedCode.Profile.xml"));
-    c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "speedCode.exercise.xml"));
+    c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "speedCode.Exercise.xml"));
     c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "speedCode.Room.xml"));
 });
 
