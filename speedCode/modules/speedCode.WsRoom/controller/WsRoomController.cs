@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using speedCode.Core.attribute;
 using speedCode.Core.interfaces;
 using speedCode.Core.judge0.dto;
+using speedCode.Exercise.service;
 using speedCode.rooms;
-using speedCode.services;
 using speedCode.WsRoom.handlers;
 
 namespace speedCode.WsRoom.controller;
@@ -17,7 +17,7 @@ public class WsRoomController : ControllerBase
     private readonly RoomWebSocketHandler _wsHandler;
     private readonly IJwtService _jwtService;
 
-    public WsRoomController(exerciseService exerciseService, RoomWebSocketHandler wsHandler, IJwtService jwtService)
+    public WsRoomController(ExerciseService exerciseService, RoomWebSocketHandler wsHandler, IJwtService jwtService)
     {
         _jwtService = jwtService;
         _wsHandler = wsHandler;

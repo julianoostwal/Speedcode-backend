@@ -4,6 +4,7 @@ using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using speedCode.Core.judge0.dto;
 using speedCode.Core.rooms.enums;
+using speedCode.exercise;
 using speedCode.Exercise;
 using speedCode.Exercise.model;
 using speedCode.Profile;
@@ -85,39 +86,39 @@ namespace speedCode.Seeder
 
             if (!exerciseDb.Exercise.Any())
             {
-                var exercises = new List<Exercise>
+                var exercises = new List<Exercise.model.Exercise>
                 {
-                    new Exercise
+                    new Exercise.model.Exercise
                     {
                         Level = Level.Easy,
                         title = "Opdracht1", description = "Test1", isRoomExercise = false, createdAt = DateTime.UtcNow,
                         points = 5
                     },
-                    new Exercise
+                    new Exercise.model.Exercise
                     {
                         Level = Level.Easy,
                         title = "Opdracht2", description = "Test2", isRoomExercise = false, createdAt = DateTime.UtcNow,
                         points = 10
                     },
-                    new Exercise
+                    new Exercise.model.Exercise
                     {
                         Level = Level.Easy,
                         title = "Opdracht3", description = "Test3", isRoomExercise = false, createdAt = DateTime.UtcNow,
                         points = 15
                     },
-                    new Exercise
+                    new Exercise.model.Exercise
                     {
                         Level = Level.Easy,
                         title = "Opdracht4", description = "Test4", isRoomExercise = false, createdAt = DateTime.UtcNow,
                         points = 20
                     },
-                    new Exercise
+                    new Exercise.model.Exercise
                     {
                         Level = Level.Easy,
                         title = "Opdracht5", description = "Test5", isRoomExercise = false, createdAt = DateTime.UtcNow,
                         points = 25
                     },
-                    new Exercise
+                    new Exercise.model.Exercise
                     {
                         Level = Level.Easy,
                         title = "Opdracht6", description = "Test6", isRoomExercise = false, createdAt = DateTime.UtcNow,

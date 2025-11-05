@@ -4,11 +4,11 @@ using speedCode.Core.interfaces;
 using speedCode.Core.judge0.dto;
 using speedCode.Exercise;
 using speedCode.Exercise.model;
+using speedCode.Exercise.service;
 using speedCode.Profile;
 using speedCode.Room.service;
 using speedCode.rooms;
 using speedCode.rooms.service;
-using speedCode.services;
 using speedCode.WsRoom.DTO;
 using speedCode.WsRoom.interfaces;
 
@@ -18,11 +18,11 @@ public class RoomWebSocketHandler
 {
     private readonly RoomValidator _validator;
     private readonly ProfileDb _profileDb;
-    private readonly exerciseService _exerciseService;
+    private readonly ExerciseService _exerciseService;
     private readonly WSService _wsService;
     private readonly WebSocketActionFactory _webSocketActionFactory;
 
-    public RoomWebSocketHandler(RoomValidator validator, exerciseService exerciseService,
+    public RoomWebSocketHandler(RoomValidator validator, ExerciseService exerciseService,
         ProfileDb profileDb,
         WebSocketActionFactory webSocketActionFactory,
         WSService wsService)

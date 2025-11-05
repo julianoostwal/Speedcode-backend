@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using speedCode.Core.judge0.dto;
-using speedCode.Exercise.model;
-using speedCode.services;
+using speedCode.Exercise.service;
 using speedCode.Infrastructure;
 
 namespace speedCode.Exercise.controller;

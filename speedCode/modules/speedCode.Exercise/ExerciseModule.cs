@@ -1,8 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using speedCode.exercise;
+using speedCode.Exercise.service;
 using speedCode.Modularity;
-using speedCode.services;
 
 namespace speedCode.Exercise;
 
