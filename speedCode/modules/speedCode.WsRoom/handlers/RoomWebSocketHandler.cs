@@ -1,12 +1,9 @@
 using System.Net.WebSockets;
-using System.Text;
-using speedCode.Core.interfaces;
 using speedCode.Core.judge0.dto;
 using speedCode.Exercise;
 using speedCode.Exercise.model;
 using speedCode.Exercise.service;
 using speedCode.Profile;
-using speedCode.Room.service;
 using speedCode.rooms;
 using speedCode.rooms.service;
 using speedCode.WsRoom.DTO;
