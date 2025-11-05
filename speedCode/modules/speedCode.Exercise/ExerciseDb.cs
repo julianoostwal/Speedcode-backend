@@ -5,23 +5,22 @@ namespace speedCode.exercise;
 
 using Microsoft.EntityFrameworkCore;
 
-public class exerciseDb : DbContext
+public class ExerciseDb : DbContext
 {
     public DbSet<TestCode> TestCode { get; set; }
     public DbSet<ExerciseTest> ExerciseTest { get; set; }
     public DbSet<Exercise> Exercise { get; set; }
 
     public DbSet<TestExpectIO> TestExpectIos { get; set; }
-    
 
-    public exerciseDb(DbContextOptions<exerciseDb> options)
+
+    public ExerciseDb(DbContextOptions<ExerciseDb> options)
         : base(options)
     {
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        
         modelBuilder.Entity<ExerciseTest>()
             .HasKey(et => new { et.exerciseId, et.testId });
 

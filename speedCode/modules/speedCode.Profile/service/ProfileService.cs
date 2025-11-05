@@ -6,7 +6,7 @@ namespace speedCode.Profile.service;
 public class ProfileService
 {
     private readonly ProfileDb _profileDb;
-    private readonly exerciseDb _dbContext;
+    private readonly ExerciseDb _dbContext;
 
     public List<Exercise> GetAllCompletedexercisesByProfileId(Guid profileId)
     {

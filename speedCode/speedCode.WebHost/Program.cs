@@ -53,7 +53,7 @@ if (app.Environment.IsDevelopment())
     {
         var serviceProvider = scope.ServiceProvider;
         var roomsDb = serviceProvider.GetRequiredService<RoomsDb>();
-        var exerciseDb = serviceProvider.GetRequiredService<exerciseDb>();
+        var exerciseDb = serviceProvider.GetRequiredService<ExerciseDb>();
         var profileDb = serviceProvider.GetRequiredService<ProfileDb>();
         //seed database
         SeederManager

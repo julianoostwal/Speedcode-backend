@@ -16,9 +16,9 @@ public class RoomService
     private readonly RoomsDb _RoomDb;
     private readonly ProfileDb _profileDb;
     private readonly exerciseService _exerciseService;
-    private readonly exerciseDb _exerciseDb;
+    private readonly ExerciseDb _exerciseDb;
 
-    public RoomService(RoomsDb db, ProfileDb profileDb, exerciseService exerciseService, exerciseDb exerciseDb)
+    public RoomService(RoomsDb db, ProfileDb profileDb, exerciseService exerciseService, ExerciseDb exerciseDb)
     {
         _exerciseService = exerciseService;
         _RoomDb = db;
