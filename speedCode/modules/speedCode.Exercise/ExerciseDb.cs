@@ -1,4 +1,4 @@
-using speedCode.exercise.model;
+using speedCode.Exercise.model;
 
 
 namespace speedCode.exercise;
@@ -9,7 +9,7 @@ public class ExerciseDb : DbContext
 {
     public DbSet<TestCode> TestCode { get; set; }
     public DbSet<ExerciseTest> ExerciseTest { get; set; }
-    public DbSet<Exercise> Exercise { get; set; }
+    public DbSet<Exercise.model.Exercise> Exercise { get; set; }
 
     public DbSet<TestExpectIO> TestExpectIos { get; set; }
 

@@ -1,13 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using speedCode.Core.rooms.dto;
 using speedCode.Core.rooms.Mapper;
+using speedCode.exercise;
 using speedCode.Exercise;
 using speedCode.Exercise.model;
+using speedCode.Exercise.service;
 using speedCode.Profile;
 using speedCode.Profile.model;
 using speedCode.Room.dtos;
 using speedCode.Room.Model;
-using speedCode.services;
 
 namespace speedCode.Room.service;
 
@@ -15,10 +16,10 @@ public class RoomService
 {
     private readonly RoomsDb _RoomDb;
     private readonly ProfileDb _profileDb;
-    private readonly exerciseService _exerciseService;
+    private readonly ExerciseService _exerciseService;
     private readonly ExerciseDb _exerciseDb;
 
-    public RoomService(RoomsDb db, ProfileDb profileDb, exerciseService exerciseService, ExerciseDb exerciseDb)
+    public RoomService(RoomsDb db, ProfileDb profileDb, ExerciseService exerciseService, ExerciseDb exerciseDb)
     {
         _exerciseService = exerciseService;
         _RoomDb = db;

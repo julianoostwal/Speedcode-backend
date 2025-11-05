@@ -21,7 +21,7 @@ public class RoomsDb : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<TestCode>().ToTable("testCode", t => t.ExcludeFromMigrations());
-        modelBuilder.Entity<Exercise>().ToTable("exercises", t => t.ExcludeFromMigrations());
+        modelBuilder.Entity<Exercise.model.Exercise>().ToTable("exercises", t => t.ExcludeFromMigrations());
         modelBuilder.Entity<Profiles>().ToTable("profiles", t => t.ExcludeFromMigrations());
         modelBuilder.Entity<CompletedProfileExercise>().ToTable("profile_exercises", t => t.ExcludeFromMigrations());
         modelBuilder.Entity<TestExpectIO>().ToTable("testExpectIO", t => t.ExcludeFromMigrations());

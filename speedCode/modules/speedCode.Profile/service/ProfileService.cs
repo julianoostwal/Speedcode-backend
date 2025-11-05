@@ -1,5 +1,4 @@
-using speedCode.Exercise;
-using speedCode.exercise.model;
+using speedCode.exercise;
 
 namespace speedCode.Profile.service;
 
@@ -8,7 +7,7 @@ public class ProfileService
     private readonly ProfileDb _profileDb;
     private readonly ExerciseDb _dbContext;
 
-    public List<Exercise> GetAllCompletedexercisesByProfileId(Guid profileId)
+    public List<Exercise.model.Exercise> GetAllCompletedexercisesByProfileId(Guid profileId)
     {
         return (from e in _dbContext.Exercise
             join pe in _profileDb.CompletedProfileExercise
@@ -18,7 +17,7 @@ public class ProfileService
             select e).ToList();
     }
 
-    public List<Exercise> GetAllCreatedAndPublicExercisesByProfileId(Guid profileId)
+    public List<Exercise.model.Exercise> GetAllCreatedAndPublicExercisesByProfileId(Guid profileId)
     {
         return (
             from e in _dbContext.Exercise

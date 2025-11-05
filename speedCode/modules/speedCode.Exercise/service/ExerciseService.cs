@@ -1,23 +1,23 @@
 using Microsoft.EntityFrameworkCore;
 using speedCode.Core.judge0.dto;
 using speedCode.exercise;
-using speedCode.exercise.model;
+using speedCode.Exercise.model;
 using speedCode.Judge0;
 
-namespace speedCode.services;
+namespace speedCode.Exercise.service;
 
-public class exerciseService
+public class ExerciseService
 {
     private readonly Judge0Handler _judge0Handler;
     private readonly ExerciseDb _dbContext;
 
-    public exerciseService(Judge0Handler judge0Handler, ExerciseDb dbContext)
+    public ExerciseService(Judge0Handler judge0Handler, ExerciseDb dbContext)
     {
         _judge0Handler = judge0Handler;
         _dbContext = dbContext;
     }
 
-    public List<Exercise> gerRandomExercises(int count)
+    public List<model.Exercise> gerRandomExercises(int count)
     {
         return _dbContext.Exercise
             .OrderBy(e => EF.Functions.Random())
@@ -53,6 +53,7 @@ public class exerciseService
                 results.TestProcess.Add(output);
             }
         }
+
         return await Task.FromResult(results);
     }
 }

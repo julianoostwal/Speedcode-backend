@@ -1,5 +1,6 @@
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using speedCode.exercise;
 using speedCode.Exercise;
 using speedCode.Judge0;
 using speedCode.Modularity;
@@ -29,7 +30,7 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddControllers()
     .AddApplicationPart(typeof(speedCode.Profile.ProfileModule).Assembly)
-    .AddApplicationPart(typeof(speedCode.exercise.exerciseModule).Assembly)
+    .AddApplicationPart(typeof(speedCode.exercise.ExerciseDb).Assembly)
     .AddApplicationPart(typeof(speedCode.Judge0.Judge0Module).Assembly)
     .AddApplicationPart(typeof(speedCode.Room.RoomsModule).Assembly)
     .AddApplicationPart(typeof(speedCode.WsRoom.WsRoomModule).Assembly)
