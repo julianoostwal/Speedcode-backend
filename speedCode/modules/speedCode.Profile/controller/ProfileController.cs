@@ -170,7 +170,7 @@ public class ProfilesController : ControllerBase
         try
         {
             Guid profielId = _webHelper.GetClientIdByTokenInHeader();
-            return Ok(_profileService.GetAllCompletedexercisesByProfileId(profielId));
+            return Ok(_profileService.GetAllCompletedExercisesByProfileId(profielId));
         }
         catch (Exception e)
         {
