@@ -1,4 +1,5 @@
 using speedCode.exercise;
+using speedCode.Profile.Model;
 
 namespace speedCode.Profile.service;
 
@@ -13,6 +14,11 @@ public class ProfileService
         _dbContext = dbContext;
     }
 
+
+    public Profiles? GetProfileById(Guid id)
+    {
+        return _profileDb.Profiles.Find(id);
+    }
 
     public List<Exercise.model.Exercise> GetAllCompletedExercisesByProfileId(Guid profileId)
     {

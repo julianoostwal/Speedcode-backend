@@ -1,9 +1,9 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using speedCode.Infrastructure;
-using speedCode.Model;
 using speedCode.Profile.service;
 using Microsoft.Extensions.Configuration;
+using speedCode.Profile.Model;
 
 namespace speedCode.Profile.controller;
 

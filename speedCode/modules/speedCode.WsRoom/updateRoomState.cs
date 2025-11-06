@@ -1,4 +1,6 @@
-namespace speedCode.dto.room
+using speedCode.Profile.Model;
+
+namespace speedCode.WsRoom
 {
     public class UpdateRoomStateDto
     {
@@ -8,7 +10,7 @@ namespace speedCode.dto.room
 
     public class PlayerStateDto
     {
-        public Guid ClientId { get; set; }
+        public Profiles Profiles { get; set; }
         public required List<Guid> Finishedexercise { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using speedCode.Exercise.model;
-using speedCode.Model;
 using speedCode.Profile.model;
+using speedCode.Profile.Model;
 using speedCode.Room.Model;
 
 namespace speedCode.Room;

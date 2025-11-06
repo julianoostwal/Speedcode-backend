@@ -18,7 +18,7 @@ public static class WSRoomsService
 
         Task.Run(async () =>
         {
-            await Task.Delay(TimeSpan.FromMinutes(1));
+            await Task.Delay(TimeSpan.FromHours(1));
 
             if (room.Players.IsEmpty && Rooms.ContainsKey(roomId))
             {
