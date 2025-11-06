@@ -98,4 +98,23 @@ public class RoomController : ControllerBase
 
         return NoContent();
     }
+
+    //! moet nog gemaakt worden Joshua is er mee bezig
+    /*
+    /// <summary>
+    /// Get public leaderboard
+    /// </summary>
+    [HttpGet("GetLeaderboardPublic")]
+    public ActionResult<List<LeaderboardDto>> GetLeaderboardPublic()
+    {
+        try
+        {
+            return Ok(_profileService.GetLeaderboardPublic());
+        }
+        catch (Exception e)
+        {
+            return Unauthorized();
+        }
+    }
+    */
 }

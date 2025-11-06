@@ -309,4 +309,11 @@ public class RoomService
         await _RoomDb.SaveChangesAsync();
         return true;
     }
+
+    //! moet nog gemaakt worden Joshua is er mee bezig
+    /*
+    public List<LeaderboardDto> GetLeaderboardPublic()
+    {
+        return new List<LeaderboardDto>();
+    }*/
 }
