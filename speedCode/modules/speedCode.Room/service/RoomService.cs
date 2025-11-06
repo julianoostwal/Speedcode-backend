@@ -9,6 +9,7 @@ using speedCode.Profile;
 using speedCode.Profile.model;
 using speedCode.Room.dtos;
 using speedCode.Room.Model;
+using speedCode.Core.interfaces;
 
 namespace speedCode.Room.service;
 
@@ -18,13 +19,15 @@ public class RoomService
     private readonly ProfileDb _profileDb;
     private readonly ExerciseService _exerciseService;
     private readonly ExerciseDb _exerciseDb;
+    private readonly IWSRoomStatusProvider _wsRoomStatusProvider;
 
-    public RoomService(RoomsDb db, ProfileDb profileDb, ExerciseService exerciseService, ExerciseDb exerciseDb)
+    public RoomService(RoomsDb db, ProfileDb profileDb, ExerciseService exerciseService, ExerciseDb exerciseDb, IWSRoomStatusProvider wsRoomStatusProvider)
     {
         _exerciseService = exerciseService;
         _RoomDb = db;
         _exerciseDb = exerciseDb;
         _profileDb = profileDb;
+        _wsRoomStatusProvider = wsRoomStatusProvider;
     }
 
     public async Task<Rooms> UpdateRoom(Guid id, UpdateRoomDTO dto)
@@ -129,26 +132,34 @@ public class RoomService
             .Where(p => allProfileIds.Contains(p.id))
             .ToListAsync();
     
-        var roomDtos = filteredRooms.Select(room => new RoomFullDto
+        var roomDtos = filteredRooms.Select(room =>
         {
-            id = room.id,
-            roomName = room.roomName,
-            roomLevel = room.roomLevel.ToString(),
-            isPrivate = room.isPrivate,
-            createdAt = room.createdAt,
-            CreatedById = room.CreatedById,
-            CreatedBy = profiles
-                .Where(p => p.id == room.CreatedById)
-                .Select(p => new RoomFullDto.ProfileDto
-                {
-                    id = p.id,
-                    avatarUrl = p.avatarUrl,
-                    createdAt = p.createdAt,
-                    nickName = p.nickName,
-                    role = p.role.ToString()
-                })
-                .FirstOrDefault(),
-            RoomUsers = room.RoomUsers.Select(ru => new RoomFullDto.RoomUserDto
+            // Get WebSocket room status
+            var (isStarted, activePlayers) = _wsRoomStatusProvider.GetRoomStatus(room.id);
+            
+            return new RoomFullDto
+            {
+                id = room.id,
+                roomName = room.roomName,
+                roomLevel = room.roomLevel.ToString(),
+                isPrivate = room.isPrivate,
+                createdAt = room.createdAt,
+                CreatedById = room.CreatedById,
+                // WebSocket room status
+                IsStarted = isStarted,
+                ActivePlayers = activePlayers,
+                CreatedBy = profiles
+                    .Where(p => p.id == room.CreatedById)
+                    .Select(p => new RoomFullDto.ProfileDto
+                    {
+                        id = p.id,
+                        avatarUrl = p.avatarUrl,
+                        createdAt = p.createdAt,
+                        nickName = p.nickName,
+                        role = p.role.ToString()
+                    })
+                    .FirstOrDefault(),
+                RoomUsers = room.RoomUsers.Select(ru => new RoomFullDto.RoomUserDto
             {
                 id = ru.id,
                 roomId = ru.roomId,
@@ -183,6 +194,7 @@ public class RoomService
                     Level = re.exercise.Level.ToString()
                 }
             }).ToList()
+        };
         }).ToList();
     
         return roomDtos;
@@ -210,6 +222,9 @@ public class RoomService
             .Where(p => allProfileIds.Contains(p.id))
             .ToListAsync();
     
+        // Get WebSocket room status
+        var (isStarted, activePlayers) = _wsRoomStatusProvider.GetRoomStatus(id);
+    
         return new RoomFullDto
         {
             id = room.id,
@@ -218,6 +233,9 @@ public class RoomService
             isPrivate = room.isPrivate,
             createdAt = room.createdAt,
             CreatedById = room.CreatedById,
+            // WebSocket room status
+            IsStarted = isStarted,
+            ActivePlayers = activePlayers,
             CreatedBy = profiles
                 .Where(p => p.id == room.CreatedById)
                 .Select(p => new RoomFullDto.ProfileDto

@@ -14,6 +14,10 @@ public class RoomFullDto
     public ProfileDto CreatedBy { get; set; }
     public List<RoomUserDto> RoomUsers { get; set; }
     public List<RoomExerciseDto> RoomExercises { get; set; }
+    
+    // WebSocket room status
+    public bool IsStarted { get; set; }
+    public int ActivePlayers { get; set; }
 
     public class ProfileDto
     {
