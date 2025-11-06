@@ -58,4 +58,16 @@ public class RoomValidator
 
         return dbRoom.CreatedById == clientId;
     }
+
+    public bool IsRoomStarted(Guid roomId)
+    {
+        // Room should always exist due to GetOrCreateRoom logic
+        // If it doesn't exist in WS service yet, it means it's not started
+        if (!WSRoomsService.Rooms.TryGetValue(roomId, out var room))
+        {
+            return false;
+        }
+
+        return room.IsStarted;
+    }
 }
