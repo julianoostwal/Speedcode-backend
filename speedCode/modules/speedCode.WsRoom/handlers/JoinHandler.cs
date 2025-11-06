@@ -29,7 +29,9 @@ public class JoinHandler : IWebSocketActionHandler
     {
         var clientId = await _wsService.ValidateAndExtractClientIdAsync(socket, payload);
 
-        rooms.Room room = WSRoomsService.GetRoom(roomId);
+        // Get existing room or create new one if it doesn't exist
+        var room = WSRoomsService.GetOrCreateRoom(roomId, clientId);
+
         var player = new Player
         {
             Profile = _profileService.GetProfileById(clientId),

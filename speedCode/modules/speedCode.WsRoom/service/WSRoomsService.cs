@@ -29,6 +29,16 @@ public static class WSRoomsService
         return room;
     }
 
+    public static Room GetOrCreateRoom(Guid roomId, Guid profileId)
+    {
+        if (Rooms.TryGetValue(roomId, out var existingRoom))
+        {
+            return existingRoom;
+        }
+
+        return CreateRoom(roomId, profileId);
+    }
+
     public static List<Room> GetOnlineRoomsById(Guid profileId)
     {
         return Rooms.Values

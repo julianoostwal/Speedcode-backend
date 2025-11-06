@@ -9,12 +9,9 @@ public class WebSocketActionFactory
 {
     private readonly JoinHandler _joinHandler;
     private readonly StartRoomHandler _startRoomHandler;
-    private readonly CreateHandler _createHandler;
 
-    public WebSocketActionFactory(JoinHandler joinHandler, CreateHandler createHandler,
-        StartRoomHandler startRoomHandler)
+    public WebSocketActionFactory(JoinHandler joinHandler, StartRoomHandler startRoomHandler)
     {
-        _createHandler = createHandler;
         _joinHandler = joinHandler;
         _startRoomHandler = startRoomHandler;
     }
@@ -28,8 +25,6 @@ public class WebSocketActionFactory
 
             case "start":
                 return _startRoomHandler;
-            case "create":
-                return _createHandler;
             default:
                 return null;
         }
