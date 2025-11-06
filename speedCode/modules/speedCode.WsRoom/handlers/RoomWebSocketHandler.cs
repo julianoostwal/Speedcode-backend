@@ -52,15 +52,16 @@ public class RoomWebSocketHandler
 
                 string handlerType = _wsService.ValidateAndReturnJsonProperty("type", json);
 
-                if (handlerType != "create" && await _validator.IsRoomStarted(roomId))
+                // Don't allow joining if room is already started
+                if (handlerType == "join" && await _validator.IsRoomStarted(roomId))
                 {
-                    await socket.CloseAsync(WebSocketCloseStatus.PolicyViolation, "room is started no body can join",
+                    await socket.CloseAsync(WebSocketCloseStatus.PolicyViolation, "Room is already started, no one can join",
                         CancellationToken.None);
                     return;
                 }
 
                 IWebSocketActionHandler handler =
-                    _webSocketActionFactory.GetHandler(_wsService.ValidateAndReturnJsonProperty("type", json));
+                    _webSocketActionFactory.GetHandler(handlerType);
 
                 if (handler == null)
                 {

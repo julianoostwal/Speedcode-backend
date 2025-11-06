@@ -58,16 +58,4 @@ public class RoomValidator
 
         return dbRoom.CreatedById == clientId;
     }
-
-    public async Task<bool> IsRoomStarted(Guid roomId)
-    {
-        WSRoomsService.Rooms.TryGetValue(roomId, out var room);
-
-        if (room == null)
-        {
-            throw new KeyNotFoundException($"Room {roomId} not found");
-        }
-
-        return room.IsStarted;
-    }
 }
