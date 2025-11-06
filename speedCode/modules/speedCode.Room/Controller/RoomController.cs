@@ -28,9 +28,14 @@ public class RoomController : ControllerBase
     /// get all rooms with exercises and profiles
     /// </summary>
     [HttpGet]
+    [InjectUserId]
     public async Task<ActionResult<List<RoomFullDto>>> GetAllRooms()
     {
-        var rooms = await _RoomService.GetAllRooms();
+        var userIdStr = User.FindFirst("sub")?.Value ?? User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
+            return Unauthorized();
+    
+        var rooms = await _RoomService.GetAllRooms(userId);
         return Ok(rooms);
     }
 

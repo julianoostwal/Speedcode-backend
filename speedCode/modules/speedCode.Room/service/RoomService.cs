@@ -106,7 +106,7 @@ public class RoomService
         return room;
     }
 
-    public async Task<List<RoomFullDto>> GetAllRooms()
+    public async Task<List<RoomFullDto>> GetAllRooms(Guid userId)
     {
         var rooms = await _RoomDb.rooms
             .Include(r => r.RoomExercises)
@@ -114,9 +114,14 @@ public class RoomService
             .Include(r => r.RoomUsers)
             .ToListAsync();
     
-        var allProfileIds = rooms
+        var filteredRooms = rooms.Where(room =>
+            !room.isPrivate ||
+            room.RoomUsers.Any(u => u.profileId == userId)
+        ).ToList();
+    
+        var allProfileIds = filteredRooms
             .Select(r => r.CreatedById)
-            .Concat(rooms.SelectMany(r => r.RoomUsers.Select(ru => ru.profileId)))
+            .Concat(filteredRooms.SelectMany(r => r.RoomUsers.Select(ru => ru.profileId)))
             .Distinct()
             .ToList();
     
@@ -124,7 +129,7 @@ public class RoomService
             .Where(p => allProfileIds.Contains(p.id))
             .ToListAsync();
     
-        var roomDtos = rooms.Select(room => new RoomFullDto
+        var roomDtos = filteredRooms.Select(room => new RoomFullDto
         {
             id = room.id,
             roomName = room.roomName,
