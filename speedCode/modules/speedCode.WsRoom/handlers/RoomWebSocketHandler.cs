@@ -80,6 +80,12 @@ public class RoomWebSocketHandler
                 CancellationToken.None);
             PlayerManager.RemovePlayer(WSRoomsService.GetRoom(roomId), clientId);
         }
+        finally
+        {
+            PlayerManager.RemovePlayer(WSRoomsService.GetRoom(roomId), clientId);
+            if (socket.State != WebSocketState.Closed)
+                await socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closed", CancellationToken.None);
+        }
     }
 
     public async Task<TestCodeAsyncResults> TestCodeAsyncForWSRoom(TestCodeRequest request, Guid roomId,
