@@ -18,6 +18,5 @@ public class WsRoomModule : IModule
         services.AddScoped<JoinHandler>();
         services.AddScoped<WebSocketActionFactory>();
         services.AddScoped<StartRoomHandler>();
-        services.AddScoped<CreateHandler>();
     }
 }
