@@ -35,32 +35,5 @@ public class JoinHandler : IWebSocketActionHandler
             Finishedexercise = _roomService.GetAllFinishedexercisesByRoomAndUserId(roomId, clientId)
         };
         PlayerManager.AddPlayer(room, player);
-        await ReceiveLoopAsync(room, player);
-    }
-
-    private async Task ReceiveLoopAsync(rooms.Room room, Player player)
-    {
-        var buffer = new byte[1024 * 4];
-        await room.BroadcastRoomUpdateAsync();
-
-        try
-        {
-            while (player.Socket.State == WebSocketState.Open)
-            {
-                var result = await player.Socket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-                if (result.MessageType == WebSocketMessageType.Close)
-                {
-                    PlayerManager.RemovePlayer(room, player.ClientId);
-                    await player.Socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closed by the player",
-                        CancellationToken.None);
-                    break;
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            PlayerManager.RemovePlayer(room, player.ClientId);
-        }
     }
 }

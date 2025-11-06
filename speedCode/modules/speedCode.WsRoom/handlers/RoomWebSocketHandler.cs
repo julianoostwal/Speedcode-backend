@@ -33,39 +33,49 @@ public class RoomWebSocketHandler
 
     public async Task HandleAsync(WebSocket socket)
     {
-        var json = await _wsService.ReceiveJsonAsync(socket);
-        Guid clientId = await _wsService.ValidateAndExtractClientIdAsync(socket, json);
-        Guid roomId = Guid.Parse(_wsService.ValidateAndReturnJsonProperty("roomId", json));
-
-        if (!await _validator.RoomExistsAsync(roomId) || !await _validator.ClientExistsAsync(clientId) ||
-            !await _validator.ClientAllowToJoin(roomId, clientId))
+        try
         {
-            await socket.CloseAsync(WebSocketCloseStatus.PolicyViolation, "Room or client not found",
-                CancellationToken.None);
-            return;
+            while (socket.State == WebSocketState.Open)
+            {
+                var json = await _wsService.ReceiveJsonAsync(socket);
+                Guid clientId = await _wsService.ValidateAndExtractClientIdAsync(socket, json);
+                Guid roomId = Guid.Parse(_wsService.ValidateAndReturnJsonProperty("roomId", json));
+                if (!await _validator.RoomExistsAsync(roomId) || !await _validator.ClientExistsAsync(clientId) ||
+                    !await _validator.ClientAllowToJoin(roomId, clientId))
+                {
+                    await socket.CloseAsync(WebSocketCloseStatus.PolicyViolation, "Room or client not found",
+                        CancellationToken.None);
+                    return;
+                }
+
+                string handlerType = _wsService.ValidateAndReturnJsonProperty("type", json);
+
+                if (handlerType != "create" && await _validator.IsRoomStarted(roomId))
+                {
+                    await socket.CloseAsync(WebSocketCloseStatus.PolicyViolation, "room is started no body can join",
+                        CancellationToken.None);
+                    return;
+                }
+
+                IWebSocketActionHandler handler =
+                    _webSocketActionFactory.GetHandler(_wsService.ValidateAndReturnJsonProperty("type", json));
+
+                if (handler == null)
+                {
+                    await socket.CloseAsync(WebSocketCloseStatus.PolicyViolation, "unknown type",
+                        CancellationToken.None);
+                    return;
+                }
+
+                await handler.HandleAsync(socket, json, roomId);
+            }
         }
-
-        string handlerType = _wsService.ValidateAndReturnJsonProperty("type", json);
-
-        if (handlerType != "create" && await _validator.IsRoomStarted(roomId))
+        catch (Exception e)
         {
-            await socket.CloseAsync(WebSocketCloseStatus.PolicyViolation, "room is started no body can join",
+            await socket.CloseAsync(WebSocketCloseStatus.PolicyViolation, e.Message,
                 CancellationToken.None);
-            return;
+            // PlayerManager.RemovePlayer(WSRoomsService.GetRoom(roomId), clientId);
         }
-
-        IWebSocketActionHandler handler =
-            _webSocketActionFactory.GetHandler(_wsService.ValidateAndReturnJsonProperty("type", json));
-
-        if (handler == null)
-        {
-            await socket.CloseAsync(WebSocketCloseStatus.PolicyViolation, "unknown type",
-                CancellationToken.None);
-            return;
-        }
-
-        // hier bepaald of er een join of create of wat anders is.
-        await handler.HandleAsync(socket, json, roomId);
     }
 
     public async Task<TestCodeAsyncResults> TestCodeAsyncForWSRoom(TestCodeRequest request, Guid roomId,

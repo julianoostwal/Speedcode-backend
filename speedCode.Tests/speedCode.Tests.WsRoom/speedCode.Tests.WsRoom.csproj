@@ -1,29 +1,32 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <RootNamespace>speedCode.WsRoom.Tests</RootNamespace>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>speedCode.WsRoom.Tests</RootNamespace>
+        <UserSecretsId>b14983b7-da5c-45d9-967a-487c6d631698</UserSecretsId>
+    </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="../../speedCode/modules/speedCode.WsRoom/speedCode.WsRoom.csproj" />
-        <ProjectReference Include="../../speedCode/modules/speedCode.Core/speedCode.Core.csproj" />
-        <ProjectReference Include="../../speedCode/modules/speedCode.Modularity/speedCode.Modularity.csproj" />
+        <ProjectReference Include="../../speedCode/speedCode.WebHost/speedCode.WebHost.csproj"/>
+        <ProjectReference Include="../../speedCode/modules/speedCode.WsRoom/speedCode.WsRoom.csproj"/>
+        <ProjectReference Include="../../speedCode/modules/speedCode.Core/speedCode.Core.csproj"/>
+        <ProjectReference Include="../../speedCode/modules/speedCode.Modularity/speedCode.Modularity.csproj"/>
     </ItemGroup>
 
 
     <ItemGroup>
-        <PackageReference Include="FluentAssertions" Version="8.8.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.0" />
-        <PackageReference Include="Moq" Version="4.20.72" />
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.30.0" />
-        <PackageReference Include="xunit" Version="2.9.3" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.10"/>
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0"/>
+        <PackageReference Include="FluentAssertions" Version="8.8.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.0"/>
+        <PackageReference Include="Moq" Version="4.20.72"/>
+        <PackageReference Include="xunit" Version="2.9.3"/>
         <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1"/>
     </ItemGroup>
 </Project>
