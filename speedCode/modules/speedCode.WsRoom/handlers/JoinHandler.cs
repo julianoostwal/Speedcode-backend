@@ -1,6 +1,7 @@
 using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
+using speedCode.Profile.service;
 using speedCode.Room.service;
 using speedCode.rooms;
 using speedCode.rooms.service;
@@ -14,9 +15,11 @@ public class JoinHandler : IWebSocketActionHandler
 
     private readonly WSService _wsService;
     private readonly RoomService _roomService;
+    private readonly ProfileService _profileService;
 
-    public JoinHandler(WSService wsService, RoomService roomService)
+    public JoinHandler(WSService wsService, RoomService roomService, ProfileService profileService)
     {
+        _profileService = profileService;
         _wsService = wsService;
         _roomService = roomService;
     }
@@ -29,7 +32,7 @@ public class JoinHandler : IWebSocketActionHandler
         rooms.Room room = WSRoomsService.GetRoom(roomId);
         var player = new Player
         {
-            ClientId = clientId,
+            Profile = _profileService.GetProfileById(clientId),
             Socket = socket,
             ConnectedAt = DateTime.UtcNow,
             Finishedexercise = _roomService.GetAllFinishedexercisesByRoomAndUserId(roomId, clientId)

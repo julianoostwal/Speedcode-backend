@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using speedCode.Exercise.model;
 using speedCode.Profile;
 
-namespace speedCode.Model
+namespace speedCode.Profile.Model
 {
     [Table("profiles")]
     public class Profiles

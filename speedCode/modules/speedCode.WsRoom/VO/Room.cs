@@ -1,4 +1,4 @@
-using speedCode.dto.room;
+using speedCode.WsRoom;
 
 namespace speedCode.rooms;
 
@@ -19,7 +19,7 @@ public class Room
 
     public void AddPlayer(Player player)
     {
-        Players[player.ClientId] = player;
+        Players[player.Profile.id] = player;
     }
 
     public async Task BroadcastRoomUpdateAsync()
@@ -28,7 +28,7 @@ public class Room
         {
             Players = Players.Values.Select(p => new PlayerStateDto
             {
-                ClientId = p.ClientId,
+                Profiles = p.Profile,
                 Finishedexercise = p.Finishedexercise
             }).ToList()
         };
