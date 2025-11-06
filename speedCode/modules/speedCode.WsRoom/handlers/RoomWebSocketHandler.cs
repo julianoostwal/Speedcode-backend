@@ -33,13 +33,15 @@ public class RoomWebSocketHandler
 
     public async Task HandleAsync(WebSocket socket)
     {
+        Guid clientId = Guid.Empty;
+        Guid roomId = Guid.Empty;
         try
         {
             while (socket.State == WebSocketState.Open)
             {
                 var json = await _wsService.ReceiveJsonAsync(socket);
-                Guid clientId = await _wsService.ValidateAndExtractClientIdAsync(socket, json);
-                Guid roomId = Guid.Parse(_wsService.ValidateAndReturnJsonProperty("roomId", json));
+                clientId = await _wsService.ValidateAndExtractClientIdAsync(socket, json);
+                roomId = Guid.Parse(_wsService.ValidateAndReturnJsonProperty("roomId", json));
                 if (!await _validator.RoomExistsAsync(roomId) || !await _validator.ClientExistsAsync(clientId) ||
                     !await _validator.ClientAllowToJoin(roomId, clientId))
                 {
@@ -74,7 +76,7 @@ public class RoomWebSocketHandler
         {
             await socket.CloseAsync(WebSocketCloseStatus.PolicyViolation, e.Message,
                 CancellationToken.None);
-            // PlayerManager.RemovePlayer(WSRoomsService.GetRoom(roomId), clientId);
+            PlayerManager.RemovePlayer(WSRoomsService.GetRoom(roomId), clientId);
         }
     }
 
