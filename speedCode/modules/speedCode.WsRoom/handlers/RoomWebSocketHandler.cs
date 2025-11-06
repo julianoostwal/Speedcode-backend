@@ -55,7 +55,8 @@ public class RoomWebSocketHandler
                 // Don't allow joining if room is already started
                 if (handlerType == "join" && _validator.IsRoomStarted(roomId))
                 {
-                    await socket.CloseAsync(WebSocketCloseStatus.PolicyViolation, "Room is already started, no one can join",
+                    await socket.CloseAsync(WebSocketCloseStatus.PolicyViolation,
+                        "Room is already started, no one can join",
                         CancellationToken.None);
                     return;
                 }

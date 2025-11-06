@@ -62,6 +62,7 @@ public static class WSRoomsService
             throw new InvalidOperationException($"Room {room.RoomId} does not exist.");
 
         existingRoom.AddPlayer(player);
+        existingRoom.BroadcastRoomUpdateAsync();
     }
 
     public static Room GetRoom(Guid roomId)
