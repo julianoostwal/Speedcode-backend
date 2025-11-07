@@ -1,21 +1,16 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using speedCode.Profile.Model;
-using speedCode.Room.Model;
 
-namespace speedCode.Profile.model
+namespace speedCode.Room.Model;
+
+[Table("room_users")]
+public class RoomUser
 {
-    [Table("room_users")]
-    public class RoomUser
-    {
-        [Key] public Guid id { get; set; } = Guid.NewGuid();
+    [Key] public Guid id { get; set; } = Guid.NewGuid();
 
-        [Required] public virtual Guid roomId { get; set; }
-        [ForeignKey("roomId")] public virtual Rooms room { get; set; }
+    [Required] public Guid roomId { get; set; }
 
-        [Required] public virtual Guid profileId { get; set; }
-        [ForeignKey("profileId")] public virtual Profiles profile { get; set; }
+    [Required] public Guid profileId { get; set; }
 
-        [Required] public DateTime createdAt { get; set; }
-    }
+    [Required] public DateTime createdAt { get; set; }
 }

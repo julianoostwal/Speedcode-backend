@@ -19,7 +19,7 @@ public class Room
 
     public void AddPlayer(Player player)
     {
-        Players[player.Profile.id] = player;
+        Players[player.Profile.Id] = player;
     }
 
     public async Task BroadcastRoomUpdateAsync()

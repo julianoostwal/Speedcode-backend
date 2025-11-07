@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using speedCode.Core.judge0.dto;
 using speedCode.Core.judge0.enums;
 using speedCode.exercise;
+using speedCode.Exercise.Interfaces;
 using speedCode.Exercise.model;
 using speedCode.Judge0;
 
@@ -10,33 +11,25 @@ namespace speedCode.Exercise.service;
 public class ExerciseService
 {
     private readonly Judge0Handler _judge0Handler;
-    private readonly ExerciseDb _dbContext;
+    private readonly IExerciseRepository _exerciseRepository;
 
-    public ExerciseService(Judge0Handler judge0Handler, ExerciseDb dbContext)
+    public ExerciseService(Judge0Handler judge0Handler, IExerciseRepository exerciseRepository)
     {
         _judge0Handler = judge0Handler;
-        _dbContext = dbContext;
+        _exerciseRepository = exerciseRepository;
     }
 
     public List<model.Exercise> gerRandomExercises(int count)
     {
-        return _dbContext.Exercise
-            .OrderBy(e => EF.Functions.Random())
-            .Take(count)
-            .ToList();
+        return _exerciseRepository.GetRandomExercisesAsync(count).Result;
     }
 
     public async Task<TestCodeAsyncResults> TestCodeAsync(TestCodeRequest request)
     {
         var results = new TestCodeAsyncResults();
 
-        var testCodes = await _dbContext.Exercise
-            .Include(e => e.ExerciseTests)
-            .ThenInclude(et => et.test)
-            .ThenInclude(t => t.TestExpectIOs)
-            .Where(e => e.id == request.ExerciseId)
-            .SelectMany(e => e.ExerciseTests.Select(et => et.test))
-            .ToListAsync();
+        // Use repository instead of direct DbContext access
+        var testCodes = await _exerciseRepository.GetTestCodesByExerciseIdAsync(request.ExerciseId);
 
         var outputs = await RunAllTestsAsync(request, testCodes);
 
@@ -52,7 +45,10 @@ public class ExerciseService
 
         foreach (var testCode in testCodes.Where(t => t.LanguageId == request.LanguageId))
         {
-            foreach (var testExpectIO in testCode.TestExpectIOs)
+            // Use repository to get TestExpectIOs
+            var testExpectIOs = await _exerciseRepository.GetTestExpectIOsByTestCodeIdAsync(testCode.id);
+
+            foreach (var testExpectIO in testExpectIOs)
             {
                 testTasks.Add(RunSingleTestAsync(request, testCode, testExpectIO));
             }

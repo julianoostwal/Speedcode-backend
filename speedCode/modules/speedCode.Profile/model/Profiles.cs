@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
-using speedCode.Exercise.model;
 using speedCode.Profile;
 
 namespace speedCode.Profile.Model
@@ -20,10 +19,5 @@ namespace speedCode.Profile.Model
         public string? nickName { get; set; }
 
         public Rol role { get; set; }
-
-        public virtual ICollection<CompletedProfileExercise> ProfileExercises { get; set; } =
-            new List<CompletedProfileExercise>();
-
-        public virtual ICollection<TestCode> TestCodes { get; set; } = new List<TestCode>();
     }
 }

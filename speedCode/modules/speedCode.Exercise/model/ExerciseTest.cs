@@ -9,10 +9,8 @@ namespace speedCode.Exercise.model
     {
         [Key] public Guid id { get; set; } = Guid.NewGuid();
 
-        [Required] public virtual Guid testId { get; set; }
-        [ForeignKey("testId")] public virtual TestCode test { get; set; }
+        [Required] public Guid testId { get; set; }
 
-        [Required] public virtual Guid exerciseId { get; set; }
-        [ForeignKey("exerciseId")] public virtual Exercise exercise { get; set; }
+        [Required] public Guid exerciseId { get; set; }
     }
 }
