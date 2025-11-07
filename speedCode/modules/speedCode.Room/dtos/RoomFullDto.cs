@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using speedCode.Core.interfaces;
 
 namespace speedCode.Room.dtos;
 
+
+// todo joshua: hergebruik de class die al bestaat.
 public class RoomFullDto
 {
     public Guid id { get; set; }
@@ -19,14 +22,7 @@ public class RoomFullDto
     public bool IsStarted { get; set; }
     public int ActivePlayers { get; set; }
 
-    public class ProfileDto
-    {
-        public Guid id { get; set; }
-        public string? avatarUrl { get; set; }
-        public DateTime createdAt { get; set; }
-        public string? nickName { get; set; }
-        public string role { get; set; }
-    }
+    public ProfileDto Profile { get; set; }
 
     public class RoomUserDto
     {
