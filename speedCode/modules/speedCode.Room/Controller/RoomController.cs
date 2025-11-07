@@ -43,9 +43,9 @@ public class RoomController : ControllerBase
     /// get room with exercises and profiles by id
     /// </summary>
     [HttpGet("id/{id}")]
-    public async Task<IActionResult> GetRoom(Guid id)
+    public async Task<ActionResult<RoomFullDto>> GetRoom(Guid id)
     {
-        var room = await _RoomService.GetRoomAndKoppelById(id);
+        RoomFullDto room = await _RoomService.GetRoomAndKoppelById(id);
         if (room == null)
         {
             return NotFound();
@@ -55,7 +55,7 @@ public class RoomController : ControllerBase
     }
 
     [HttpPut("id/{id}")]
-    public async Task<IActionResult> UpdateRoomDTO(Guid id, [FromBody] UpdateRoomDTO dto)
+    public async Task<ActionResult<Rooms>> UpdateRoom(Guid id, [FromBody] UpdateRoomDTO dto)
     {
         return Ok(await _RoomService.UpdateRoom(id, dto));
     }
