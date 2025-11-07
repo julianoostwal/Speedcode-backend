@@ -163,14 +163,14 @@ public class RoomService
                 IsStarted = isStarted,
                 ActivePlayers = activePlayers,
                 CreatedBy = profiles
-                    .Where(p => p.Id == room.CreatedById)
+                    .Where(p => p.id == room.CreatedById)
                     .Select(p => new RoomFullDto.ProfileDto
                     {
-                        id = p.Id,
-                        avatarUrl = p.AvatarUrl,
-                        createdAt = p.CreatedAt,
-                        nickName = p.NickName,
-                        role = p.Role
+                        id = p.id,
+                        avatarUrl = p.avatarUrl,
+                        createdAt = p.createdAt,
+                        nickName = p.nickName,
+                        role = p.role
                     })
                     .FirstOrDefault(),
                 RoomUsers = roomUsers.Select(ru => new RoomFullDto.RoomUserDto
@@ -180,14 +180,14 @@ public class RoomService
                     profileId = ru.ProfileId,
                     createdAt = ru.CreatedAt,
                     profile = profiles
-                        .Where(p => p.Id == ru.ProfileId)
+                        .Where(p => p.id == ru.ProfileId)
                         .Select(p => new RoomFullDto.ProfileDto
                         {
-                            id = p.Id,
-                            avatarUrl = p.AvatarUrl,
-                            createdAt = p.CreatedAt,
-                            nickName = p.NickName,
-                            role = p.Role
+                            id = p.id,
+                            avatarUrl = p.avatarUrl,
+                            createdAt = p.createdAt,
+                            nickName = p.nickName,
+                            role = p.role
                         })
                         .FirstOrDefault()
                 }).ToList(),
@@ -255,14 +255,14 @@ public class RoomService
                 profileId = ru.ProfileId,
                 createdAt = ru.CreatedAt,
                 profile = profiles
-                    .Where(p => p.Id == ru.ProfileId)
+                    .Where(p => p.id == ru.ProfileId)
                     .Select(p => new RoomFullDto.ProfileDto
                     {
-                        id = p.Id,
-                        avatarUrl = p.AvatarUrl,
-                        createdAt = p.CreatedAt,
-                        nickName = p.NickName,
-                        role = p.Role
+                        id = p.id,
+                        avatarUrl = p.avatarUrl,
+                        createdAt = p.createdAt,
+                        nickName = p.nickName,
+                        role = p.role
                     })
                     .FirstOrDefault()
             }).ToList(),

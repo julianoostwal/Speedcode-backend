@@ -36,11 +36,11 @@ public class ProfileQueryService : IProfileQueryService
     {
         return new ProfileDto
         {
-            Id = profile.id,
-            AvatarUrl = profile.avatarUrl,
-            NickName = profile.nickName,
-            Role = profile.role.ToString(),
-            CreatedAt = profile.createdAt
+            id = profile.id,
+            avatarUrl = profile.avatarUrl,
+            nickName = profile.nickName,
+            role = profile.role.ToString(),
+            createdAt = profile.createdAt
         };
     }
 }
