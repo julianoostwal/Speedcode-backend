@@ -15,6 +15,7 @@ AuthManager.ConfigureJwt(builder);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
+    c.CustomSchemaIds(type => type.FullName.Replace("+", "."));
     c.SwaggerDoc("v1", new() { Title = "SpeedCode API", Version = "v1" });
 
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
