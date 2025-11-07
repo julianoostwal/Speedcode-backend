@@ -20,9 +20,7 @@
         <ProjectReference Include="..\speedCode.Core\speedCode.Core.csproj"/>
         <ProjectReference Include="..\speedCode.Modularity\speedCode.Modularity.csproj"/>
         <ProjectReference Include="..\speedCode.Infrastructure\speedCode.Infrastructure.csproj"/>
-        <ProjectReference Include="..\speedCode.Exercise\speedCode.Exercise.csproj"/>
     </ItemGroup>
 
 
 </Project>
-

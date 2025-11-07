@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
+using speedCode.Core.interfaces;
 using speedCode.Infrastructure;
 using speedCode.Profile.service;
 using Microsoft.Extensions.Configuration;
@@ -165,12 +166,13 @@ public class ProfilesController : ControllerBase
     }
 
     [HttpGet("GetAllCompletedExercises")]
-    public IActionResult GetAllCompletedExercises()
+    public async Task<IActionResult> GetAllCompletedExercises()
     {
         try
         {
             Guid profielId = _webHelper.GetClientIdByTokenInHeader();
-            return Ok(_profileService.GetAllCompletedExercisesByProfileId(profielId));
+            var exercises = await _profileService.GetAllCompletedExercisesByProfileIdAsync(profielId);
+            return Ok(exercises);
         }
         catch (Exception e)
         {
@@ -180,12 +182,13 @@ public class ProfilesController : ControllerBase
     }
 
     [HttpGet("GetAllExercises")]
-    public ActionResult<List<Exercise.model.Exercise>> GetAllCreatedAndPublicExercises()
+    public async Task<ActionResult<List<ExerciseDto>>> GetAllCreatedAndPublicExercises()
     {
         try
         {
             Guid profielId = _webHelper.GetClientIdByTokenInHeader();
-            return Ok(_profileService.GetAllCreatedAndPublicExercisesByProfileId(profielId));
+            var exercises = await _profileService.GetAllCreatedAndPublicExercisesByProfileIdAsync(profielId);
+            return Ok(exercises);
         }
         catch (Exception e)
         {

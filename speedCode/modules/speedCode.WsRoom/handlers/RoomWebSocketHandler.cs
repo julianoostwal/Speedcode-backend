@@ -1,9 +1,6 @@
 using System.Net.WebSockets;
 using speedCode.Core.judge0.dto;
-using speedCode.Exercise;
-using speedCode.Exercise.model;
-using speedCode.Exercise.service;
-using speedCode.Profile;
+using speedCode.Core.interfaces;
 using speedCode.rooms;
 using speedCode.rooms.service;
 using speedCode.WsRoom.DTO;
@@ -14,20 +11,22 @@ namespace speedCode.WsRoom.handlers;
 public class RoomWebSocketHandler
 {
     private readonly RoomValidator _validator;
-    private readonly ProfileDb _profileDb;
-    private readonly ExerciseService _exerciseService;
+    private readonly IExerciseTestService _exerciseTestService;
+    private readonly IProfileCompletionService _profileCompletionService;
     private readonly WSService _wsService;
     private readonly WebSocketActionFactory _webSocketActionFactory;
 
-    public RoomWebSocketHandler(RoomValidator validator, ExerciseService exerciseService,
-        ProfileDb profileDb,
+    public RoomWebSocketHandler(
+        RoomValidator validator,
+        IExerciseTestService exerciseTestService,
+        IProfileCompletionService profileCompletionService,
         WebSocketActionFactory webSocketActionFactory,
         WSService wsService)
     {
         _webSocketActionFactory = webSocketActionFactory;
         _wsService = wsService;
-        _profileDb = profileDb;
-        _exerciseService = exerciseService;
+        _profileCompletionService = profileCompletionService;
+        _exerciseTestService = exerciseTestService;
         _validator = validator;
     }
 
@@ -91,7 +90,7 @@ public class RoomWebSocketHandler
     public async Task<TestCodeAsyncResults> TestCodeAsyncForWSRoom(TestCodeRequest request, Guid roomId,
         Guid clientId)
     {
-        TestCodeAsyncResults result = await _exerciseService.TestCodeAsync(request);
+        TestCodeAsyncResults result = await _exerciseTestService.TestCodeAsync(request);
 
         if (result.IsPassed)
         {
@@ -110,28 +109,21 @@ public class RoomWebSocketHandler
                 .Average();
 
 
-            CompletedProfileExercise completedProfileExercise = new CompletedProfileExercise()
+            await _profileCompletionService.SaveCompletedExerciseAsync(
+                clientId,
+                request.ExerciseId,
+                averageMemory,
+                TimeSpan.FromMilliseconds(averageTime)
+            );
+
+            PlayerManager.CompletedAExercise(new FinishARoomExerciseDto()
             {
-                profileId = clientId,
-                exerciseId = request.ExerciseId,
                 memory = averageMemory,
                 time = TimeSpan.FromMilliseconds(averageTime),
-            };
-            _profileDb.CompletedProfileExercise.Add(completedProfileExercise);
-
-            if (WSRoomsService.Rooms.TryGetValue(roomId, out var roomValue))
-            {
-                PlayerManager.CompletedAExercise(new FinishARoomExerciseDto()
-                {
-                    clientId = clientId,
-                    ExerciseId = request.ExerciseId,
-                    Room = roomValue,
-                    memory = averageMemory,
-                    time = TimeSpan.FromMilliseconds(averageTime),
-                });
-            }
-
-            await _profileDb.SaveChangesAsync();
+                Room = WSRoomsService.GetRoom(roomId),
+                clientId = clientId,
+                ExerciseId = request.ExerciseId
+            });
         }
 
         return result;

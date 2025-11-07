@@ -1,8 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using speedCode.Profile.Model;
 
-namespace speedCode.Exercise.model
+namespace speedCode.Profile.model
 {
     [Table("completed_profile_exercises")]
     public class CompletedProfileExercise
@@ -11,14 +10,10 @@ namespace speedCode.Exercise.model
         public Guid id { get; set; } = Guid.NewGuid();
 
         [Required]
-        public virtual Guid exerciseId { get; set; }
-        [ForeignKey("exerciseId")]
-        public virtual Exercise exercise { get; set; }
+        public Guid exerciseId { get; set; }
 
         [Required]
-        public virtual Guid profileId { get; set; }
-        [ForeignKey("profileId")]
-        public virtual Profiles profile { get; set; }
+        public Guid profileId { get; set; }
         
         [Required]
         public Double memory { get; set; }

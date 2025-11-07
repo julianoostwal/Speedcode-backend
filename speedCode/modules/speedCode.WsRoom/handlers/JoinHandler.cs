@@ -1,8 +1,7 @@
 using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
-using speedCode.Profile.service;
-using speedCode.Room.service;
+using speedCode.Core.interfaces;
 using speedCode.rooms;
 using speedCode.rooms.service;
 using speedCode.WsRoom.interfaces;
@@ -14,16 +13,15 @@ public class JoinHandler : IWebSocketActionHandler
     public string Action => "join";
 
     private readonly WSService _wsService;
-    private readonly RoomService _roomService;
-    private readonly ProfileService _profileService;
+    private readonly IRoomDataService _roomDataService;
+    private readonly IProfileQueryService _profileQueryService;
 
-    public JoinHandler(WSService wsService, RoomService roomService, ProfileService profileService)
+    public JoinHandler(WSService wsService, IRoomDataService roomDataService, IProfileQueryService profileQueryService)
     {
-        _profileService = profileService;
+        _profileQueryService = profileQueryService;
         _wsService = wsService;
-        _roomService = roomService;
+        _roomDataService = roomDataService;
     }
-
 
     public async Task HandleAsync(WebSocket socket, JsonElement payload, Guid roomId)
     {
@@ -32,12 +30,14 @@ public class JoinHandler : IWebSocketActionHandler
         // Get existing room or create new one if it doesn't exist
         var room = WSRoomsService.GetOrCreateRoom(roomId, clientId);
 
+        var profileDto = await _profileQueryService.GetByIdAsync(clientId);
+        
         var player = new Player
         {
-            Profile = _profileService.GetProfileById(clientId),
+            Profile = profileDto!,
             Socket = socket,
             ConnectedAt = DateTime.UtcNow,
-            Finishedexercise = _roomService.GetAllFinishedexercisesByRoomAndUserId(roomId, clientId)
+            Finishedexercise = await _roomDataService.GetFinishedExercisesByRoomAndUserAsync(roomId, clientId)
         };
         PlayerManager.AddPlayer(room, player);
     }

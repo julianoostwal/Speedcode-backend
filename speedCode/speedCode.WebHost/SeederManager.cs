@@ -197,181 +197,206 @@ namespace speedCode.Seeder
             {
                 var exercises = exerciseDb.Exercise.OrderBy(e => e.createdAt).ToList();
                 var testCodes = new List<TestCode>();
+                var testExpectIOs = new List<TestExpectIO>();
 
                 if (exercises.Count > 0)
                 {
                     // Test 1: Hello World
-                    testCodes.Add(new TestCode
+                    var test1 = new TestCode
                     {
                         LanguageId = 71,
                         createdAt = DateTime.UtcNow,
                         Type = TestType.Exactly,
-                        ACRegex = @"print\s*\(\s*[""']Hello,\s*World![""']\s*\)",
-                        TestExpectIOs = new List<TestExpectIO>
-                        {
-                            new TestExpectIO
-                            {
-                                input = "",
-                                output = "Hello, World!"
-                            }
-                        }
-                    });
+                        ACRegex = @"print\s*\(\s*[""']Hello,\s*World![""']\s*\)"
+                    };
+                    testCodes.Add(test1);
 
                     // Test 2: Som van Twee Getallen
-                    testCodes.Add(new TestCode
+                    var test2 = new TestCode
                     {
                         LanguageId = 71,
                         createdAt = DateTime.UtcNow,
                         Type = TestType.Exactly,
-                        ACRegex = @"(input\s*\(\s*\).*input\s*\(\s*\)|int\s*\(.*int\s*\()",
-                        TestExpectIOs = new List<TestExpectIO>
-                        {
-                            new TestExpectIO
-                            {
-                                input = "5\n3",
-                                output = "8"
-                            },
-                            new TestExpectIO
-                            {
-                                input = "10\n20",
-                                output = "30"
-                            },
-                            new TestExpectIO
-                            {
-                                input = "-5\n5",
-                                output = "0"
-                            }
-                        }
-                    });
+                        ACRegex = @"(input\s*\(\s*\).*input\s*\(\s*\)|int\s*\(.*int\s*\()"
+                    };
+                    testCodes.Add(test2);
 
                     // Test 3: Even of Oneven
-                    testCodes.Add(new TestCode
+                    var test3 = new TestCode
                     {
                         LanguageId = 71,
                         createdAt = DateTime.UtcNow,
                         Type = TestType.Exactly,
-                        ACRegex = @"(%|mod)",
-                        TestExpectIOs = new List<TestExpectIO>
-                        {
-                            new TestExpectIO
-                            {
-                                input = "4",
-                                output = "even"
-                            },
-                            new TestExpectIO
-                            {
-                                input = "7",
-                                output = "oneven"
-                            },
-                            new TestExpectIO
-                            {
-                                input = "0",
-                                output = "even"
-                            }
-                        }
-                    });
+                        ACRegex = @"(%|mod)"
+                    };
+                    testCodes.Add(test3);
 
                     // Test 4: FizzBuzz
-                    testCodes.Add(new TestCode
+                    var test4 = new TestCode
                     {
                         LanguageId = 71,
                         createdAt = DateTime.UtcNow,
                         Type = TestType.Exactly,
-                        ACRegex = @"(for|while).*range\s*\(.*15",
-                        TestExpectIOs = new List<TestExpectIO>
-                        {
-                            new TestExpectIO
-                            {
-                                input = "",
-                                output = "1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz"
-                            }
-                        }
-                    });
+                        ACRegex = @"(for|while).*range\s*\(.*15"
+                    };
+                    testCodes.Add(test4);
 
                     // Test 5: Palindroom Checker
-                    testCodes.Add(new TestCode
+                    var test5 = new TestCode
                     {
                         LanguageId = 71,
                         createdAt = DateTime.UtcNow,
                         Type = TestType.Exactly,
-                        ACRegex = @"\[::-1\]",
-                        TestExpectIOs = new List<TestExpectIO>
-                        {
-                            new TestExpectIO
-                            {
-                                input = "radar",
-                                output = "true"
-                            },
-                            new TestExpectIO
-                            {
-                                input = "hello",
-                                output = "false"
-                            },
-                            new TestExpectIO
-                            {
-                                input = "level",
-                                output = "true"
-                            }
-                        }
-                    });
+                        ACRegex = @"\[::-1\]"
+                    };
+                    testCodes.Add(test5);
 
                     // Test 6: Fibonacci Reeks
-                    testCodes.Add(new TestCode
+                    var test6 = new TestCode
                     {
                         LanguageId = 71,
                         createdAt = DateTime.UtcNow,
                         Type = TestType.Exactly,
-                        ACRegex = @"(for|while).*range",
-                        TestExpectIOs = new List<TestExpectIO>
-                        {
-                            new TestExpectIO
-                            {
-                                input = "5",
-                                output = "0 1 1 2 3"
-                            },
-                            new TestExpectIO
-                            {
-                                input = "8",
-                                output = "0 1 1 2 3 5 8 13"
-                            },
-                            new TestExpectIO
-                            {
-                                input = "1",
-                                output = "0"
-                            }
-                        }
-                    });
+                        ACRegex = @"(for|while).*range"
+                    };
+                    testCodes.Add(test6);
 
                     // Test 7: Priemgetal Checker
-                    testCodes.Add(new TestCode
+                    var test7 = new TestCode
                     {
                         LanguageId = 71,
                         createdAt = DateTime.UtcNow,
                         Type = TestType.Exactly,
-                        ACRegex = @"(for|while).*range.*\(2,",
-                        TestExpectIOs = new List<TestExpectIO>
-                        {
-                            new TestExpectIO
-                            {
-                                input = "10",
-                                output = "2 3 5 7"
-                            },
-                            new TestExpectIO
-                            {
-                                input = "20",
-                                output = "2 3 5 7 11 13 17 19"
-                            },
-                            new TestExpectIO
-                            {
-                                input = "2",
-                                output = "2"
-                            }
-                        }
-                    });
+                        ACRegex = @"(for|while).*range.*\(2,"
+                    };
+                    testCodes.Add(test7);
                 }
 
                 exerciseDb.TestCode.AddRange(testCodes);
                 exerciseDb.SaveChanges();
+
+                // Now add TestExpectIOs with proper testCodeId references
+                if (testCodes.Count > 0)
+                {
+                    // Test 1 ExpectIOs
+                    testExpectIOs.Add(new TestExpectIO
+                    {
+                        testCodeId = testCodes[0].id,
+                        input = "",
+                        output = "Hello, World!"
+                    });
+
+                    // Test 2 ExpectIOs
+                    testExpectIOs.Add(new TestExpectIO
+                    {
+                        testCodeId = testCodes[1].id,
+                        input = "5\n3",
+                        output = "8"
+                    });
+                    testExpectIOs.Add(new TestExpectIO
+                    {
+                        testCodeId = testCodes[1].id,
+                        input = "10\n20",
+                        output = "30"
+                    });
+                    testExpectIOs.Add(new TestExpectIO
+                    {
+                        testCodeId = testCodes[1].id,
+                        input = "-5\n5",
+                        output = "0"
+                    });
+
+                    // Test 3 ExpectIOs
+                    testExpectIOs.Add(new TestExpectIO
+                    {
+                        testCodeId = testCodes[2].id,
+                        input = "4",
+                        output = "even"
+                    });
+                    testExpectIOs.Add(new TestExpectIO
+                    {
+                        testCodeId = testCodes[2].id,
+                        input = "7",
+                        output = "oneven"
+                    });
+                    testExpectIOs.Add(new TestExpectIO
+                    {
+                        testCodeId = testCodes[2].id,
+                        input = "0",
+                        output = "even"
+                    });
+
+                    // Test 4 ExpectIOs
+                    testExpectIOs.Add(new TestExpectIO
+                    {
+                        testCodeId = testCodes[3].id,
+                        input = "",
+                        output = "1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz"
+                    });
+
+                    // Test 5 ExpectIOs
+                    testExpectIOs.Add(new TestExpectIO
+                    {
+                        testCodeId = testCodes[4].id,
+                        input = "radar",
+                        output = "true"
+                    });
+                    testExpectIOs.Add(new TestExpectIO
+                    {
+                        testCodeId = testCodes[4].id,
+                        input = "hello",
+                        output = "false"
+                    });
+                    testExpectIOs.Add(new TestExpectIO
+                    {
+                        testCodeId = testCodes[4].id,
+                        input = "level",
+                        output = "true"
+                    });
+
+                    // Test 6 ExpectIOs
+                    testExpectIOs.Add(new TestExpectIO
+                    {
+                        testCodeId = testCodes[5].id,
+                        input = "5",
+                        output = "0 1 1 2 3"
+                    });
+                    testExpectIOs.Add(new TestExpectIO
+                    {
+                        testCodeId = testCodes[5].id,
+                        input = "8",
+                        output = "0 1 1 2 3 5 8 13"
+                    });
+                    testExpectIOs.Add(new TestExpectIO
+                    {
+                        testCodeId = testCodes[5].id,
+                        input = "1",
+                        output = "0"
+                    });
+
+                    // Test 7 ExpectIOs
+                    testExpectIOs.Add(new TestExpectIO
+                    {
+                        testCodeId = testCodes[6].id,
+                        input = "10",
+                        output = "2 3 5 7"
+                    });
+                    testExpectIOs.Add(new TestExpectIO
+                    {
+                        testCodeId = testCodes[6].id,
+                        input = "20",
+                        output = "2 3 5 7 11 13 17 19"
+                    });
+                    testExpectIOs.Add(new TestExpectIO
+                    {
+                        testCodeId = testCodes[6].id,
+                        input = "2",
+                        output = "2"
+                    });
+
+                    exerciseDb.TestExpectIos.AddRange(testExpectIOs);
+                    exerciseDb.SaveChanges();
+                }
             }
 
             // Seed ExerciseTest - koppel exercises aan hun tests
@@ -541,3 +566,4 @@ namespace speedCode.Seeder
         }
     }
 }
+

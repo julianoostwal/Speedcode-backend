@@ -1,73 +1,50 @@
-using Microsoft.EntityFrameworkCore;
-using speedCode.Profile;
-using speedCode.Room;
+using speedCode.Core.interfaces;
 using speedCode.rooms;
 
-namespace speedCode.Exercise;
+namespace speedCode.WsRoom;
 
 public class RoomValidator
 {
-    private readonly RoomsDb _db;
-    private readonly ProfileDb _profileDb;
+    private readonly IRoomValidationService _validationService;
+    private readonly IProfileQueryService _profileQueryService;
 
-    public RoomValidator(RoomsDb db, ProfileDb profileDb)
+    public RoomValidator(IRoomValidationService validationService, IProfileQueryService profileQueryService)
     {
-        _db = db;
-        _profileDb = profileDb;
+        _validationService = validationService;
+        _profileQueryService = profileQueryService;
     }
 
     public async Task<bool> RoomExistsAsync(Guid roomId)
     {
-        return await _db.rooms.AnyAsync(r => r.id == roomId);
+        return await _validationService.RoomExistsAsync(roomId);
     }
 
     public async Task<bool> ClientExistsAsync(Guid clientId)
     {
-        return await _profileDb.Profiles.AnyAsync(p => p.id == clientId);
-    }
-
-    public async Task<bool> ClientAllowToJoin(Guid roomId, Guid clientId)
-    {
-        var room = await _db.rooms
-            .AsNoTracking()
-            .FirstOrDefaultAsync(r => r.id == roomId);
-
-        if (room == null)
-            return false;
-
-        if (!room.isPrivate)
-            return true;
-
-        return await _db.RoomUser.AnyAsync(ru =>
-            ru.roomId == roomId && ru.profileId == clientId
-        );
-    }
-
-
-    public async Task<bool> isRoomAdmin(Guid roomId, Guid clientId)
-    {
-        WSRoomsService.Rooms.TryGetValue(roomId, out var room);
-        if (room != null)
-        {
-            return true;
-        }
-
-        var dbRoom = await _db.rooms
-            .AsNoTracking()
-            .FirstOrDefaultAsync(r => r.id == roomId);
-
-        return dbRoom.CreatedById == clientId;
+        var profile = await _profileQueryService.GetByIdAsync(clientId);
+        return profile != null;
     }
 
     public bool IsRoomStarted(Guid roomId)
     {
-        // Room should always exist due to GetOrCreateRoom logic
-        // If it doesn't exist in WS service yet, it means it's not started
-        if (!WSRoomsService.Rooms.TryGetValue(roomId, out var room))
+        try
+        {
+            WSRoomsService.GetRoom(roomId);
+            return true;
+        }
+        catch (Exception e)
         {
             return false;
         }
+    }
 
-        return room.IsStarted;
+    public async Task<bool> ClientAllowToJoin(Guid roomId, Guid clientId)
+    {
+        return await _validationService.ClientAllowToJoinAsync(roomId, clientId);
+    }
+
+    public async Task<bool> isRoomAdmin(Guid roomId, Guid clientId)
+    {
+        return await _validationService.IsRoomAdminAsync(roomId, clientId);
     }
 }

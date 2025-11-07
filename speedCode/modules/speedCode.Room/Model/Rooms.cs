@@ -1,9 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using speedCode.Core.rooms.enums;
-using speedCode.Exercise.model;
-using speedCode.Profile.model;
-using speedCode.Profile.Model;
 
 
 namespace speedCode.Room.Model;
@@ -26,9 +23,4 @@ public class Rooms
     public Guid chatId { get; set; } = Guid.Empty;
 
     [Required] public Guid CreatedById { get; set; }
-
-    [ForeignKey(nameof(CreatedById))] public virtual Profiles CreatedBy { get; set; }
-
-    public virtual ICollection<RoomExercise> RoomExercises { get; set; } = new List<RoomExercise>();
-    public virtual ICollection<RoomUser> RoomUsers { get; set; } = new List<RoomUser>();
 }
