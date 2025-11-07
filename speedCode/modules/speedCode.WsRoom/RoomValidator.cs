@@ -29,8 +29,7 @@ public class RoomValidator
     {
         try
         {
-            WSRoomsService.GetRoom(roomId);
-            return true;
+            return WSRoomsService.GetRoom(roomId).IsStarted;
         }
         catch (Exception e)
         {
