@@ -16,7 +16,7 @@ public class ExerciseModule : IModule
     {
         services.AddDbContext<ExerciseDb>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
-        
+
         services.AddScoped<IExerciseRepository, ExerciseRepository>();
         services.AddScoped<ExerciseService>();
         services.AddScoped<IExerciseQueryService, ExerciseQueryService>();
