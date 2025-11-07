@@ -1,5 +1,5 @@
-using speedCode.Profile.model;
 using speedCode.Room;
+using speedCode.Room.Model;
 
 namespace speedCode.Profile;
 

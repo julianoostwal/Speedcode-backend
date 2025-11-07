@@ -1,46 +1,38 @@
-using speedCode.exercise;
+using speedCode.Core.interfaces;
+using speedCode.Profile.Interfaces;
 using speedCode.Profile.Model;
 
 namespace speedCode.Profile.service;
 
 public class ProfileService
 {
-    private readonly ProfileDb _profileDb;
-    private readonly ExerciseDb _dbContext;
+    private readonly IProfileRepository _profileRepository;
+    private readonly IExerciseQueryService _exerciseQueryService;
 
-    public ProfileService(ProfileDb profileDb, ExerciseDb dbContext)
+    public ProfileService(IProfileRepository profileRepository, IExerciseQueryService exerciseQueryService)
     {
-        _profileDb = profileDb;
-        _dbContext = dbContext;
+        _profileRepository = profileRepository;
+        _exerciseQueryService = exerciseQueryService;
     }
-
 
     public Profiles? GetProfileById(Guid id)
     {
-        return _profileDb.Profiles.Find(id);
+        return _profileRepository.GetByIdAsync(id).Result;
     }
 
-    public List<Exercise.model.Exercise> GetAllCompletedExercisesByProfileId(Guid profileId)
+    public async Task<List<ExerciseDto>> GetAllCompletedExercisesByProfileIdAsync(Guid profileId)
     {
-        var completedIds = _profileDb.CompletedProfileExercise
-            .Where(p => p.profileId == profileId)
-            .Select(p => p.exerciseId)
-            .ToList();
-
-        return _dbContext.Exercise
-            .Where(e => completedIds.Contains(e.id))
-            .ToList();
+        var completedIds = await _profileRepository.GetCompletedExerciseIdsByProfileIdAsync(profileId);
+        return await _exerciseQueryService.GetByIdsAsync(completedIds);
     }
 
-    public List<Exercise.model.Exercise> GetAllCreatedAndPublicExercisesByProfileId(Guid profileId)
+    public async Task<List<ExerciseDto>> GetAllCreatedAndPublicExercisesByProfileIdAsync(Guid profileId)
     {
-        var createdIds = _profileDb.CreatedProfileExercise
-            .Where(p => p.profileId == profileId)
-            .Select(p => p.exerciseId)
-            .ToList();
-
-        return _dbContext.Exercise
-            .Where(e => !e.isPrivate || createdIds.Contains(e.id))
+        var createdIds = await _profileRepository.GetCreatedExerciseIdsByProfileIdAsync(profileId);
+        var allExercises = await _exerciseQueryService.GetAllAsync();
+        
+        return allExercises
+            .Where(e => !e.IsPrivate || createdIds.Contains(e.Id))
             .ToList();
     }
 }

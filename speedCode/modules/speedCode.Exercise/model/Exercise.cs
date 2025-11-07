@@ -28,8 +28,6 @@ namespace speedCode.Exercise.model
         
         [Required]
         public Level Level { get; set; }
-        
-        public virtual ICollection<ExerciseTest> ExerciseTests { get; set; } = new List<ExerciseTest>();
 
     }
 }

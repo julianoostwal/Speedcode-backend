@@ -1,4 +1,4 @@
-using speedCode.Profile.Model;
+using speedCode.Core.interfaces;
 
 namespace speedCode.WsRoom
 {
@@ -10,7 +10,7 @@ namespace speedCode.WsRoom
 
     public class PlayerStateDto
     {
-        public Profiles Profiles { get; set; }
+        public ProfileDto Profiles { get; set; }
         public required List<Guid> Finishedexercise { get; set; }
     }
 }

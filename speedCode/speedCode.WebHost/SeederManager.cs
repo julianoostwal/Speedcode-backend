@@ -82,8 +82,8 @@ namespace speedCode.Seeder
         public static void SeedDatabase(RoomsDb roomsDb, ExerciseDb exerciseDb, ProfileDb profileDb)
         {
             Console.WriteLine("Seeding database...");
-            // Seed Exercises
-
+            
+            // Seed Exercises met realistische programmeer opdrachten
             if (!exerciseDb.Exercise.Any())
             {
                 var exercises = new List<Exercise.model.Exercise>
@@ -91,48 +91,81 @@ namespace speedCode.Seeder
                     new Exercise.model.Exercise
                     {
                         Level = Level.Easy,
-                        title = "Opdracht1", description = "Test1", isRoomExercise = false, createdAt = DateTime.UtcNow,
+                        title = "Hello World",
+                        description = "Schrijf een programma dat 'Hello, World!' print naar de console.",
+                        isRoomExercise = false,
+                        isPrivate = false,
+                        createdAt = DateTime.UtcNow,
                         points = 5
                     },
                     new Exercise.model.Exercise
                     {
                         Level = Level.Easy,
-                        title = "Opdracht2", description = "Test2", isRoomExercise = false, createdAt = DateTime.UtcNow,
+                        title = "Som van Twee Getallen",
+                        description = "Schrijf een programma dat twee getallen inleest en de som ervan print.",
+                        isRoomExercise = false,
+                        isPrivate = false,
+                        createdAt = DateTime.UtcNow,
                         points = 10
                     },
                     new Exercise.model.Exercise
                     {
                         Level = Level.Easy,
-                        title = "Opdracht3", description = "Test3", isRoomExercise = false, createdAt = DateTime.UtcNow,
-                        points = 15
+                        title = "Even of Oneven",
+                        description = "Schrijf een programma dat controleert of een getal even of oneven is en print 'even' of 'oneven'.",
+                        isRoomExercise = false,
+                        isPrivate = false,
+                        createdAt = DateTime.UtcNow,
+                        points = 10
                     },
                     new Exercise.model.Exercise
                     {
-                        Level = Level.Easy,
-                        title = "Opdracht4", description = "Test4", isRoomExercise = false, createdAt = DateTime.UtcNow,
+                        Level = Level.Medium,
+                        title = "FizzBuzz",
+                        description = "Print getallen van 1 tot 15. Voor veelvouden van 3 print 'Fizz', voor veelvouden van 5 print 'Buzz', voor veelvouden van beide print 'FizzBuzz'.",
+                        isRoomExercise = false,
+                        isPrivate = false,
+                        createdAt = DateTime.UtcNow,
                         points = 20
                     },
                     new Exercise.model.Exercise
                     {
-                        Level = Level.Easy,
-                        title = "Opdracht5", description = "Test5", isRoomExercise = false, createdAt = DateTime.UtcNow,
+                        Level = Level.Medium,
+                        title = "Palindroom Checker",
+                        description = "Schrijf een programma dat controleert of een woord een palindroom is. Print 'true' of 'false'.",
+                        isRoomExercise = false,
+                        isPrivate = false,
+                        createdAt = DateTime.UtcNow,
                         points = 25
                     },
                     new Exercise.model.Exercise
                     {
-                        Level = Level.Easy,
-                        title = "Opdracht6", description = "Test6", isRoomExercise = false, createdAt = DateTime.UtcNow,
-                        points = 30
+                        Level = Level.Hard,
+                        title = "Fibonacci Reeks",
+                        description = "Genereer de eerste N getallen van de Fibonacci reeks, gescheiden door spaties.",
+                        isRoomExercise = false,
+                        isPrivate = false,
+                        createdAt = DateTime.UtcNow,
+                        points = 35
+                    },
+                    new Exercise.model.Exercise
+                    {
+                        Level = Level.Hard,
+                        title = "Priemgetal Checker",
+                        description = "Schrijf een programma dat alle priemgetallen tot en met N print, gescheiden door spaties.",
+                        isRoomExercise = false,
+                        isPrivate = false,
+                        createdAt = DateTime.UtcNow,
+                        points = 40
                     }
                 };
                 exerciseDb.Exercise.AddRange(exercises);
                 exerciseDb.SaveChanges();
-                profileDb.SaveChanges();
             }
 
             // Seed Rooms
 
-            if (!roomsDb.rooms.Any())
+            if (!roomsDb.rooms.Any() && profileDb.Profiles.Any())
             {
                 var profile = profileDb.Profiles.AsNoTracking().First();
                 var rooms = new List<Rooms>
@@ -159,62 +192,227 @@ namespace speedCode.Seeder
             }
 
 
-            // Seed TestCode and testExpectIOs
-            if (!exerciseDb.TestCode.Any() && profileDb.Profiles.Any())
+            // Seed TestCode met realistische test cases
+            if (!exerciseDb.TestCode.Any())
             {
+                var exercises = exerciseDb.Exercise.OrderBy(e => e.createdAt).ToList();
                 var testCodes = new List<TestCode>();
-                int count = profileDb.Profiles.Count();
+                var testExpectIOs = new List<TestExpectIO>();
 
-                var profiles = profileDb.Profiles.ToList();
-
-                for (int i = 0; i < count; i++)
+                if (exercises.Count > 0)
                 {
-                    var author = profiles[i];
-
-                    var testCode = new TestCode
+                    // Test 1: Hello World
+                    var test1 = new TestCode
                     {
-                        // AuthorId = author.id,
                         LanguageId = 71,
                         createdAt = DateTime.UtcNow,
-                        Type = TestType.Exactly
+                        Type = TestType.Exactly,
+                        ACRegex = @"print\s*\(\s*[""']Hello,\s*World![""']\s*\)"
                     };
+                    testCodes.Add(test1);
 
-                    testCode.TestExpectIOs = new List<TestExpectIO>
+                    // Test 2: Som van Twee Getallen
+                    var test2 = new TestCode
                     {
-                        new TestExpectIO
-                        {
-                            input = $"Input for TestCode {i + 1} - Case 1",
-                            output = $"Output for TestCode {i + 1} - Case 1"
-                        },
-                        new TestExpectIO
-                        {
-                            input = $"Input for TestCode {i + 1} - Case 2",
-                            output = $"Output for TestCode {i + 1} - Case 2"
-                        }
+                        LanguageId = 71,
+                        createdAt = DateTime.UtcNow,
+                        Type = TestType.Exactly,
+                        ACRegex = @"(input\s*\(\s*\).*input\s*\(\s*\)|int\s*\(.*int\s*\()"
                     };
+                    testCodes.Add(test2);
 
-                    testCodes.Add(testCode);
+                    // Test 3: Even of Oneven
+                    var test3 = new TestCode
+                    {
+                        LanguageId = 71,
+                        createdAt = DateTime.UtcNow,
+                        Type = TestType.Exactly,
+                        ACRegex = @"(%|mod)"
+                    };
+                    testCodes.Add(test3);
+
+                    // Test 4: FizzBuzz
+                    var test4 = new TestCode
+                    {
+                        LanguageId = 71,
+                        createdAt = DateTime.UtcNow,
+                        Type = TestType.Exactly,
+                        ACRegex = @"(for|while).*range\s*\(.*15"
+                    };
+                    testCodes.Add(test4);
+
+                    // Test 5: Palindroom Checker
+                    var test5 = new TestCode
+                    {
+                        LanguageId = 71,
+                        createdAt = DateTime.UtcNow,
+                        Type = TestType.Exactly,
+                        ACRegex = @"\[::-1\]"
+                    };
+                    testCodes.Add(test5);
+
+                    // Test 6: Fibonacci Reeks
+                    var test6 = new TestCode
+                    {
+                        LanguageId = 71,
+                        createdAt = DateTime.UtcNow,
+                        Type = TestType.Exactly,
+                        ACRegex = @"(for|while).*range"
+                    };
+                    testCodes.Add(test6);
+
+                    // Test 7: Priemgetal Checker
+                    var test7 = new TestCode
+                    {
+                        LanguageId = 71,
+                        createdAt = DateTime.UtcNow,
+                        Type = TestType.Exactly,
+                        ACRegex = @"(for|while).*range.*\(2,"
+                    };
+                    testCodes.Add(test7);
                 }
 
                 exerciseDb.TestCode.AddRange(testCodes);
                 exerciseDb.SaveChanges();
-                profileDb.SaveChanges();
+
+                // Now add TestExpectIOs with proper testCodeId references
+                if (testCodes.Count > 0)
+                {
+                    // Test 1 ExpectIOs
+                    testExpectIOs.Add(new TestExpectIO
+                    {
+                        testCodeId = testCodes[0].id,
+                        input = "",
+                        output = "Hello, World!"
+                    });
+
+                    // Test 2 ExpectIOs
+                    testExpectIOs.Add(new TestExpectIO
+                    {
+                        testCodeId = testCodes[1].id,
+                        input = "5\n3",
+                        output = "8"
+                    });
+                    testExpectIOs.Add(new TestExpectIO
+                    {
+                        testCodeId = testCodes[1].id,
+                        input = "10\n20",
+                        output = "30"
+                    });
+                    testExpectIOs.Add(new TestExpectIO
+                    {
+                        testCodeId = testCodes[1].id,
+                        input = "-5\n5",
+                        output = "0"
+                    });
+
+                    // Test 3 ExpectIOs
+                    testExpectIOs.Add(new TestExpectIO
+                    {
+                        testCodeId = testCodes[2].id,
+                        input = "4",
+                        output = "even"
+                    });
+                    testExpectIOs.Add(new TestExpectIO
+                    {
+                        testCodeId = testCodes[2].id,
+                        input = "7",
+                        output = "oneven"
+                    });
+                    testExpectIOs.Add(new TestExpectIO
+                    {
+                        testCodeId = testCodes[2].id,
+                        input = "0",
+                        output = "even"
+                    });
+
+                    // Test 4 ExpectIOs
+                    testExpectIOs.Add(new TestExpectIO
+                    {
+                        testCodeId = testCodes[3].id,
+                        input = "",
+                        output = "1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz"
+                    });
+
+                    // Test 5 ExpectIOs
+                    testExpectIOs.Add(new TestExpectIO
+                    {
+                        testCodeId = testCodes[4].id,
+                        input = "radar",
+                        output = "true"
+                    });
+                    testExpectIOs.Add(new TestExpectIO
+                    {
+                        testCodeId = testCodes[4].id,
+                        input = "hello",
+                        output = "false"
+                    });
+                    testExpectIOs.Add(new TestExpectIO
+                    {
+                        testCodeId = testCodes[4].id,
+                        input = "level",
+                        output = "true"
+                    });
+
+                    // Test 6 ExpectIOs
+                    testExpectIOs.Add(new TestExpectIO
+                    {
+                        testCodeId = testCodes[5].id,
+                        input = "5",
+                        output = "0 1 1 2 3"
+                    });
+                    testExpectIOs.Add(new TestExpectIO
+                    {
+                        testCodeId = testCodes[5].id,
+                        input = "8",
+                        output = "0 1 1 2 3 5 8 13"
+                    });
+                    testExpectIOs.Add(new TestExpectIO
+                    {
+                        testCodeId = testCodes[5].id,
+                        input = "1",
+                        output = "0"
+                    });
+
+                    // Test 7 ExpectIOs
+                    testExpectIOs.Add(new TestExpectIO
+                    {
+                        testCodeId = testCodes[6].id,
+                        input = "10",
+                        output = "2 3 5 7"
+                    });
+                    testExpectIOs.Add(new TestExpectIO
+                    {
+                        testCodeId = testCodes[6].id,
+                        input = "20",
+                        output = "2 3 5 7 11 13 17 19"
+                    });
+                    testExpectIOs.Add(new TestExpectIO
+                    {
+                        testCodeId = testCodes[6].id,
+                        input = "2",
+                        output = "2"
+                    });
+
+                    exerciseDb.TestExpectIos.AddRange(testExpectIOs);
+                    exerciseDb.SaveChanges();
+                }
             }
 
-            // Seed ExerciseTest
-
+            // Seed ExerciseTest - koppel exercises aan hun tests
             if (!exerciseDb.ExerciseTest.Any() && exerciseDb.TestCode.Any() && exerciseDb.Exercise.Any())
             {
                 var exerciseTests = new List<ExerciseTest>();
-                int countExercise = exerciseDb.Exercise.Count();
-                int countTestCode = exerciseDb.TestCode.Count();
+                var exercises = exerciseDb.Exercise.OrderBy(e => e.createdAt).ToList();
+                var testCodes = exerciseDb.TestCode.OrderBy(t => t.createdAt).ToList();
 
-                for (int i = 0; i < Math.Min(countExercise, countTestCode); i++)
+                // Koppel elke oefening aan zijn bijbehorende test
+                for (int i = 0; i < Math.Min(exercises.Count, testCodes.Count); i++)
                 {
                     exerciseTests.Add(new ExerciseTest
                     {
-                        testId = exerciseDb.TestCode.Skip(i).First().id,
-                        exerciseId = exerciseDb.Exercise.Skip(i).First().id
+                        testId = testCodes[i].id,
+                        exerciseId = exercises[i].id
                     });
                 }
 
@@ -368,3 +566,4 @@ namespace speedCode.Seeder
         }
     }
 }
+

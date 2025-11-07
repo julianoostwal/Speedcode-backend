@@ -3,7 +3,6 @@ using speedCode.Core.attribute;
 using speedCode.Core.interfaces;
 using speedCode.Core.rooms.dto;
 using speedCode.Core.utils;
-using speedCode.Exercise.model;
 using speedCode.Room.dtos;
 using speedCode.Room.Model;
 using speedCode.Room.service;
@@ -31,10 +30,11 @@ public class RoomController : ControllerBase
     [InjectUserId]
     public async Task<ActionResult<List<RoomFullDto>>> GetAllRooms()
     {
-        var userIdStr = User.FindFirst("sub")?.Value ?? User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        var userIdStr = User.FindFirst("sub")?.Value ??
+                        User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))
             return Unauthorized();
-    
+
         var rooms = await _RoomService.GetAllRooms(userId);
         return Ok(rooms);
     }
@@ -77,9 +77,9 @@ public class RoomController : ControllerBase
     [HttpPost]
     [Route("/generateroomwithrandomexercises")]
     [InjectUserId]
-    public ActionResult<Rooms> GenerateRoomWithRandomExercises(CreateRoomDTO request)
+    public async Task<ActionResult<Rooms>> GenerateRoomWithRandomExercises(CreateRoomDTO request)
     {
-        Rooms room = _RoomService.GenerateRoomWithRandomexercises(request, 5);
+        Rooms room = await _RoomService.GenerateRoomWithRandomexercises(request, 5);
         return Ok(room);
     }
 
@@ -90,13 +90,7 @@ public class RoomController : ControllerBase
     public async Task<IActionResult> DeleteRoom(Guid id)
     {
         var result = await _RoomService.DeleteRoom(id);
-
-        if (!result)
-        {
-            return NotFound();
-        }
-
-        return NoContent();
+        return Ok(result);
     }
 
     //! moet nog gemaakt worden Joshua is er mee bezig

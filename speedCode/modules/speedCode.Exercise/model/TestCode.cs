@@ -16,21 +16,6 @@ namespace speedCode.Exercise.model
         // anti cheat regex 
         [Column("AC_regex")] public string? ACRegex { get; set; }
 
-        public virtual ICollection<ExerciseTest> ExerciseTests { get; set; } = new List<ExerciseTest>();
-        public virtual ICollection<TestExpectIO> TestExpectIOs { get; set; } = new List<TestExpectIO>();
         [Required] public DateTime createdAt { get; set; }
-
-        [NotMapped]
-        public string Judge0Stdin
-        {
-            get
-            {
-                if (TestExpectIOs == null || !TestExpectIOs.Any())
-                    return string.Empty;
-                return string.Join("\n", TestExpectIOs
-                    .Where(io => !string.IsNullOrWhiteSpace(io.input))
-                    .Select(io => io.input.Trim()));
-            }
-        }
     }
 }

@@ -1,7 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using speedCode.Core.interfaces;
 using speedCode.exercise;
+using speedCode.Exercise.Interfaces;
+using speedCode.Exercise.repository;
 using speedCode.Exercise.service;
 using speedCode.Modularity;
 
@@ -13,7 +16,10 @@ public class ExerciseModule : IModule
     {
         services.AddDbContext<ExerciseDb>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
-        
+
+        services.AddScoped<IExerciseRepository, ExerciseRepository>();
         services.AddScoped<ExerciseService>();
+        services.AddScoped<IExerciseQueryService, ExerciseQueryService>();
+        services.AddScoped<IExerciseTestService, ExerciseTestService>();
     }
 }
