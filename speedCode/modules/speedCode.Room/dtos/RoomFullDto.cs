@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace speedCode.Room.dtos;
 
+// todo : hergebruiken en optimatiseren voor deze dto's
 public class RoomFullDto
 {
     public Guid id { get; set; }

@@ -52,6 +52,7 @@ public class ExerciseQueryService : IExerciseQueryService
     {
         return new ExerciseDto
         {
+            Points = exercise.points,
             Id = exercise.id,
             Title = exercise.title,
             Description = exercise.description,
