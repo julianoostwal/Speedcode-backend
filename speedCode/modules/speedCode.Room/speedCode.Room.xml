@@ -29,5 +29,10 @@
             delete room by id
             </summary>
         </member>
+        <member name="M:speedCode.Room.controller.RoomController.GetLeaderboardPublic">
+            <summary>
+            Get public leaderboard
+            </summary>
+        </member>
     </members>
 </doc>

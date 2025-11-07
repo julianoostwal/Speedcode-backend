@@ -105,16 +105,9 @@ public class RoomController : ControllerBase
     /// Get public leaderboard
     /// </summary>
     [HttpGet("GetLeaderboardPublic")]
-    public ActionResult<List<LeaderboardDto>> GetLeaderboardPublic()
+    public async Task<ActionResult<List<LeaderboardDto>>> GetLeaderboardPublic()
     {
-        try
-        {
-            return Ok(_profileService.GetLeaderboardPublic());
-        }
-        catch (Exception e)
-        {
-            return Unauthorized();
-        }
-    }
-    */
+        var leaderboard = await _RoomService.GetLeaderboardPublic();
+        return Ok(leaderboard);
+    }*/
 }
