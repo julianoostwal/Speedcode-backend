@@ -93,8 +93,6 @@ public class RoomController : ControllerBase
         return Ok(result);
     }
 
-    //! moet nog gemaakt worden Joshua is er mee bezig
-    /*
     /// <summary>
     /// Get public leaderboard
     /// </summary>
@@ -103,5 +101,5 @@ public class RoomController : ControllerBase
     {
         var leaderboard = await _RoomService.GetLeaderboardPublic();
         return Ok(leaderboard);
-    }*/
+    }
 }

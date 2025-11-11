@@ -1,5 +1,6 @@
 using speedCode.Core.interfaces;
 using speedCode.Profile.Interfaces;
+using speedCode.Profile.model;
 
 namespace speedCode.Profile.service;
 
@@ -42,6 +43,28 @@ public class ProfileQueryService : IProfileQueryService
             role = profile.role.ToString(),
             createdAt = profile.createdAt
         };
+    }
+
+    public async Task<List<CompletedProfileExerciseDto>> GetCompletedProfileExercisesAsync(List<Guid> profileIds, List<Guid> exerciseIds)
+    {
+        var allCompleted = new List<CompletedProfileExercise>();
+        foreach (var profileId in profileIds)
+        {
+            var completed = await _profileRepository.GetCompletedExercisesByProfileIdAsync(profileId);
+            if (completed != null)
+                allCompleted.AddRange(completed);
+        }
+
+        var filtered = allCompleted
+            .Where(cpe => exerciseIds.Contains(cpe.exerciseId))
+            .ToList();
+
+        return filtered.Select(cpe => new CompletedProfileExerciseDto
+        {
+            profileId = cpe.profileId,
+            exerciseId = cpe.exerciseId,
+            time = cpe.time
+        }).ToList();
     }
 }
 
