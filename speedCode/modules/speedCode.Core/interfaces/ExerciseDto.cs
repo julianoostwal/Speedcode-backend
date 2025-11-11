@@ -10,5 +10,5 @@ public class ExerciseDto
     public DateTime CreatedAt { get; set; }
     public string Difficulty { get; set; } = string.Empty;
     public string Language { get; set; } = string.Empty;
+    public required int Points { get; set; }
 }
-
