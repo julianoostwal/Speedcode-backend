@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -11,12 +11,12 @@
 
     <ItemGroup>
         <FrameworkReference Include="Microsoft.AspNetCore.App"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.10">
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.14"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.14">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4"/>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3"/>
         <ProjectReference Include="..\speedCode.Core\speedCode.Core.csproj"/>
         <ProjectReference Include="..\speedCode.Modularity\speedCode.Modularity.csproj"/>
     </ItemGroup>
